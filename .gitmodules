@@ -1,0 +1,3 @@
+[submodule "arduino_libraries_for_matrixctrlr/Timer3"]
+	path = arduino_libraries_for_matrixctrlr/Timer3
+	url = https://github.com/PaulStoffregen/TimerThree.git
