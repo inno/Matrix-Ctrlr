@@ -1,0 +1,31 @@
+#######################################
+# Syntax Coloring Map For Wire
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+Initialize	KEYWORD2
+Button_Pin_Read	KEYWORD2
+Button_SR_Read	KEYWORD2
+Led_Pin_Write	KEYWORD2
+Led_SR_Write	KEYWORD2
+Led_SR_Read	KEYWORD2
+Led_All_On	KEYWORD2
+Led_All_Off	KEYWORD2
+
+#######################################
+# Instances (KEYWORD3)
+#######################################
+SR	KEYWORD3
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
