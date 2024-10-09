@@ -26,10 +26,8 @@
 EEPROM256_512::EEPROM256_512()
 {
 	uint8_t i=0;
-	for(i=0;i<MINIBUFFER;i++){
-		minibuffer[i] = 0b00000000;
-	}
-	page_size = 256; // was 256
+	for(i=0;i<MINIBUFFER;i++){minibuffer[i]=0b00000000;}
+	page_size = 256;
 	fulladdr=I2CBASEADDR;
 }
 
@@ -64,8 +62,7 @@ uint8_t EEPROM256_512::readByte(unsigned int addr)
     Wire.write((int)(addr & 0xFF)); // LSB write lower 8 bits to wire (by bit & by 0xFF)
     Wire.endTransmission();//end the transmission on the wire
     Wire.requestFrom((uint8_t)fulladdr,(uint8_t)1);//request 1 byte from EEPROM (memory location sent above)
-    if (Wire.available()) 
-		data = Wire.read();
+    if (Wire.available()) data = Wire.read();
     return data;
 }//end readByte
 
@@ -77,7 +74,6 @@ void EEPROM256_512::writeByte(unsigned int addr, unsigned char data)
     Wire.write((int)(addr & 0xFF)); // LSB write lower 8 bits to wire (by bit & by 0xFF)
     Wire.write(data);//write data byte
     Wire.endTransmission();//end transmission on wire
-//    delay(5);//wait max write time of chip
     delay(5);//wait max write time of chip
 }//end writeByte
 
@@ -194,11 +190,8 @@ void EEPROM256_512::writeMiniBuffer(unsigned int addr)
     {
 		Wire.write((uint8_t)minibuffer[ct]);
 		ct++;
-    } 
-
+    }  
     Wire.endTransmission();
-	//delay(5);
-	//delay(DELAYMINIBUFFER); // delay(2) -> OK for Bankdump, delay(3) -> OK for SAV : bilan, on peut pas avoir les 2 :(
     delay(5);
 }//end writeMiniBuffer
 
@@ -216,11 +209,8 @@ void EEPROM256_512::writeMiniBufferFast(unsigned int addr)
     }
     
     Wire.endTransmission();
-	//delay(5);
-	//delay(DELAYMINIBUFFER); // delay(2) -> OK for Bankdump, delay(3) -> OK for SAV : bilan, on peut pas avoir les 2 :(
-    delay(5);
+	delay(5);
 }//end writeMiniBuffer
-
 
 //512 class
 EEPROM512::EEPROM512(): EEPROM256_512(){/*Use base class constructor*/}
