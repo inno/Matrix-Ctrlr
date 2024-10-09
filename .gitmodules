@@ -1,3 +1,6 @@
 [submodule "arduino_libraries_for_matrixctrlr/Timer3"]
 	path = arduino_libraries_for_matrixctrlr/Timer3
 	url = https://github.com/PaulStoffregen/TimerThree.git
+[submodule "arduino_libraries_for_matrixctrlr/uClock"]
+	path = arduino_libraries_for_matrixctrlr/uClock
+	url = https://github.com/midilab/uClock.git
