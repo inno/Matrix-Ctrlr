@@ -26,7 +26,6 @@
 
 // external Arduino libraries
 #include <elapsedMillis.h> // https://www.arduino.cc/reference/en/libraries/elapsedmillis/
-// #include <TimerOne.h>
 #include <TimerThree.h> // https://www.arduino.cc/reference/en/libraries/timerthree/
 #include <Wire.h> // included in Arduino IDE
 #include <EEPROM.h> // included in Arduino IDE
