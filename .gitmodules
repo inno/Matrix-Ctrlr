@@ -1,21 +1,21 @@
 [submodule "arduino_libraries_for_matrixctrlr/Timer3"]
-	path = arduino_libraries_for_matrixctrlr/Timer3
+	path = lib/Timer3
 	url = https://github.com/PaulStoffregen/TimerThree.git
 [submodule "arduino_libraries_for_matrixctrlr/uClock"]
-	path = arduino_libraries_for_matrixctrlr/uClock
+	path = lib/uClock
 	url = https://github.com/midilab/uClock.git
 [submodule "arduino_libraries_for_matrixctrlr/FlexiTimer2"]
-	path = arduino_libraries_for_matrixctrlr/FlexiTimer2
+	path = lib/FlexiTimer2
 	url = https://github.com/wimleers/flexitimer2.git
 [submodule "arduino_libraries_for_matrixctrlr/Encoder"]
-	path = arduino_libraries_for_matrixctrlr/Encoder
+	path = lib/Encoder
 	url = https://github.com/PaulStoffregen/Encoder.git
 [submodule "arduino_libraries_for_matrixctrlr/MIDI-Library"]
-	path = arduino_libraries_for_matrixctrlr/MIDI-Library
+	path = lib/MIDI-Library
 	url = https://github.com/FortySevenEffects/arduino_midi_library.git
 [submodule "arduino_libraries_for_matrixctrlr/elapsedMillis"]
-	path = arduino_libraries_for_matrixctrlr/elapsedMillis
+	path = lib/elapsedMillis
 	url = https://github.com/pfeerick/elapsedMillis.git
 [submodule "arduino_libraries_for_matrixctrlr/hd44780"]
-	path = arduino_libraries_for_matrixctrlr/hd44780
+	path = lib/hd44780
 	url = https://github.com/duinoWitchery/hd44780.git
