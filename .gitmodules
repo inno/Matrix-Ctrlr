@@ -4,3 +4,6 @@
 [submodule "arduino_libraries_for_matrixctrlr/uClock"]
 	path = arduino_libraries_for_matrixctrlr/uClock
 	url = https://github.com/midilab/uClock.git
+[submodule "arduino_libraries_for_matrixctrlr/FlexiTimer2"]
+	path = arduino_libraries_for_matrixctrlr/FlexiTimer2
+	url = https://github.com/wimleers/flexitimer2.git
