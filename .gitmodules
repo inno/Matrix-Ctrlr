@@ -13,3 +13,6 @@
 [submodule "arduino_libraries_for_matrixctrlr/MIDI-Library"]
 	path = arduino_libraries_for_matrixctrlr/MIDI-Library
 	url = https://github.com/FortySevenEffects/arduino_midi_library.git
+[submodule "arduino_libraries_for_matrixctrlr/elapsedMillis"]
+	path = arduino_libraries_for_matrixctrlr/elapsedMillis
+	url = https://github.com/pfeerick/elapsedMillis.git
