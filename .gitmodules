@@ -16,3 +16,6 @@
 [submodule "arduino_libraries_for_matrixctrlr/elapsedMillis"]
 	path = arduino_libraries_for_matrixctrlr/elapsedMillis
 	url = https://github.com/pfeerick/elapsedMillis.git
+[submodule "arduino_libraries_for_matrixctrlr/hd44780"]
+	path = arduino_libraries_for_matrixctrlr/hd44780
+	url = https://github.com/duinoWitchery/hd44780.git
