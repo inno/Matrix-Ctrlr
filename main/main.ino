@@ -55,7 +55,12 @@
 #include "softpanel.h"
 #include "oner.h"
 
-#define firmware "1.42 "
+
+#ifdef VERSION
+#define firmware VERSION  // Build
+#else
+#define firmware "X.XX "  // Development
+#endif
 
 // http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1208715493/11
 #define FASTADC 0 // à essayer à 1 plus tard quand les ain non utilisés seront reliés à la masse
