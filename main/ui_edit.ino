@@ -8,7 +8,6 @@
 #include "memo.h"
 #include "ui_patch.h"
 #include "device.h"
-#include <LiquidCrystal.h>
 
 unsigned char banksaved;
 unsigned char programsaved;
