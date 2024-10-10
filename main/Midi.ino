@@ -51,10 +51,18 @@ void MIDI_Init()
 #endif
 }
 
+void MIDI_SendPatchProgram(unsigned char interface, unsigned char program)
+{
+  if (polyChain)
+    PolySendPatchProgram(interface, program);
+  else
+    MIDI_SendPatchProgramSingle(interface, program);
+}
+
 /////////////////////////////////////////////////////////////////////////////
 //  Send program change on current MIDI channel
 /////////////////////////////////////////////////////////////////////////////
-void MIDI_SendPatchProgram(unsigned char interface, unsigned char program)
+void MIDI_SendPatchProgramSingle(unsigned char interface, unsigned char program)
 {
   switch (interface) {
     case  INTERFACE_SERIAL1:
@@ -88,10 +96,17 @@ void MIDI_SendPatchProgram(unsigned char interface, unsigned char program)
 
 }
 
+void MIDI_SendPatchNumber(unsigned char interface, unsigned char bank, unsigned char program)
+{
+    if (polyChain)
+        PolySendPatchNumber(interface, bank, program);
+    else
+        MIDI_SendPatchNumberSingle(interface, bank, program);
+}
 //////////////////////////////////////////////////////////////////////////////
 //  Send bank/program number on default core out
 /////////////////////////////////////////////////////////////////////////////
-void MIDI_SendPatchNumber(unsigned char interface, unsigned char bank, unsigned char program)
+void MIDI_SendPatchNumberSingle(unsigned char interface, unsigned char bank, unsigned char program)
 {
   // send this type of message (3 at a time)
   // bank select MSB - CC00 :: bank (0-9)
@@ -424,7 +439,7 @@ void MIDI_SendVoiceParamSingle(unsigned char interface, unsigned char param, uns
         default:
           break;
       }
-      MIDI_Send_UNISONDETUNE(interface, value); // send value to device
+      MIDI_Send_UNISONDETUNESingle(interface, value); // send value to device
     }
     else // rest of the parameters
     {
@@ -791,11 +806,19 @@ void MIDI_Send_BreathController(unsigned char interface, unsigned char value)
 #endif
 }
 
+void MIDI_Send_UNISONDETUNE(unsigned char interface, unsigned char value)
+{
+  if (polyChain)
+    PolySendUnisonDetune(interface, value);
+  else
+    MIDI_Send_UNISONDETUNESingle(interface, value);
+
+}
 /////////////////////////////////////////////////////////////////////////////
 //  Send Unison detune CC94 introduced by Gliggli
 // http://gliglisynth.blogspot.fr/2014/11/matrix-1000-rom-only-upgrade-v116.html
 /////////////////////////////////////////////////////////////////////////////
-void MIDI_Send_UNISONDETUNE(unsigned char interface, unsigned char value)
+void MIDI_Send_UNISONDETUNESingle(unsigned char interface, unsigned char value)
 {
   switch (interface) {
     case INTERFACE_SERIAL1:

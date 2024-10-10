@@ -461,6 +461,7 @@ extern void SetPatchChange(void);
 extern void InitEditBuffer(void);
 extern void SendPatchInit(unsigned char  interface);
 extern void SendEditBuffer(unsigned char device, unsigned char  interface);
+extern void SendEditBufferSingle(unsigned char device, unsigned char interface);
 extern void SendEditBufferOrig(unsigned char  interface);
 extern void SendSinglePatchData(unsigned char interface, unsigned char patch);
 

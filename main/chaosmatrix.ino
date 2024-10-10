@@ -1,6 +1,7 @@
-#include "chaosmatrix.h"
 #include <avr/pgmspace.h>
+#include "chaosmatrix.h"
 #include "lcd.h"
+#include "polychain.h"
 
 unsigned char EditBuffer[4][134];
 unsigned char EditBufferOrig [134];
@@ -867,10 +868,18 @@ void SendPatchInit(unsigned char  interface)
 }
 
 
+void SendEditBuffer(unsigned char device, unsigned char interface)
+{
+    if (polyChain)
+        PolySendEditBuffer(device, interface);
+    else
+        SendEditBufferSingle(device, interface);
+}
+
 /////////////////////////////////////////////////////////////////////////////
 //  Send the edit buffer
 /////////////////////////////////////////////////////////////////////////////
-void SendEditBuffer(unsigned char device, unsigned char  interface)
+void SendEditBufferSingle(unsigned char device, unsigned char interface)
 {
   unsigned char i;
   unsigned char checksum = 0;
