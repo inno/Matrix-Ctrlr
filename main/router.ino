@@ -64,7 +64,8 @@ void HandleNoteOff(byte channel, byte pitch, byte velocity)
     else if (ui_aHold && (SetAB == false) && (pitch < aSplit))
       Feed_aChordLatch(pitch, velocity, channel);
     else                                           //   if(1)// ((arpN >= 7-1)||(arpN==0))
-      MIDI1.sendNoteOff(pitch, velocity, channel); // let pass last noteOff after arpegio ***
+      MIDI1.sendNoteOff(pitch, velocity, channel);
+      // let pass last noteOff after arpegio ***
 
     if (SetAB)
     {
@@ -116,8 +117,7 @@ void HandleNoteOff(byte channel, byte pitch, byte velocity)
         Serial.println(F("arpegiateOption FALSE"));
 #endif
       }
-      else // normal behaviour : play notes thru
-        //MIDI1.sendNoteOff(pitch, velocity, channel); // ***
+      else
         return;
     }
     else
@@ -170,8 +170,7 @@ void HandleNoteOff(byte channel, byte pitch, byte velocity)
         Serial.println(F("arpegiateOption FALSE"));
 #endif
       }
-      else // normal behaviour : play notes thru
-        //MIDI1.sendNoteOff(pitch, velocity, channel); // *** double noteoff dans midimonitor donc commentaire necessaire (voir*** plus haut)
+      else
         return;
     }
   }
@@ -327,7 +326,6 @@ void HandleNoteOn(byte channel, byte pitch, byte velocity)
         }
         else // normal behabviour : play notes
           MIDI1.sendNoteOn(pitch, velocity, channel);
-
         return;
       }
       else
@@ -393,9 +391,6 @@ void HandleNoteOn(byte channel, byte pitch, byte velocity)
     }
     if (channel == (MIDI_CHANNEL + 1))
       MIDI2.sendNoteOn(pitch, velocity, channel);
-
-    //if(channel == (MIDI_CHANNEL+8))
-    //     MIDI3.sendNoteOn(pitch,velocity,channel);
 
 #if SOFTSERIAL_ENABLED
     if (channel == MIDI_CHANNEL + 2)

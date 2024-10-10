@@ -1,5 +1,6 @@
 #include <EEPROM.h>
 #include "oner.h"
+#include "polychain.h"
 
 
 ///////////////////////////////////////////////////////////
@@ -119,6 +120,8 @@ void ZoneNoteOff(byte channel, byte pitch, byte velocity)
       }
     }
   }
+  else if (polyChain)
+    PolyChainNoteOff(pitch, velocity);
   else
     HandleNoteOff(channel, pitch, velocity);
 }
@@ -142,6 +145,8 @@ void ZoneNoteOn(byte channel, byte pitch, byte velocity)
       }
     }
   }
+  else if (polyChain)
+    PolyChainNoteOn(pitch, velocity);
   else
     HandleNoteOn(channel, pitch, velocity);
 
@@ -166,6 +171,8 @@ void ZoneControlChange(byte CCchannel, byte CCnumber, byte CCvalue)
       }
     }
   }
+  else if (polyChain)
+    PolyControlChange(CCnumber, CCvalue);
   else
     HandleControlChange(CCchannel, CCnumber, CCvalue);
 
@@ -189,6 +196,9 @@ void ZoneAfterTouchChannel(byte channel, byte pressure)
         HandleAfterTouchChannel(ZONE[z][Z_TCH], pressure);
       }
     }
+  }
+  else if (polyChain) {
+    PolyAfterTouch(pressure);
   }
   else
     HandleAfterTouchChannel(channel, pressure);
@@ -214,6 +224,8 @@ void ZonePitchBend(byte channel, int bend)
       }
     }
   }
+  else if (polyChain)
+    PolyPitchBend(bend);
   else
     HandlePitchBend(channel, bend);
 
@@ -238,6 +250,8 @@ void ZoneProgramChange(byte channel, byte program)
       }
     }
   }
+  else if (polyChain)
+    PolyProgramChange(program);
   else
     HandleProgramChange(channel, program);
 
