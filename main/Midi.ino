@@ -4,6 +4,7 @@
 #include "chaosmatrix.h"
 #include "device.h"
 #include "memo.h"
+#include "polychain.h"
 #include "ui_patch.h"
 #include <EEPROM.h>
 
@@ -347,6 +348,16 @@ void MIDI_BankRequest(unsigned char interface, unsigned char bank_req)
 /////////////////////////////////////////////////////////////////////////////
 void MIDI_SendVoiceParam(unsigned char interface, unsigned char param, unsigned char value, bool midiThru)
 {
+  if (polyChain)
+    PolySendVoiceParam(interface, param, value, midiThru);
+  else
+    MIDI_SendVoiceParamSingle(interface, param, value, midiThru);
+}
+
+
+void MIDI_SendVoiceParamSingle(unsigned char interface, unsigned char param, unsigned char value, bool midiThru)
+{
+  static unsigned char lastinterface;
   static unsigned char lastparam;
   static unsigned char lastvalue;
 
@@ -355,8 +366,8 @@ void MIDI_SendVoiceParam(unsigned char interface, unsigned char param, unsigned 
   sysex[4] = param;
   sysex[5] = value;
 
-  // don't send the same message twice in a row
-  if (param != lastparam || value != lastvalue)
+  // don't send the same message twice in a row to the same interface
+  if (interface != lastinterface || param != lastparam || value != lastvalue)
   {
     //    //update_EditBuffer(device, param, value);
     //    switch (interface)
@@ -489,6 +500,7 @@ void MIDI_SendVoiceParam(unsigned char interface, unsigned char param, unsigned 
     }
 
   }
+  lastinterface = interface;
   lastparam = param;
   lastvalue = value;
 }

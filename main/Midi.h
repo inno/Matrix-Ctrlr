@@ -16,6 +16,7 @@ void MIDI_RequestSinglePatch(unsigned char interface, unsigned char program);
 void MIDI_RequestMasterParameters(unsigned char interface);
 void MIDI_BankRequest(unsigned char interface, unsigned char bank_req);
 void MIDI_SendVoiceParam(unsigned char interface, unsigned char param, unsigned char value, bool midiThru);
+void MIDI_SendVoiceParamSingle(unsigned char interface, unsigned char param, unsigned char value, bool midiThru);
 void MIDI_SendDelayedVoiceParam(unsigned char param, unsigned char value);
 void MIDI_HandleDelayedVoiceParam(unsigned char interface, bool midiThru);
 void MIDI_SendMatrixModParam(unsigned char mmbus, unsigned char mmsrc, unsigned char mmdest, unsigned char value);
