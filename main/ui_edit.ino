@@ -1,10 +1,8 @@
-//#include <cmios.h>
 #include "chaosmatrix.h"
 #include "softpanel.h"
 #include "lcd.h"
 #include "din.h"
 #include "midi.h"
-//#include "patchnames.h"
 #include "memo.h"
 #include "ui_patch.h"
 #include "device.h"

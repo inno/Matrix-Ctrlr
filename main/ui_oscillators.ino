@@ -1,5 +1,3 @@
-//#include <cmios.h>
-//#include "main.h"
 #include "chaosmatrix.h"
 #include "softpanel.h"
 #include "lcd.h"

@@ -1,12 +1,8 @@
-//#include <cmios.h>
 #include "device.h"
-//#include "main.h"
 #include "din.h"
 #include "midi.h"
 #include "chaosmatrix.h"
-//#include "arp.h"
 #include "ui_patch.h"
-//#include "memo.h"
 #include <EEPROM.h>
 
 //matrix_model_t matrix_model;

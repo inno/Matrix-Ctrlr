@@ -1,6 +1,4 @@
-//#include <cmios.h>
 //
-//#include "main.h"
 #include "chaosmatrix.h"
 #include "pots.h"
 #include "din.h"

@@ -1,4 +1,3 @@
-//#include "PinChangeInterrupt.h"
 bool klock;
 bool trigger;
 

@@ -1,11 +1,6 @@
-//#include <cmios.h>
-//#include "main.h"
 #include "pots.h"
-//#include "lcd.h"
 #include "din.h"
 #include "chaosmatrix.h"
-//#include "midi.h"
-//#include "device.h"
 
 const char DinDescription0 [] PROGMEM = " DCO2 WAVEFORM "; // din_pin 0
 const char DinDescription1 [] PROGMEM = " _F1_          "; // 1

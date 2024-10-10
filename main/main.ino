@@ -36,7 +36,6 @@
 #include <hd44780ioClass/hd44780_pinIO.h>
 #include <EEPROM24LC256_512.h> // https://github.com/mikeneiderhauser/I2C-EEPROM-Arduino
 #include <SoftwareSerial.h> // included in Arduino IDE
-//#include <FlexiTimer2.h> // https://playground.arduino.cc/Main/FlexiTimer2/
 #include <uClock.h> // replace flexiTimer2 library, generate midi clock https://github.com/midilab/uClock
 #include <SRIO_mxctr.h> // custom Alpes Machines library to manage serial Shift Registers In/Out (SRIO) of couple 74HC165/74HC595 (inspired by midibox.org)
 
@@ -51,7 +50,6 @@
 #include "ui_patch.h"
 #include "memo.h"
 #include "define.h"
-//#include "math.h"
 #include "softpanel.h"
 #include "oner.h"
 

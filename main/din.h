@@ -1,4 +1,3 @@
-//#include "chaosmatrix.h"
 #ifndef din_h
 #define din_h
 
