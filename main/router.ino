@@ -893,7 +893,7 @@ unsigned int HandleReceivedSysEx(byte *sysex, unsigned int length)
           SendEditBuffer( device, INTERFACE_SERIAL3);
         }
         // parameter sysex
-        if (sysex[3] = 0x06)
+        if (sysex[3] == 0x06)
         {
           // get parameter and its value -> sysex[4] & sysex[5]
           // update editbuffer & UI (dout) of the selected device,
