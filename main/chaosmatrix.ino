@@ -824,7 +824,10 @@ void SendPatchInit(unsigned char  interface)
     //send pgrm change number 0
     MIDI_SendPatchProgram(interface, 0);
 
-  MIDI_SendSysex(interface, sysex);
+  if (polyChain)
+    PolySendSysex(sysex);
+  else
+    MIDI_SendSysex(interface, sysex);
 
 #if DEBUG_serialout
   // print debug sysex +
@@ -960,7 +963,10 @@ void SendEditBufferOrig(unsigned char  interface)
   sysex[273] = checksum & 0x7f;
   sysex[274] = 0xf7;
 
-  MIDI_SendSysex(interface, sysex);
+  if (polyChain)
+    PolySendSysex(sysex);
+  else
+    MIDI_SendSysex(interface, sysex);
 
 
 #if DEBUG_serialout
@@ -1238,7 +1244,10 @@ void SendGlobalParameters(unsigned char interface)
   sysex[349] = checksum & 0x7f;
   sysex[350] = 0xf7;
 
-  MIDI_SendSysex(interface, sysex);
+  if (polyChain)
+    PolySendSysex(sysex);
+  else
+    MIDI_SendSysex(interface, sysex);
 }
 
 //////////////////////////////////////////////////////////
