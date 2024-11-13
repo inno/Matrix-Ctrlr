@@ -15,4 +15,5 @@ extern void PolySendPatchProgram(unsigned char interface, unsigned char program)
 extern void PolySendPatchNumber(unsigned char interface, unsigned char bank, unsigned char program);
 extern void PolySendEditBuffer(unsigned char device, unsigned char interface);
 extern void PolySendUnisonDetune(unsigned char interface, unsigned char value);
+extern void PolySendSysex(const byte* sysex);
 #endif

@@ -136,3 +136,14 @@ extern void PolySendUnisonDetune(unsigned char interface, unsigned char value)
       MIDI_Send_UNISONDETUNESingle(INTERFACE_SERIAL5, value);
   #endif
 }
+
+void PolySendSysex(const byte* sysex) {
+  MIDI1.sendSysEx(sizeof(sysex), sysex, true);
+  MIDI2.sendSysEx(sizeof(sysex), sysex, true);
+  #if SOFTSERIAL_ENABLED
+  if (polyDepth >= 3)
+    MIDI4.sendSysEx(sizeof(sysex), sysex, true);
+    if (polyDepth == 4)
+      MIDI5.sendSysEx(sizeof(sysex), sysex, true);
+  #endif
+}
