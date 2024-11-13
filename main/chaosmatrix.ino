@@ -1,6 +1,7 @@
 #include <avr/pgmspace.h>
 #include "chaosmatrix.h"
 #include "lcd.h"
+#include "midi.h"
 #include "polychain.h"
 
 unsigned char EditBuffer[4][134];
@@ -823,36 +824,7 @@ void SendPatchInit(unsigned char  interface)
     //send pgrm change number 0
     MIDI_SendPatchProgram(interface, 0);
 
-  switch (interface) {
-    case  INTERFACE_SERIAL1:
-      MIDI1.sendSysEx (sizeof(sysex), sysex, true);
-      break;
-
-    case INTERFACE_SERIAL2:
-      MIDI2.sendSysEx (sizeof(sysex), sysex, true);
-      break;
-
-    case INTERFACE_SERIAL3:
-      unsigned char stamp;
-      stamp = systmClock;
-      systmClock = MIDCLK; // doing this desactive F8 on serial port
-      MIDI3.sendSysEx (sizeof(sysex), sysex, true);
-      systmClock = stamp; // retrieve state
-      break;
-
-#if SOFTSERIAL_ENABLED
-    case INTERFACE_SERIAL4:
-      MIDI4.sendSysEx (sizeof(sysex), sysex, true);
-      break;
-
-    case INTERFACE_SERIAL5:
-      MIDI5.sendSysEx (sizeof(sysex), sysex, true);
-      break;
-#endif
-
-    default:
-      break;
-  }
+  MIDI_SendSysex(interface, sysex);
 
 #if DEBUG_serialout
   // print debug sysex +
@@ -923,36 +895,8 @@ void SendEditBufferSingle(unsigned char device, unsigned char interface)
     MIDI_SendPatchProgram(interface, 0);
   }
 
-  switch (interface) {
-    case  INTERFACE_SERIAL1:
-      MIDI1.sendSysEx (sizeof(sysex), sysex, true);
-      break;
+  MIDI_SendSysex(interface, sysex);
 
-    case INTERFACE_SERIAL2:
-      MIDI2.sendSysEx (sizeof(sysex), sysex, true);
-      break;
-
-    case INTERFACE_SERIAL3:
-      unsigned char stamp;
-      stamp = systmClock;
-      systmClock = MIDCLK; // doing this desactive F8 on serial port
-      MIDI3.sendSysEx (sizeof(sysex), sysex, true);
-      systmClock = stamp; // retrieve state
-      break;
-
-#if SOFTSERIAL_ENABLED
-    case INTERFACE_SERIAL4:
-      MIDI4.sendSysEx (sizeof(sysex), sysex, true);
-      break;
-
-    case INTERFACE_SERIAL5:
-      MIDI5.sendSysEx (sizeof(sysex), sysex, true);
-      break;
-#endif
-
-    default:
-      break;
-  }
 
   // turn on Matrix 6 in Patch Edit Quick mode:
   if (matrix_modele == MATRIX_6)
@@ -1016,36 +960,8 @@ void SendEditBufferOrig(unsigned char  interface)
   sysex[273] = checksum & 0x7f;
   sysex[274] = 0xf7;
 
-  switch (interface) {
-    case  INTERFACE_SERIAL1:
-      MIDI1.sendSysEx (sizeof(sysex), sysex, true);
-      break;
+  MIDI_SendSysex(interface, sysex);
 
-    case INTERFACE_SERIAL2:
-      MIDI2.sendSysEx (sizeof(sysex), sysex, true);
-      break;
-
-    case INTERFACE_SERIAL3:
-      unsigned char stamp;
-      stamp = systmClock;
-      systmClock = MIDCLK; // doing this desactive F8 on serial port
-      MIDI3.sendSysEx (sizeof(sysex), sysex, true);
-      systmClock = stamp; // retrieve state
-      break;
-
-#if SOFTSERIAL_ENABLED
-    case INTERFACE_SERIAL4:
-      MIDI4.sendSysEx (sizeof(sysex), sysex, true);
-      break;
-
-    case INTERFACE_SERIAL5:
-      MIDI5.sendSysEx (sizeof(sysex), sysex, true);
-      break;
-#endif
-
-    default:
-      break;
-  }
 
 #if DEBUG_serialout
   // print debug sysex +
@@ -1091,36 +1007,8 @@ void SendSinglePatchData(unsigned char interface, unsigned char patch_num)
   sysex[273] = checksum & 0x7f;
   sysex[274] = 0xf7;
 
-  switch (interface) {
-    case  INTERFACE_SERIAL1:
-      MIDI1.sendSysEx (sizeof(sysex), sysex, true);
-      break;
+  MIDI_SendSysex(interface, sysex);
 
-    case INTERFACE_SERIAL2:
-      MIDI2.sendSysEx (sizeof(sysex), sysex, true);
-      break;
-
-    case INTERFACE_SERIAL3:
-      unsigned char stamp;
-      stamp = systmClock;
-      systmClock = MIDCLK; // doing this desactive F8 on serial port
-      MIDI3.sendSysEx (sizeof(sysex), sysex, true);
-      systmClock = stamp; // retrieve state
-      break;
-
-#if SOFTSERIAL_ENABLED
-    case INTERFACE_SERIAL4:
-      MIDI4.sendSysEx (sizeof(sysex), sysex, true);
-      break;
-
-    case INTERFACE_SERIAL5:
-      MIDI5.sendSysEx (sizeof(sysex), sysex, true);
-      break;
-#endif
-
-    default:
-      break;
-  }
 
 #if DEBUG_serialout
   // print debug sysex
@@ -1165,36 +1053,8 @@ void SendSingleUnison(unsigned char interface, unsigned char number)
   sysex[7] = checksum & 0x7f;
   sysex[8] = 0xf7;
 
-  switch (interface) {
-    case  INTERFACE_SERIAL1:
-      MIDI1.sendSysEx (sizeof(sysex), sysex, true);
-      break;
+  MIDI_SendSysex(interface, sysex);
 
-    case INTERFACE_SERIAL2:
-      MIDI2.sendSysEx (sizeof(sysex), sysex, true);
-      break;
-
-    case INTERFACE_SERIAL3:
-      unsigned char stamp;
-      stamp = systmClock;
-      systmClock = MIDCLK; // doing this desactive F8 on serial port
-      MIDI3.sendSysEx (sizeof(sysex), sysex, true);
-      systmClock = stamp; // retrieve state
-      break;
-
-#if SOFTSERIAL_ENABLED
-    case INTERFACE_SERIAL4:
-      MIDI4.sendSysEx (sizeof(sysex), sysex, true);
-      break;
-
-    case INTERFACE_SERIAL5:
-      MIDI5.sendSysEx (sizeof(sysex), sysex, true);
-      break;
-#endif
-
-    default:
-      break;
-  }
 
 #if DEBUG_serialout
   // print debug sysex
@@ -1258,36 +1118,8 @@ void SendSingleArpData(unsigned char interface, unsigned char number)
   sysex[141] = checksum & 0x7f;
   sysex[142] = 0xf7;
 
-  switch (interface) {
-    case  INTERFACE_SERIAL1:
-      MIDI1.sendSysEx (sizeof(sysex), sysex, true);
-      break;
+  MIDI_SendSysex(interface, sysex);
 
-    case INTERFACE_SERIAL2:
-      MIDI2.sendSysEx (sizeof(sysex), sysex, true);
-      break;
-
-    case INTERFACE_SERIAL3:
-      unsigned char stamp;
-      stamp = systmClock;
-      systmClock = MIDCLK; // doing this desactive F8 on serial port
-      MIDI3.sendSysEx (sizeof(sysex), sysex, true);
-      systmClock = stamp; // retrieve state
-      break;
-
-#if SOFTSERIAL_ENABLED
-    case INTERFACE_SERIAL4:
-      MIDI4.sendSysEx (sizeof(sysex), sysex, true);
-      break;
-
-    case INTERFACE_SERIAL5:
-      MIDI5.sendSysEx (sizeof(sysex), sysex, true);
-      break;
-#endif
-
-    default:
-      break;
-  }
 
 #if DEBUG_serialout
   // print debug sysex
@@ -1343,36 +1175,7 @@ void SendGlobalParametersInit(unsigned char interface)
   sysex[349] = checksum & 0x7f;
   sysex[350] = 0xf7;
 
-  switch (interface) {
-    case  INTERFACE_SERIAL1:
-      MIDI1.sendSysEx (sizeof(sysex), sysex, true);
-      break;
-
-    case INTERFACE_SERIAL2:
-      MIDI2.sendSysEx (sizeof(sysex), sysex, true);
-      break;
-
-    case INTERFACE_SERIAL3:
-      unsigned char stamp;
-      stamp = systmClock;
-      systmClock = MIDCLK; // doing this desactive F8 on serial port
-      MIDI3.sendSysEx (sizeof(sysex), sysex, true);
-      systmClock = stamp; // retrieve state
-      break;
-
-#if SOFTSERIAL_ENABLED
-    case INTERFACE_SERIAL4:
-      MIDI4.sendSysEx (sizeof(sysex), sysex, true);
-      break;
-
-    case INTERFACE_SERIAL5:
-      MIDI5.sendSysEx (sizeof(sysex), sysex, true);
-      break;
-#endif
-
-    default:
-      break;
-  }
+  MIDI_SendSysex(interface, sysex);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1435,37 +1238,7 @@ void SendGlobalParameters(unsigned char interface)
   sysex[349] = checksum & 0x7f;
   sysex[350] = 0xf7;
 
-  switch (interface) {
-    case  INTERFACE_SERIAL1:
-      MIDI1.sendSysEx (sizeof(sysex), sysex, true);
-      break;
-
-    case INTERFACE_SERIAL2:
-      MIDI2.sendSysEx (sizeof(sysex), sysex, true);
-      break;
-
-    case INTERFACE_SERIAL3:
-      unsigned char tmp;
-      tmp = systmClock;
-      systmClock = MIDCLK; // desactive F8 on serial port
-      MIDI3.sendSysEx (sizeof(sysex), sysex, true);
-      systmClock = tmp; // retrieve state
-      break;
-
-#if SOFTSERIAL_ENABLED
-    case INTERFACE_SERIAL4:
-      MIDI4.sendSysEx (sizeof(sysex), sysex, true);
-      break;
-
-    case INTERFACE_SERIAL5:
-      MIDI5.sendSysEx (sizeof(sysex), sysex, true);
-      break;
-#endif
-
-    default:
-      break;
-  }
-
+  MIDI_SendSysex(interface, sysex);
 }
 
 //////////////////////////////////////////////////////////
@@ -1538,28 +1311,8 @@ void StoreEditBuffer(unsigned char interface, unsigned char bank, unsigned char 
   sysex[7] = 0x7f;
   sysex[8] = 0xf7;
 
-  switch (interface) {
-    case  INTERFACE_SERIAL1:
-      MIDI1.sendSysEx (sizeof(sysex), sysex, true);
-      break;
+  MIDI_SendSysex(interface, sysex);
 
-    case INTERFACE_SERIAL2:
-      MIDI2.sendSysEx (sizeof(sysex), sysex, true);
-      break;
-
-#if SOFTSERIAL_ENABLED
-    case INTERFACE_SERIAL4:
-      MIDI4.sendSysEx (sizeof(sysex), sysex, true);
-      break;
-
-    case INTERFACE_SERIAL5:
-      MIDI5.sendSysEx (sizeof(sysex), sysex, true);
-      break;
-#endif
-
-    default:
-      break;
-  }
 
   // print a short msg on display :
   lcd.setCursor(0, 1);
@@ -1655,36 +1408,8 @@ void SendCtrlrSystemCfg(unsigned char interface)
   elapsedTime = 0;  //reset tmpMessage-
 
   // send sysex
-  switch (interface) {
-    case  INTERFACE_SERIAL1:
-      MIDI1.sendSysEx (sizeof(sysex), sysex, true);
-      break;
+  MIDI_SendSysex(interface, sysex);
 
-    case INTERFACE_SERIAL2:
-      MIDI2.sendSysEx (sizeof(sysex), sysex, true);
-      break;
-
-    case INTERFACE_SERIAL3:
-      unsigned char stamp;
-      stamp = systmClock;
-      systmClock = MIDCLK; // doing this desactive F8 on serial port
-      MIDI3.sendSysEx (sizeof(sysex), sysex, true);
-      systmClock = stamp; // retrieve state
-      break;
-
-#if SOFTSERIAL_ENABLED
-    case INTERFACE_SERIAL4:
-      MIDI4.sendSysEx (sizeof(sysex), sysex, true);
-      break;
-
-    case INTERFACE_SERIAL5:
-      MIDI5.sendSysEx (sizeof(sysex), sysex, true);
-      break;
-#endif
-
-    default:
-      break;
-  }
 
 #if DEBUG_midi
   Serial.println(F("MIDI_SendCtrlrSystemCfg() "));
@@ -1719,35 +1444,7 @@ void MIDI_Rcv_Diagnostics(unsigned char interface, byte order1, byte order2)
     sysex[6] = 0x08;
 
     // send a midi response
-    switch (interface) {
-      case  INTERFACE_SERIAL1:
-        MIDI1.sendSysEx (sizeof(sysex), sysex, true);
-        break;
-
-      case INTERFACE_SERIAL2:
-        MIDI2.sendSysEx (sizeof(sysex), sysex, true);
-        break;
-
-      case INTERFACE_SERIAL3:
-        unsigned char stamp;
-        stamp = systmClock;
-        systmClock = MIDCLK; // doing this desactive F8 on serial port
-        MIDI3.sendSysEx (sizeof(sysex), sysex, true);
-        systmClock = stamp; // retrieve state
-        break;
-
-#if SOFTSERIAL_ENABLED
-      case INTERFACE_SERIAL4:
-        MIDI4.sendSysEx (sizeof(sysex), sysex, true);
-        break;
-
-      case INTERFACE_SERIAL5:
-        MIDI5.sendSysEx (sizeof(sysex), sysex, true);
-        break;
-#endif
-      default: break;
-
-    }
+    MIDI_SendSysex(interface, sysex);
   }
   // other messages below
   // etc ..

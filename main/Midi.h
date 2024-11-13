@@ -7,7 +7,7 @@ extern bool MIDI_ReceivingBank;
 extern byte MIDI_CHANNEL;
 
 void MIDI_Init(void);
-extern void MIDI_SendSysex(unsigned char interface, byte* sysex);
+extern void MIDI_SendSysex(unsigned char interface, const byte* sysex);
 void MIDI_SendChannel(void);
 void MIDI_SendPatchProgram(unsigned char interface, unsigned char program);
 void MIDI_SendPatchProgramSingle(unsigned char interface, unsigned char program);
@@ -34,8 +34,6 @@ void MIDI_EnterRemoteEdit(unsigned char interface);
 
 void MIDI_Send_UNISONDETUNE(unsigned char interface, unsigned char value);
 void MIDI_Send_UNISONDETUNESingle(unsigned char interface, unsigned char value);
-// void MIDI_SendSysex(unsigned char interface, byte *sysex); NE MARCHE PAS !
-
 extern void MIDI_SendControlMessages(unsigned char deviceCC, unsigned char param, unsigned char value);
 extern void MIDI_Control2Sysex( unsigned char evnt0, unsigned char param, unsigned char evnt2);
 
