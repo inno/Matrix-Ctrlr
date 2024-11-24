@@ -222,8 +222,19 @@
 #define SX_LFO1_SPEEDMODULATION	                           81 // pressure
 #define SX_LFO2_SPEEDMODULATION	                           91 // keyboard tracking
 
+// Gligli OS116 additional parameter :
+#define SX_UNISON_DETUNE	99
+
 // edit buffer byte order
 // 0-7 patch name characters
+#define EB_PATCHNAME0 0
+#define EB_PATCHNAME1 1
+#define EB_PATCHNAME2 2
+#define EB_PATCHNAME3 3
+#define EB_PATCHNAME4 4
+#define EB_PATCHNAME5 5
+#define EB_PATCHNAME6 6
+#define EB_PATCHNAME7 7
 #define EB_KEYBOARD_MODE 		8
 #define EB_OSC1_FREQ 			9
 #define EB_OSC1_WAVESHAPE		10
@@ -350,6 +361,9 @@
 #define EB_MODBUS9_SOURCE  		131
 #define EB_MODBUS9_AMOUNT		132
 #define EB_MODBUS9_DESTINATION 	        133
+
+// Gligli OS116 additional parameter :
+#define EB_UNISON_DETUNE	134
 
 #define MMOD_BUS1 0
 #define MMOD_BUS2 1
