@@ -53,17 +53,16 @@
 #include "softpanel.h"
 #include "oner.h"
 
-
 #ifdef VERSION
-#define firmware VERSION  // Build
+#define firmware VERSION // Build
 #else
-#define firmware "X.XX "  // Development
+#define firmware "X.XX " // Development
 #endif
 
 #ifdef YEAR
 #define year YEAR // Build
 #else
-#define year "XXXX"  // Development
+#define year "XXXX" // Development
 #endif
 
 // http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1208715493/11
@@ -85,10 +84,10 @@ const unsigned char PS_128 = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);
 // used to debug various stuff :
 #define DEBUG 0
 #define DEBUG_looptime 0
-#define DEBUG_adc   0
-#define DEBUG_SRIO    0
-#define DEBUG_din      0
-#define DEBUG_dout     0
+#define DEBUG_adc 0
+#define DEBUG_SRIO 0
+#define DEBUG_din 0
+#define DEBUG_dout 0
 #define DEBUG_serialout 0
 #define DEBUG_LCDparamvaluedescription 0
 #define DEBUG_softpanel 0
@@ -121,11 +120,11 @@ const unsigned char PS_128 = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);
 #define DEBUG_uEB 0
 #define DEBUG_CHORDM 0
 
-
 // LCD display defines
-#define  LCD_ROWS  2
-#define  LCD_COLS  20
-hd44780_pinIO lcd(44, 45, 40, 43, 41, 42); // lcd(RS, Enable, D4, D5, D6, D7) julien proto arduino (ne marche pas en 47/48) ... pour les 2 premieres entrées A4 A5 ok
+#define LCD_ROWS 2
+#define LCD_COLS 20
+// lcd(RS, Enable, D4, D5, D6, D7) julien proto arduino (ne marche pas en 47/48) ... pour les 2 premieres entrées A4 A5 ok
+hd44780_pinIO lcd(44, 45, 40, 43, 41, 42);
 #define HD44780_LCDOBJECT
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -163,28 +162,15 @@ bool send_stop;
 bool send_continue;
 bool send_tick;
 unsigned char bpm;
-unsigned char systmClock; // midi clock choice for a patch : INTernal, MIDi external, s24 SYNC24, Trg TRIGGER jack, mTg midi trigger cannel 10 cowbell pitch
+unsigned char systmClock; // midi clock choice for a patch
 unsigned char patch_clock; // system midi clock choice. can be chosen in a patch
 bool localControl;
 
 // set bit to control cd4051 S0 S1 S2 :
-byte controlPins[] = {
-  B00000000,
-  B10000000,
-  B01000000,
-  B11000000,
-  B00100000,
-  B10100000,
-  B01100000,
-  B11100000
-};
+byte controlPins[] = {B00000000, B10000000, B01000000, B11000000, B00100000, B10100000, B01100000, B11100000};
 
 // function to select pin on 74HC4067/4051
-void setPin(byte outputPin)
-{
-  PORTA = controlPins[outputPin];
-}
-
+void setPin(byte outputPin) { PORTA = controlPins[outputPin]; }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // MIDI INTERFACE DECLARATIONS
@@ -200,8 +186,8 @@ void setPin(byte outputPin)
 // alternative :
 // http://www.pjrc.com/teensy/td_libs_AltSoftSerial.html
 #if SOFTSERIAL_ENABLED
-SoftwareSerial mSerial4 (A12, A13); // MIDI4 in out
-SoftwareSerial mSerial5 (A14, A15); // MIDI5 in out
+SoftwareSerial mSerial4(A12, A13); // MIDI4 in out
+SoftwareSerial mSerial5(A14, A15); // MIDI5 in out
 #endif
 /*
    Some boards, like Teensy, Teensy++ and Arduino Mega, have more than 1 timer
@@ -238,8 +224,8 @@ struct smallSysEx : public MIDI_NAMESPACE::DefaultSettings
   static const unsigned SysExMaxSize = 32;
 };
 
-MIDI_CREATE_CUSTOM_INSTANCE(HardwareSerial, Serial1, MIDI3,  MatrixCtrlrSettings); // CORE DIN Midi
-MIDI_CREATE_CUSTOM_INSTANCE(HardwareSerial, Serial3, MIDI1,  Matrix1000Settings); // A DIN Midi
+MIDI_CREATE_CUSTOM_INSTANCE(HardwareSerial, Serial1, MIDI3, MatrixCtrlrSettings); // CORE DIN Midi
+MIDI_CREATE_CUSTOM_INSTANCE(HardwareSerial, Serial3, MIDI1, Matrix1000Settings); // A DIN Midi
 //MIDI_CREATE_INSTANCE(HardwareSerial, Serial3, MIDI1); // RX3 TX3 port A
 MIDI_CREATE_CUSTOM_INSTANCE(HardwareSerial, Serial2, MIDI2, smallSysEx); // port B DIN
 // MIDI_CREATE_CUSTOM_INSTANCE(HardwareSerial, Serial, midiUSB, Matrix1000Settings); // USB with HIDuino on m16u2 !
@@ -288,7 +274,7 @@ void setup()
   delay(1000); // let arduino wake up ;)
 
   // set up the ADC :
-  ADCSRA &= ~PS_128;  // remove bits set by Arduino library
+  ADCSRA &= ~PS_128; // remove bits set by Arduino library
   // you can choose a prescaler from above : PS_16, PS_32, PS_64 or PS_128
   //  ADCSRA |= PS_64;    // set our own prescaler to 64 if pots 100KB
   ADCSRA |= PS_32; // 32 prescaler if pots 10 KB
@@ -296,9 +282,9 @@ void setup()
 
 #if FASTADC
   // set prescale to 16
-  sbi(ADCSRA, ADPS2) ;
-  cbi(ADCSRA, ADPS1) ;
-  cbi(ADCSRA, ADPS0) ;
+  sbi(ADCSRA, ADPS2);
+  cbi(ADCSRA, ADPS1);
+  cbi(ADCSRA, ADPS0);
 #endif
 
   // CONFIGURE SERIAL DEBUG
@@ -382,7 +368,7 @@ void loop()
 #endif
 
   // first, read midi !
-  MIDI3.read();  // NRT : stable 2/4/2016 // Core IN
+  MIDI3.read(); // NRT : stable 2/4/2016 // Core IN
   MIDI1.read(); // Matrix A IN
 
   /*
@@ -439,13 +425,11 @@ void loop()
   InitFlag = 0;
   booting = 0;
 
-  
 #if DEBUG_looptime
   looptime1 = micros();
-  Serial.print (F("looptime (usec) : "));
+  Serial.print(F("looptime (usec) : "));
   Serial.println(looptime1 - looptime);
 #endif
-
 }
 
 /// --------------------------
@@ -477,7 +461,8 @@ void Ticker(void)
 void software_Reboot()
 {
   // reboot system :
-  Serial.println(F("rebooting system / software_Reboot() ")); Serial.println();
+  Serial.println(F("rebooting system / software_Reboot() "));
+  Serial.println();
   delay(200);
 
   // print temp message on display
@@ -487,7 +472,5 @@ void software_Reboot()
 
   wdt_enable(WDTO_1S);
 
-  while (1)
-  {
-  }
+  while (1) {}
 }
