@@ -10,7 +10,7 @@ app_flags_t app_flags;
 // affichage démarage du firmware
 ///////////////////////////////////////////////////////////
 void Display_FW(void) {
-  lcd.setCursor(0, 0); lcd.print(F("ALPES MACHINES 2017 "));
+  lcd.setCursor(0, 0); lcd.print(F("ALPES MACHINES ")); lcd.print(year);
   lcd.setCursor(0, 1); lcd.print(F("Matrix Ctrlr ")); lcd.print(firmware);
   delay(255); // to read it ^^
   //LCD_Clear(); // flush lcd

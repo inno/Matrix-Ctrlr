@@ -7,12 +7,13 @@ arduino-cli core update-index
 arduino-cli core install arduino:avr
 
 VERSION="9.99"
+YEAR=$(date -I | cut -d- -f1)
 
 echo "Compiling ${VERSION}..."
 arduino-cli compile \
     --fqbn arduino:avr:mega \
     --libraries lib \
-    --build-property compiler.cpp.extra_flags="'-DVERSION=\"${VERSION}\"'" \
+    --build-property compiler.cpp.extra_flags="'-DVERSION=\"${VERSION}\"' '-DYEAR=\"${YEAR}\"'" \
     --export-binaries \
     main
 

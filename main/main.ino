@@ -60,6 +60,12 @@
 #define firmware "X.XX "  // Development
 #endif
 
+#ifdef YEAR
+#define year YEAR // Build
+#else
+#define year "XXXX"  // Development
+#endif
+
 // http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1208715493/11
 #define FASTADC 0 // à essayer à 1 plus tard quand les ain non utilisés seront reliés à la masse
 //defines for setting and clearing register bits
