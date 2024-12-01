@@ -30,26 +30,20 @@ void LivePanel_DinHandler(unsigned char pin)
   {
     //////////// DCO1 /////////
     case DIN_DCO1_CLICK: // click
-      // toggle its on/off state at the bit level
-      EditBuffer[device][EB_OSC1_CLICK] ^= (1 << BIT0);
+      EditBuffer[device][EB_OSC1_CLICK] ^= (1 << BIT0); // toggle its on/off state at the bit level
       DOUT_PinSet(dout_pin, EditBuffer[device][EB_OSC1_CLICK]);
       MIDI_SendVoiceParam(INTERFACE_SERIAL, SX_OSC1_CLICK, EditBuffer[device][EB_OSC1_CLICK], mThru_XCc);
       break;
 
     case DIN_DCO1_WAVE: // wave
-      // toggle its on/off state at the bit level
-      EditBuffer[device][EB_OSC1_WAVEFORM] ^= (1 << BIT1);
-      //val = EditBuffer[device][EB_OSC1_WAVEFORM];
+      EditBuffer[device][EB_OSC1_WAVEFORM] ^= (1 << BIT1); // toggle its on/off state at the bit level
       // set the LED to the value of the bit change above
       DOUT_PinSet(dout_pin, (EditBuffer[device][EB_OSC1_WAVEFORM] & (1 << BIT1)) != 0);
       MIDI_SendVoiceParam(INTERFACE_SERIAL, SX_OSC1_WAVEFORM, EditBuffer[device][EB_OSC1_WAVEFORM], mThru_XCc);
       break;
 
     case DIN_DCO1_PULSE: // pulse
-      //Osc_Pulse_Modulate[DCO1] = 0;
-      // toggle its on/off state at the bit level
-      EditBuffer[device][EB_OSC1_WAVEFORM] ^= (1 << BIT0);
-      //val = EditBuffer[device][EB_OSC1_WAVEFORM];
+      EditBuffer[device][EB_OSC1_WAVEFORM] ^= (1 << BIT0); // toggle its on/off state at the bit level
       // set the LED to the value of the bit change above
       DOUT_PinSet(dout_pin, (EditBuffer[device][EB_OSC1_WAVEFORM] & (1 << BIT0)) != 0);
       MIDI_SendVoiceParam(INTERFACE_SERIAL, SX_OSC1_WAVEFORM, EditBuffer[device][EB_OSC1_WAVEFORM], mThru_XCc);
@@ -57,17 +51,14 @@ void LivePanel_DinHandler(unsigned char pin)
 
     //////////// DCO2 /////////
     case DIN_DCO2_CLICK: // click only
-      // toggle its on/off state at the bit level
-      EditBuffer[device][EB_OSC2_CLICK] ^= (1 << BIT0);
+      EditBuffer[device][EB_OSC2_CLICK] ^= (1 << BIT0); // toggle its on/off state at the bit level
       DOUT_PinSet(dout_pin, EditBuffer[device][EB_OSC2_CLICK]);
       MIDI_SendVoiceParam(INTERFACE_SERIAL, SX_OSC2_CLICK, EditBuffer[device][EB_OSC2_CLICK], mThru_XCc);
       break;
 
     case DIN_DCO2_WAVE: // wave
       if (EditBuffer[device][EB_OSC2_WAVEFORM] > 3) // if we have noisebit set (EB=4 or EB=5 or EB=6) -> quit
-      {
         return;
-      }
       else
       {
         // toggle its on/off state at the bit level
@@ -85,17 +76,10 @@ void LivePanel_DinHandler(unsigned char pin)
       // https://www.arduino.cc/en/Reference/BitClear
       switch (EditBuffer[device][EB_OSC2_WAVEFORM])
       {
-        // if it is off (000) then pulse = 1 (bit0)
-        case 0: bitSet(EditBuffer[device][EB_OSC2_WAVEFORM], BIT0); break;
-
-        // if it is pulse (001) then it becomes noise (bit2=1)
-        case 1: bitSet(EditBuffer[device][EB_OSC2_WAVEFORM], BIT2); break;
-
-        // if it is wave (010) then it becomes wave+pulse (bit0=1)
-        case 2: bitSet(EditBuffer[device][EB_OSC2_WAVEFORM], BIT0); break;
-
-        // if it wave+pulse (011) then it becomes noise (bit2=1)
-        case 3: bitSet(EditBuffer[device][EB_OSC2_WAVEFORM], BIT2); break;
+        case 0: bitSet(EditBuffer[device][EB_OSC2_WAVEFORM], BIT0); break; // off (000) then pulse = 1 (bit0)
+        case 1: bitSet(EditBuffer[device][EB_OSC2_WAVEFORM], BIT2); break; // pulse (001) then noise (bit2=1)
+        case 2: bitSet(EditBuffer[device][EB_OSC2_WAVEFORM], BIT0); break; // wave (010) then wave+pulse (bit0=1)
+        case 3: bitSet(EditBuffer[device][EB_OSC2_WAVEFORM], BIT2); break; // wave+pulse (011) then noise (bit2=1)
 
         // if it is noise (100 or 110 or 111) then set bit noise to zero (bit2 = 0) and pulse to zero(bit0=0-
         case 4: bitClear(EditBuffer[device][EB_OSC2_WAVEFORM], BIT2); bitClear(EditBuffer[device][EB_OSC2_WAVEFORM], BIT0); break;
@@ -104,45 +88,34 @@ void LivePanel_DinHandler(unsigned char pin)
         case 7: bitClear(EditBuffer[device][EB_OSC2_WAVEFORM], BIT2); bitClear(EditBuffer[device][EB_OSC2_WAVEFORM], BIT0); break;
         default: break;
       }
-      //      // toggle its on/off state at the bit level
-      //      EditBuffer[device][EB_OSC2_WAVEFORM] ^= (1 << BIT0);
-      //      // set the LED to the value of the bit change above
+      // set the LED to the value of the bit change above
       DOUT_PinSet(dout_pin, (EditBuffer[device][EB_OSC2_WAVEFORM] & (1 << BIT0)) != 0);
       DOUT_PinSet(DOUT_DCO2_WAVE, (EditBuffer[device][EB_OSC2_WAVEFORM] & (1 << BIT1)) != 0);
       MIDI_SendVoiceParam(INTERFACE_SERIAL, SX_OSC2_WAVEFORM, EditBuffer[device][EB_OSC2_WAVEFORM], mThru_XCc);
       break;
 
-
-
     case DIN_DCO_SYNC: //DCO1 Sync Toggle
       EditBuffer[device][EB_OSC_SYNCMODE]++;
-      if (EditBuffer[device][EB_OSC_SYNCMODE] > 3) {
+      if (EditBuffer[device][EB_OSC_SYNCMODE] > 3)
         EditBuffer[device][EB_OSC_SYNCMODE] = 0;
-      }
       // set the LED to the value if we are > 0
       DOUT_PinSet(dout_pin, (EditBuffer[device][EB_OSC_SYNCMODE] > 0) ? DIN_STATE_ON : DIN_STATE_OFF);
       MIDI_SendVoiceParam(INTERFACE_SERIAL, SX_OSC_SYNCMODE, EditBuffer[device][EB_OSC_SYNCMODE], mThru_XCc);
       break;
 
-
     case DIN_LFO1_WAVESELECT: // LFO Wave Select
       EditBuffer[device][EB_LFO1_WAVESHAPE]++;
       if (EditBuffer[device][EB_LFO1_WAVESHAPE] > 6)
-      {
         EditBuffer[device][EB_LFO1_WAVESHAPE] = 0;
-      }
       MIDI_SendVoiceParam(INTERFACE_SERIAL, SX_LFO1_WAVESHAPE, EditBuffer[device][EB_LFO1_WAVESHAPE], mThru_XCc);
       break;
 
     case DIN_LFO2_WAVESELECT: // LFO Wave Select
       EditBuffer[device][EB_LFO2_WAVESHAPE]++;
       if (EditBuffer[device][EB_LFO2_WAVESHAPE] > 6)
-      {
         EditBuffer[device][EB_LFO2_WAVESHAPE] = 0;
-      }
       MIDI_SendVoiceParam(INTERFACE_SERIAL, SX_LFO2_WAVESHAPE, EditBuffer[device][EB_LFO2_WAVESHAPE], mThru_XCc);
       break;
-
 
     case DIN_PATCH:
       SendEditBuffer(device, INTERFACE_SERIAL);
@@ -152,7 +125,6 @@ void LivePanel_DinHandler(unsigned char pin)
       break;
   }
   elapsedTime = 0; // for the RestTmpMsg function
-
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -164,7 +136,6 @@ void LivePanel_DisplayDin (unsigned char pin) // , unsigned char value
   RefreshSoftPanel = 1; // soft panel display may have been overwritten, make sure it completely refreshes on a button click
 
   switch (pin) {
-
     case DIN_LFO1_WAVESELECT: // LFO1 Wave Select Pin
       lcd.setCursor(4, 0);
       lcd.print(strcpy_P(bufferProgmem, (PGM_P)pgm_read_word(&(DinDescription [pin]))));
@@ -184,7 +155,6 @@ void LivePanel_DisplayDin (unsigned char pin) // , unsigned char value
       break;
 
     case DIN_DCO_SYNC: // DCO Sync Mode
-      //      LCD_DisplayParamDescription(DIN_ConfigMap[pin].description);
       lcd.setCursor(4, 0);
       lcd.print(strcpy_P(bufferProgmem, (PGM_P)pgm_read_word(&(DinDescription [pin]))));
       LCD_DisplayEditBufferOrig(EditBufferOrig[EB_OSC_SYNCMODE], UNSIGNED7);
@@ -192,7 +162,6 @@ void LivePanel_DisplayDin (unsigned char pin) // , unsigned char value
       lcd.setCursor(4, 1);
       lcd.print(strcpy_P(bufferProgmem, (PGM_P)pgm_read_word(&(SyncModes[EditBuffer[device][EB_OSC_SYNCMODE]]))));
       break;
-
 
     case DIN_DCO1_WAVE: // DCO1
     case DIN_DCO1_PULSE:
@@ -225,7 +194,6 @@ void LivePanel_DisplayDin (unsigned char pin) // , unsigned char value
       break;
 
     case DIN_DCO2_CLICK: // DCO2 Click
-      //      LCD_DisplayParamDescription(DIN_ConfigMap[pin].description);
       lcd.setCursor(4, 0);
       lcd.print(strcpy_P(bufferProgmem, (PGM_P)pgm_read_word(&(DinDescription [pin]))));
       LCD_DisplayEditBufferOrig(EditBufferOrig[EB_OSC2_CLICK], UNSIGNED7);
@@ -240,7 +208,6 @@ void LivePanel_DisplayDin (unsigned char pin) // , unsigned char value
       break;
 
   }
-  //  UpdateDinStates(); // NE PAS METTRE PLANTE LE TRUC
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -255,9 +222,7 @@ void LivePanel_BlinkLFOs(void)
 
   // lfo 1
   if (lfo1_blinkcounter < 62 - EditBuffer[device][EB_LFO1_SPEED])
-  {
     lfo1_blinkcounter++;
-  }
   else
   {
     DOUT_PinSet(DOUT_LFO1_WAVESELECT, (DOUT_PinGet(DOUT_LFO1_WAVESELECT) == DIN_STATE_ON) ? DIN_STATE_OFF : DIN_STATE_ON);
@@ -266,9 +231,7 @@ void LivePanel_BlinkLFOs(void)
 
   // lfo 2
   if (lfo2_blinkcounter < 62 - EditBuffer[device][EB_LFO2_SPEED])
-  {
     lfo2_blinkcounter++;
-  }
   else
   {
     DOUT_PinSet(DOUT_LFO2_WAVESELECT, (DOUT_PinGet(DOUT_LFO2_WAVESELECT) == DIN_STATE_ON) ? DIN_STATE_OFF : DIN_STATE_ON);
@@ -296,52 +259,18 @@ void LivePanel_BlinkLEDs(void)
     MIDI_Incoming = 0;
   }
   else if (DOUT_PinGet(DOUT_ACTIVITY) == DIN_STATE_ON)
-  {
     DOUT_PinSet(DOUT_ACTIVITY, DIN_STATE_OFF);
-  }
-  else
-  {
-    // nope
-  }
-
-//  --> managed in the interrupt now (fw 1.12)
-// // external trigger TR707 
-//  if (trigger && (systmClock == TRGCLK))
-//  {
-//    DOUT_PinSet(DOUT_ACTIVITY2, DIN_STATE_ON);
-//    //DOUT_PinSet(DOUT_ARP, DIN_STATE_ON); // nuit à la compréhension
-//
-//    trigger = 0;
-//  }
-//  else if ((DOUT_PinGet(DOUT_ACTIVITY2) == DIN_STATE_ON) && (systmClock == TRGCLK))
-//  {
-//    DOUT_PinSet(DOUT_ACTIVITY2, DIN_STATE_OFF);
-//    //DOUT_PinSet(DOUT_ARP, DIN_STATE_OFF); // nuit à compréhension
-//
-//  }
-//  else
-//  {
-//    // nope
-//  }
 
   // SHIFT BUTTON LED (On if Pressed, Off when released)
   if (Shift)
-  {
     DOUT_PinSet(DOUT_SHIFT, DIN_STATE_ON);
-  }
   else if (DOUT_PinGet(DOUT_SHIFT) == DIN_STATE_ON)
-  {
     DOUT_PinSet(DOUT_SHIFT, DIN_STATE_OFF);
-  }
 
   if (Alt)
-  {
     DOUT_PinSet(DOUT_ALT, DIN_STATE_ON);
-  }
   else if (DOUT_PinGet(DOUT_ALT) == DIN_STATE_ON)
-  {
     DOUT_PinSet(DOUT_ALT, DIN_STATE_OFF);
-  }
 
   // blink the LEDs below at the same speed
   if (led_blinkcounter > LED_BLINK_SPEED)
@@ -354,9 +283,7 @@ void LivePanel_BlinkLEDs(void)
 
     // blink ARP led if sequenciate or arpegiate
     if (ui_seqPlay || router_arp_tag)
-    {
       DOUT_PinSet(DOUT_ARP, (DOUT_PinGet(DOUT_ARP) == DIN_STATE_ON) ? DIN_STATE_OFF : DIN_STATE_ON);
-    }
 
     led_blinkcounter = 0;
   }
@@ -367,13 +294,11 @@ void LivePanel_BlinkLEDs(void)
   {
     // blink SYNC Led is Hard or Harder :
     if (EditBuffer[device][EB_OSC_SYNCMODE] > 1)
-    {
       DOUT_PinSet(DOUT_OSC_SYNC, (DOUT_PinGet(DOUT_OSC_SYNC) == DIN_STATE_ON) ? DIN_STATE_OFF : DIN_STATE_ON);
-    }
 
     sync_blinkcounter = 0;
   }
-  ++sync_blinkcounter;
+  sync_blinkcounter++;
 
 
   if (F1F2_blinkcounter > (arp_div_index)) // arp_div_index instead of F1F2_BLINK_SPEED
@@ -393,13 +318,12 @@ void LivePanel_BlinkLEDs(void)
       DOUT_PinSet(DOUT_F2, DIN_STATE_ON);
     else if (ui_seqPlay && ui_toggleSeq)
       DOUT_PinSet(DOUT_F2, blink);
-
     else
       DOUT_PinSet(DOUT_F2, DIN_STATE_OFF);
 
     F1F2_blinkcounter = 0;
   }
-  ++F1F2_blinkcounter;
+  F1F2_blinkcounter++;
 }
 
 
@@ -421,19 +345,14 @@ void LivePanel_HandleAin(unsigned char pin , unsigned char pin_value)
   else
     MIDI_SendVoiceParam(INTERFACE_SERIAL, param, value, mThru_XCc);
 
-  if(SoftPanel.Mode != Cfg && MIDI_Incoming == false) {
-  //if(SoftPanel.Mode != Cfg && Serial3.peek() < 0) {
+  if(SoftPanel.Mode != Cfg && MIDI_Incoming == false)
     LivePanel_DisplayAin(pin, value); // don't show jittering pot value when setting JITTER in CFG/MISC
-    //app_flags.Display_Pot_Req = 1;
-  }
 
   // filter sustain is bugged, handle it here, and return
   if ((pin == POT_FILTER_SUSTAIN) && (Alt == 0)) // create bug on ENV3 AMP
   {
     if (FilterSustainMode == FILTER_ENV_MODE_HACKED)
-    {
       MIDI_SendSustainBuffer(value); // send the whole editbuffer with new param updated (HACK)
-    }
     else
     {
       lastvalue       = value; // signed converted value
@@ -446,9 +365,7 @@ void LivePanel_HandleAin(unsigned char pin , unsigned char pin_value)
 
   // should filter frequency send continuous controller messages?
   if (pin == POT_FILTER_FREQUENCY && FilterCutoffMode == FILTER_FREQ_MODE_CCONTROL)
-  {
     MIDI_Send_BreathController(INTERFACE_SERIAL, value);
-  }
   else
   {
     if (!is_transmit_delayed)
@@ -460,7 +377,6 @@ void LivePanel_HandleAin(unsigned char pin , unsigned char pin_value)
   lastvalue       = value; // signed converted value
   lastparam       = param;
   last_ain_pin    = pin;
-
   elapsedTime = 0; // for the RestTmpMsg function
 }
 
@@ -477,25 +393,24 @@ unsigned char getparam(unsigned char pin)
 ////////////////////////////////////////////////////////////////////////////
 //  Convert a pot to a matrix parameter value based on the PotConfigMap
 /////////////////////////////////////////////////////////////////////////////
-unsigned char getvalue(unsigned char pin, unsigned char valu)
+unsigned char getvalue(unsigned char pin, unsigned char value)
 {
-  unsigned char value = 0;
 #if DEBUG_pots
-  Serial.println(valu, DEC);
+  Serial.println(value, DEC);
 #endif
 
   // convert values for signed parameters
   switch (PotConfigMap[pin + Alt * 32].valtype)
   {
     case SIGNED7:
-      return Convert_7bit_Signed(valu);
+      return Convert_7bit_Signed(value);
     case SIGNED6:
-      return Convert_6bit_Signed(valu >> 1);
+      return Convert_6bit_Signed(value >> 1);
     case UNSIGNED7:
-      return valu;
+      return value;
     case UNSIGNED6:
     case MIXBALANCE:
-      return valu >> 1;
+      return value >> 1;
   }
   return 0;
 }
@@ -639,13 +554,9 @@ void LivePanel_DisplayAin( char param, byte value)
 
   ain_val = value;
   if (PotConfigMap[last_ain_pin + Alt * 32].param == SX_UNISON_DETUNE)
-  {
     LCD_DisplayEditBufferOrig(UnisonDetuneOrig, UNSIGNED6); // OK c'est bon :) 20/8/17, y a meme le msg temporaire
-  }
   else
-  {
     LCD_DisplayEditBufferOrig(EditBufferOrig[lastbyteindex], valtype);
-  }
   LCD_DisplayParamValue(ain_val, valtype);
 
   LCD_DisplayBarGraph(valtype, ain_val); // bouffe 0,8 K de RAM !!! https://zestedesavoir.com/tutoriels/374/gestion-de-la-memoire-sur-arduino/  : déjà la Macro F() dans les Serial.print
