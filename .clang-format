@@ -1,0 +1,68 @@
+BasedOnStyle:  GNU
+AlignAfterOpenBracket: false
+AlignTrailingComments:
+  Kind: Never
+AllowAllParametersOfDeclarationOnNextLine: false
+AlignConsecutiveShortCaseStatements:
+  Enabled: true
+  AcrossEmptyLines: true
+  AcrossComments: true
+  AlignCaseColons: true
+IndentCaseLabels: true
+AllowShortBlocksOnASingleLine: true
+AllowShortCaseLabelsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: All
+# Uncommenting these lines will sometimes result in lines following an
+# if(){} or for(){} block being attached to the end of the block.
+# AllowShortIfStatementsOnASingleLine: true
+# AllowShortLoopsOnASingleLine: true
+AlwaysBreakAfterDefinitionReturnType: None
+AlwaysBreakAfterReturnType: None
+BreakArrays: false
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterClass:      true
+  AfterControlStatement: true
+  AfterEnum:       true
+  AfterFunction:   true
+  AfterNamespace:  true
+  AfterStruct:     true
+  AfterUnion:      true
+  AfterExternBlock: true
+  BeforeCatch:     true
+  BeforeElse:      true
+  IndentBraces:    false
+  SplitEmptyFunction: false
+  SplitEmptyRecord: false
+  SplitEmptyNamespace: false
+BreakStringLiterals: false
+ContinuationIndentWidth: 2
+Cpp11BracedListStyle: true
+KeepEmptyLinesAtTheStartOfBlocks: false
+Language:        Cpp
+MaxEmptyLinesToKeep: 1
+NamespaceIndentation: All
+PenaltyExcessCharacter: 120
+PenaltyReturnTypeOnItsOwnLine: 1
+ColumnLimit:  150
+# PenaltyBreakAssignment: 100
+PointerAlignment: Right
+ReflowComments: false
+SortIncludes: false
+SpaceBeforeParens: Custom
+SpaceBeforeParensOptions:
+  AfterControlStatements: true
+  AfterForeachMacros: false
+  AfterFunctionDefinitionName: false
+  AfterFunctionDeclarationName: false
+  AfterIfMacros:   false
+  AfterOverloadedOperator: false
+  AfterPlacementOperator: true
+  AfterRequiresInClause: false
+  AfterRequiresInExpression: false
+  BeforeNonEmptyParentheses: false
+SpacesInContainerLiterals: false
+SpacesInLineCommentPrefix:
+  Minimum: 0
+  Maximum: -1
+Standard:        Cpp11
