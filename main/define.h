@@ -34,11 +34,11 @@
 #define SYNC24_Pin A10
 
 #define SYSCLK -1
-#define MIDCLK 1
-#define S24CLK 2
-#define TRGCLK 3
-#define MTRGCLK 4
-#define INTCLK 0
+#define MIDCLK 1 // MIDi external
+#define S24CLK 2 // s24 SYNC24
+#define TRGCLK 3 // Trg TRIGGER jack
+#define MTRGCLK 4 // mTg midi trigger cannel 10 cowbell pitch
+#define INTCLK 0 // INTernal
 
 #define MIDI_TRIGGER_NOTE 37 // 37 = rimshot
 #define MIDI_DRUMS_CHANNEL 10
