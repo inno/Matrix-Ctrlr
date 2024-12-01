@@ -97,6 +97,7 @@ const unsigned char PS_128 = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);
 #define DEBUG_encoder 0
 #define DEBUG_device 0
 #define DEBUG_midi 0
+#define DEBUG_pots 0
 #define DEBUG_router 0
 #define DEBUG_sysexhandler 0 // put to zero to allow bank damp without computer Serial is to long and bug the trick
 #define DEBUG_sysexbankhandler 0
@@ -118,7 +119,7 @@ const unsigned char PS_128 = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);
 #define DEBUG_factory 0
 #define DEBUG_wizz 0
 #define DEBUG_uEB 0
-#define DEBUG_CHORDM 1
+#define DEBUG_CHORDM 0
 
 
 // LCD display defines

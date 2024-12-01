@@ -480,34 +480,24 @@ unsigned char getparam(unsigned char pin)
 unsigned char getvalue(unsigned char pin, unsigned char valu)
 {
   unsigned char value = 0;
+#if DEBUG_pots
+  Serial.println(valu, DEC);
+#endif
 
   // convert values for signed parameters
   switch (PotConfigMap[pin + Alt * 32].valtype)
   {
     case SIGNED7:
-      //value = Convert_7bit_Signed(value);
-      value = Convert_7bit_Signed(valu);
-      break;
-
+      return Convert_7bit_Signed(valu);
     case SIGNED6:
-      //value = Convert_6bit_Signed(value);
-      value = Convert_6bit_Signed(valu >> 1);
-      break;
-
+      return Convert_6bit_Signed(valu >> 1);
     case UNSIGNED7:
-      value = valu;
-      break;
-
+      return valu;
     case UNSIGNED6:
     case MIXBALANCE:
-      value = valu >> 1;
-      break;
-
-    default :
-      break;
+      return valu >> 1;
   }
-  Serial.println(valu, DEC);
-  return value;
+  return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////
