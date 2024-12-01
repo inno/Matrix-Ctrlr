@@ -827,7 +827,7 @@ void SendPatchInit(unsigned char  interface)
   if (polyChain)
     PolySendSysex(sysex);
   else
-    MIDI_SendSysex(interface, sysex);
+    MIDI_SendSysex(interface, sysex, sizeof(sysex));
 
 #if DEBUG_serialout
   // print debug sysex +
@@ -898,7 +898,7 @@ void SendEditBufferSingle(unsigned char device, unsigned char interface)
     MIDI_SendPatchProgram(interface, 0);
   }
 
-  MIDI_SendSysex(interface, sysex);
+  MIDI_SendSysex(interface, sysex, sizeof(sysex));
 
 
   // turn on Matrix 6 in Patch Edit Quick mode:
@@ -966,7 +966,7 @@ void SendEditBufferOrig(unsigned char  interface)
   if (polyChain)
     PolySendSysex(sysex);
   else
-    MIDI_SendSysex(interface, sysex);
+    MIDI_SendSysex(interface, sysex, sizeof(sysex));
 
 
 #if DEBUG_serialout
@@ -1013,7 +1013,7 @@ void SendSinglePatchData(unsigned char interface, unsigned char patch_num)
   sysex[273] = checksum & 0x7f;
   sysex[274] = 0xf7;
 
-  MIDI_SendSysex(interface, sysex);
+  MIDI_SendSysex(interface, sysex, sizeof(sysex));
 
 
 #if DEBUG_serialout
@@ -1059,7 +1059,7 @@ void SendSingleUnison(unsigned char interface, unsigned char number)
   sysex[7] = checksum & 0x7f;
   sysex[8] = 0xf7;
 
-  MIDI_SendSysex(interface, sysex);
+  MIDI_SendSysex(interface, sysex, sizeof(sysex));
 
 
 #if DEBUG_serialout
@@ -1124,7 +1124,7 @@ void SendSingleArpData(unsigned char interface, unsigned char number)
   sysex[141] = checksum & 0x7f;
   sysex[142] = 0xf7;
 
-  MIDI_SendSysex(interface, sysex);
+  MIDI_SendSysex(interface, sysex, sizeof(sysex));
 
 
 #if DEBUG_serialout
@@ -1181,7 +1181,7 @@ void SendGlobalParametersInit(unsigned char interface)
   sysex[349] = checksum & 0x7f;
   sysex[350] = 0xf7;
 
-  MIDI_SendSysex(interface, sysex);
+  MIDI_SendSysex(interface, sysex, sizeof(sysex));
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1247,7 +1247,7 @@ void SendGlobalParameters(unsigned char interface)
   if (polyChain)
     PolySendSysex(sysex);
   else
-    MIDI_SendSysex(interface, sysex);
+    MIDI_SendSysex(interface, sysex, sizeof(sysex));
 }
 
 //////////////////////////////////////////////////////////
@@ -1320,7 +1320,7 @@ void StoreEditBuffer(unsigned char interface, unsigned char bank, unsigned char 
   sysex[7] = 0x7f;
   sysex[8] = 0xf7;
 
-  MIDI_SendSysex(interface, sysex);
+  MIDI_SendSysex(interface, sysex, sizeof(sysex));
 
 
   // print a short msg on display :
@@ -1417,7 +1417,7 @@ void SendCtrlrSystemCfg(unsigned char interface)
   elapsedTime = 0;  //reset tmpMessage-
 
   // send sysex
-  MIDI_SendSysex(interface, sysex);
+  MIDI_SendSysex(interface, sysex, sizeof(sysex));
 
 
 #if DEBUG_midi
@@ -1453,7 +1453,7 @@ void MIDI_Rcv_Diagnostics(unsigned char interface, byte order1, byte order2)
     sysex[6] = 0x08;
 
     // send a midi response
-    MIDI_SendSysex(interface, sysex);
+    MIDI_SendSysex(interface, sysex, sizeof(sysex));
   }
   // other messages below
   // etc ..

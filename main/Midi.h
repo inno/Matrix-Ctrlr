@@ -7,7 +7,7 @@ extern bool MIDI_ReceivingBank;
 extern byte MIDI_CHANNEL;
 
 void MIDI_Init(void);
-extern void MIDI_SendSysex(unsigned char interface, const byte* sysex);
+extern void MIDI_SendSysex(unsigned char interface, const byte* sysex, unsigned int sysex_len);
 void MIDI_SendChannel(void);
 void MIDI_SendPatchProgram(unsigned char interface, unsigned char program);
 void MIDI_SendPatchProgramSingle(unsigned char interface, unsigned char program);
