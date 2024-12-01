@@ -8,15 +8,14 @@
 unsigned int transmit_counter;
 unsigned char is_transmit_delayed;
 
-unsigned char lastparam;        // last patch parameter number
-unsigned char lastvalue;        // signed converted value
-unsigned char lastbyteindex;    // edit buffer index of last patch parameter
+unsigned char lastparam; // last patch parameter number
+unsigned char lastvalue; // signed converted value
+unsigned char lastbyteindex; // edit buffer index of last patch parameter
 
 unsigned char last_ain_pin;
 
 unsigned char getparam(unsigned char pin);
 unsigned char getvalue(unsigned char pin);
-
 
 /////////////////////////////////////////////////////////////////////////////
 //  Transmit MIDI and update the edit buffer on the last button pushed
@@ -79,13 +78,27 @@ void LivePanel_DinHandler(unsigned char pin)
         case 0: bitSet(EditBuffer[device][EB_OSC2_WAVEFORM], BIT0); break; // off (000) then pulse = 1 (bit0)
         case 1: bitSet(EditBuffer[device][EB_OSC2_WAVEFORM], BIT2); break; // pulse (001) then noise (bit2=1)
         case 2: bitSet(EditBuffer[device][EB_OSC2_WAVEFORM], BIT0); break; // wave (010) then wave+pulse (bit0=1)
-        case 3: bitSet(EditBuffer[device][EB_OSC2_WAVEFORM], BIT2); break; // wave+pulse (011) then noise (bit2=1)
+        case 3:
+          bitSet(EditBuffer[device][EB_OSC2_WAVEFORM], BIT2);
+          break; // wave+pulse (011) then noise (bit2=1)
 
         // if it is noise (100 or 110 or 111) then set bit noise to zero (bit2 = 0) and pulse to zero(bit0=0-
-        case 4: bitClear(EditBuffer[device][EB_OSC2_WAVEFORM], BIT2); bitClear(EditBuffer[device][EB_OSC2_WAVEFORM], BIT0); break;
-        case 5: bitClear(EditBuffer[device][EB_OSC2_WAVEFORM], BIT2); bitClear(EditBuffer[device][EB_OSC2_WAVEFORM], BIT0); break;
-        case 6: bitClear(EditBuffer[device][EB_OSC2_WAVEFORM], BIT2); bitClear(EditBuffer[device][EB_OSC2_WAVEFORM], BIT0); break;
-        case 7: bitClear(EditBuffer[device][EB_OSC2_WAVEFORM], BIT2); bitClear(EditBuffer[device][EB_OSC2_WAVEFORM], BIT0); break;
+        case 4:
+          bitClear(EditBuffer[device][EB_OSC2_WAVEFORM], BIT2);
+          bitClear(EditBuffer[device][EB_OSC2_WAVEFORM], BIT0);
+          break;
+        case 5:
+          bitClear(EditBuffer[device][EB_OSC2_WAVEFORM], BIT2);
+          bitClear(EditBuffer[device][EB_OSC2_WAVEFORM], BIT0);
+          break;
+        case 6:
+          bitClear(EditBuffer[device][EB_OSC2_WAVEFORM], BIT2);
+          bitClear(EditBuffer[device][EB_OSC2_WAVEFORM], BIT0);
+          break;
+        case 7:
+          bitClear(EditBuffer[device][EB_OSC2_WAVEFORM], BIT2);
+          bitClear(EditBuffer[device][EB_OSC2_WAVEFORM], BIT0);
+          break;
         default: break;
       }
       // set the LED to the value of the bit change above
@@ -117,12 +130,9 @@ void LivePanel_DinHandler(unsigned char pin)
       MIDI_SendVoiceParam(INTERFACE_SERIAL, SX_LFO2_WAVESHAPE, EditBuffer[device][EB_LFO2_WAVESHAPE], mThru_XCc);
       break;
 
-    case DIN_PATCH:
-      SendEditBuffer(device, INTERFACE_SERIAL);
-      break;
+    case DIN_PATCH: SendEditBuffer(device, INTERFACE_SERIAL); break;
 
-    default:
-      break;
+    default       : break;
   }
   elapsedTime = 0; // for the RestTmpMsg function
 }
@@ -130,15 +140,16 @@ void LivePanel_DinHandler(unsigned char pin)
 /////////////////////////////////////////////////////////////////////////////
 //  Display info on the last button pushed
 /////////////////////////////////////////////////////////////////////////////
-void LivePanel_DisplayDin (unsigned char pin) // , unsigned char value
+void LivePanel_DisplayDin(unsigned char pin)
 {
   LCD_Clear(); // risque de foutre la merde dans les menus EDIT : pas du tout :)
   RefreshSoftPanel = 1; // soft panel display may have been overwritten, make sure it completely refreshes on a button click
 
-  switch (pin) {
+  switch (pin)
+  {
     case DIN_LFO1_WAVESELECT: // LFO1 Wave Select Pin
       lcd.setCursor(4, 0);
-      lcd.print(strcpy_P(bufferProgmem, (PGM_P)pgm_read_word(&(DinDescription [pin]))));
+      lcd.print(strcpy_P(bufferProgmem, (PGM_P)pgm_read_word(&(DinDescription[pin]))));
       LCD_DisplayEditBufferOrig(EditBufferOrig[EB_LFO1_WAVESHAPE] + 1, UNSIGNED7);
       LCD_DisplayParamValue(EditBuffer[device][EB_LFO1_WAVESHAPE] + 1, UNSIGNED7);
       lcd.setCursor(4, 1);
@@ -147,7 +158,7 @@ void LivePanel_DisplayDin (unsigned char pin) // , unsigned char value
 
     case DIN_LFO2_WAVESELECT: // LFO2 Wave Select Pin
       lcd.setCursor(4, 0);
-      lcd.print(strcpy_P(bufferProgmem, (PGM_P)pgm_read_word(&(DinDescription [pin]))));
+      lcd.print(strcpy_P(bufferProgmem, (PGM_P)pgm_read_word(&(DinDescription[pin]))));
       LCD_DisplayEditBufferOrig(EditBufferOrig[EB_LFO2_WAVESHAPE] + 1, UNSIGNED7);
       LCD_DisplayParamValue(EditBuffer[device][EB_LFO2_WAVESHAPE] + 1, UNSIGNED7);
       lcd.setCursor(4, 1);
@@ -156,7 +167,7 @@ void LivePanel_DisplayDin (unsigned char pin) // , unsigned char value
 
     case DIN_DCO_SYNC: // DCO Sync Mode
       lcd.setCursor(4, 0);
-      lcd.print(strcpy_P(bufferProgmem, (PGM_P)pgm_read_word(&(DinDescription [pin]))));
+      lcd.print(strcpy_P(bufferProgmem, (PGM_P)pgm_read_word(&(DinDescription[pin]))));
       LCD_DisplayEditBufferOrig(EditBufferOrig[EB_OSC_SYNCMODE], UNSIGNED7);
       LCD_DisplayParamValue(EditBuffer[device][EB_OSC_SYNCMODE], UNSIGNED7);
       lcd.setCursor(4, 1);
@@ -166,7 +177,7 @@ void LivePanel_DisplayDin (unsigned char pin) // , unsigned char value
     case DIN_DCO1_WAVE: // DCO1
     case DIN_DCO1_PULSE:
       lcd.setCursor(4, 0);
-      lcd.print(strcpy_P(bufferProgmem, (PGM_P)pgm_read_word(&(DinDescription [pin]))));
+      lcd.print(strcpy_P(bufferProgmem, (PGM_P)pgm_read_word(&(DinDescription[pin]))));
       LCD_DisplayEditBufferOrig(EditBufferOrig[EB_OSC1_WAVEFORM], UNSIGNED7);
       LCD_DisplayParamValue(EditBuffer[device][EB_OSC1_WAVEFORM], UNSIGNED7);
       lcd.setCursor(4, 1);
@@ -177,7 +188,7 @@ void LivePanel_DisplayDin (unsigned char pin) // , unsigned char value
     case DIN_DCO2_WAVE: // DCO2
     case DIN_DCO2_PULSE:
       lcd.setCursor(4, 0);
-      lcd.print(strcpy_P(bufferProgmem, (PGM_P)pgm_read_word(&(DinDescription [pin]))));
+      lcd.print(strcpy_P(bufferProgmem, (PGM_P)pgm_read_word(&(DinDescription[pin]))));
       LCD_DisplayEditBufferOrig(EditBufferOrig[EB_OSC2_WAVEFORM], UNSIGNED7);
       LCD_DisplayParamValue(EditBuffer[device][EB_OSC2_WAVEFORM], UNSIGNED7);
       lcd.setCursor(4, 1);
@@ -186,7 +197,7 @@ void LivePanel_DisplayDin (unsigned char pin) // , unsigned char value
 
     case DIN_DCO1_CLICK: // DCO1 click
       lcd.setCursor(4, 0);
-      lcd.print(strcpy_P(bufferProgmem, (PGM_P)pgm_read_word(&(DinDescription [pin]))));
+      lcd.print(strcpy_P(bufferProgmem, (PGM_P)pgm_read_word(&(DinDescription[pin]))));
       LCD_DisplayEditBufferOrig(EditBufferOrig[EB_OSC1_CLICK], UNSIGNED7);
       LCD_DisplayParamValue(EditBuffer[device][EB_OSC1_CLICK], UNSIGNED7);
       lcd.setCursor(4, 1);
@@ -195,7 +206,7 @@ void LivePanel_DisplayDin (unsigned char pin) // , unsigned char value
 
     case DIN_DCO2_CLICK: // DCO2 Click
       lcd.setCursor(4, 0);
-      lcd.print(strcpy_P(bufferProgmem, (PGM_P)pgm_read_word(&(DinDescription [pin]))));
+      lcd.print(strcpy_P(bufferProgmem, (PGM_P)pgm_read_word(&(DinDescription[pin]))));
       LCD_DisplayEditBufferOrig(EditBufferOrig[EB_OSC2_CLICK], UNSIGNED7);
       LCD_DisplayParamValue(EditBuffer[device][EB_OSC2_CLICK], UNSIGNED7);
       lcd.setCursor(4, 1);
@@ -204,9 +215,8 @@ void LivePanel_DisplayDin (unsigned char pin) // , unsigned char value
 
     default:
       lcd.setCursor(4, 0);
-      lcd.print(strcpy_P(bufferProgmem, (PGM_P)pgm_read_word(&(DinDescription [pin]))));
+      lcd.print(strcpy_P(bufferProgmem, (PGM_P)pgm_read_word(&(DinDescription[pin]))));
       break;
-
   }
 }
 
@@ -218,7 +228,8 @@ void LivePanel_BlinkLFOs(void)
   static unsigned char lfo1_blinkcounter;
   static unsigned char lfo2_blinkcounter;
 
-  if (inTest && booting) return;
+  if (inTest && booting)
+    return;
 
   // lfo 1
   if (lfo1_blinkcounter < 62 - EditBuffer[device][EB_LFO1_SPEED])
@@ -249,7 +260,8 @@ void LivePanel_BlinkLEDs(void)
   static unsigned char F1F2_blinkcounter;
   static bool blink;
 
-  if (inTest && booting) return;
+  if (inTest && booting)
+    return;
 
   // Is there a MIDI message incoming ?
   // MIDI ACTIVITY LED On/Off : OK :)
@@ -289,7 +301,6 @@ void LivePanel_BlinkLEDs(void)
   }
   led_blinkcounter++;
 
-
   if (sync_blinkcounter > (LED_BLINK_SPEED >> (EditBuffer[device][EB_OSC_SYNCMODE] - 2)))
   {
     // blink SYNC Led is Hard or Harder :
@@ -299,7 +310,6 @@ void LivePanel_BlinkLEDs(void)
     sync_blinkcounter = 0;
   }
   sync_blinkcounter++;
-
 
   if (F1F2_blinkcounter > (arp_div_index)) // arp_div_index instead of F1F2_BLINK_SPEED
   {
@@ -326,11 +336,10 @@ void LivePanel_BlinkLEDs(void)
   F1F2_blinkcounter++;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 //  Transmit MIDI on a pot change. Called directly from main::AIN_NotifyChange()
 /////////////////////////////////////////////////////////////////////////////
-void LivePanel_HandleAin(unsigned char pin , unsigned char pin_value)
+void LivePanel_HandleAin(unsigned char pin, unsigned char pin_value)
 {
   unsigned char param = 0;
   unsigned char value = 0;
@@ -345,7 +354,7 @@ void LivePanel_HandleAin(unsigned char pin , unsigned char pin_value)
   else
     MIDI_SendVoiceParam(INTERFACE_SERIAL, param, value, mThru_XCc);
 
-  if(SoftPanel.Mode != Cfg && MIDI_Incoming == false)
+  if (SoftPanel.Mode != Cfg && MIDI_Incoming == false)
     LivePanel_DisplayAin(pin, value); // don't show jittering pot value when setting JITTER in CFG/MISC
 
   // filter sustain is bugged, handle it here, and return
@@ -355,9 +364,9 @@ void LivePanel_HandleAin(unsigned char pin , unsigned char pin_value)
       MIDI_SendSustainBuffer(value); // send the whole editbuffer with new param updated (HACK)
     else
     {
-      lastvalue       = value; // signed converted value
-      lastparam       = param;
-      last_ain_pin    = pin;
+      lastvalue = value; // signed converted value
+      lastparam = param;
+      last_ain_pin = pin;
       elapsedTime = 0; // for the RestTmpMsg function
       return;
     }
@@ -374,9 +383,9 @@ void LivePanel_HandleAin(unsigned char pin , unsigned char pin_value)
       is_transmit_delayed = 1; // set the next request to delay
     }
   }
-  lastvalue       = value; // signed converted value
-  lastparam       = param;
-  last_ain_pin    = pin;
+  lastvalue = value; // signed converted value
+  lastparam = param;
+  last_ain_pin = pin;
   elapsedTime = 0; // for the RestTmpMsg function
 }
 
@@ -402,15 +411,11 @@ unsigned char getvalue(unsigned char pin, unsigned char value)
   // convert values for signed parameters
   switch (PotConfigMap[pin + Alt * 32].valtype)
   {
-    case SIGNED7:
-      return Convert_7bit_Signed(value);
-    case SIGNED6:
-      return Convert_6bit_Signed(value >> 1);
-    case UNSIGNED7:
-      return value;
-    case UNSIGNED6:
-    case MIXBALANCE:
-      return value >> 1;
+    case SIGNED7   : return Convert_7bit_Signed(value);
+    case SIGNED6   : return Convert_6bit_Signed(value >> 1);
+    case UNSIGNED7 : return value;
+    case UNSIGNED6 :
+    case MIXBALANCE: return value >> 1;
   }
   return 0;
 }
@@ -421,114 +426,119 @@ unsigned char getvalue(unsigned char pin, unsigned char value)
 void update_EditBuffer(unsigned char device, unsigned char param, unsigned char value)
 {
 #if DEBUG_uEB
-  Serial.print(F("update_EditBuffer(")); Serial.print(device, DEC); Serial.print(F(", "));
-  Serial.print(param, DEC); Serial.print(F(", "));
-  Serial.print(value, DEC); Serial.println(F(")"));
+  Serial.print(F("update_EditBuffer("));
+  Serial.print(device, DEC);
+  Serial.print(F(", "));
+  Serial.print(param, DEC);
+  Serial.print(F(", "));
+  Serial.print(value, DEC);
+  Serial.println(F(")"));
 #endif
 
   switch (param)
   {
-    case SX_ENV1_AMPBYVELO:              lastbyteindex = EB_ENV1_AMPBYVELO;             break;
-    case SX_ENV1_AMPLITUDE:              lastbyteindex = EB_ENV1_AMPLITUDE;             break;
-    case SX_ENV1_ATTACK:                 lastbyteindex = EB_ENV1_ATTACK;                break;
-    case SX_ENV1_DECAY:                  lastbyteindex = EB_ENV1_DECAY;                 break;
-    case SX_ENV1_DELAY:                  lastbyteindex = EB_ENV1_DELAY;                 break;
-    case SX_ENV1_LFOTRIGGERMODE:         lastbyteindex = EB_ENV1_LFOTRIGGERMODE;        break;
-    case SX_ENV1_RELEASE:                lastbyteindex = EB_ENV1_RELEASE;               break;
-    case SX_ENV1_RELEASEMODE:            lastbyteindex = EB_ENV1_RELEASEMODE;           break;
-    case SX_ENV1_SUSTAIN:                lastbyteindex = EB_ENV1_SUSTAIN;               break;
-    case SX_ENV1_TRIGGERMODE:            lastbyteindex = EB_ENV1_TRIGGERMODE;           break;
-    case SX_ENV2_AMPBYVELO:              lastbyteindex = EB_ENV2_AMPBYVELO;             break;
-    case SX_ENV2_AMPLITUDE:              lastbyteindex = EB_ENV2_AMPLITUDE;             break;
-    case SX_ENV2_ATTACK:                 lastbyteindex = EB_ENV2_ATTACK;                break;
-    case SX_ENV2_DECAY:                  lastbyteindex = EB_ENV2_DECAY;                 break;
-    case SX_ENV2_DELAY:                  lastbyteindex = EB_ENV2_DELAY;                 break;
-    case SX_ENV2_LFOTRIGGERMODE:         lastbyteindex = EB_ENV2_LFOTRIGGERMODE;        break;
-    case SX_ENV2_RELEASE:                lastbyteindex = EB_ENV2_RELEASE;               break;
-    case SX_ENV2_RELEASEMODE:            lastbyteindex = EB_ENV2_RELEASEMODE;           break;
-    case SX_ENV2_SUSTAIN:                lastbyteindex = EB_ENV2_SUSTAIN;               break;
-    case SX_ENV2_TRIGGERMODE:            lastbyteindex = EB_ENV2_TRIGGERMODE;           break;
-    case SX_ENV3_AMPBYVELO:              lastbyteindex = EB_ENV3_AMPBYVELO;             break;
-    case SX_ENV3_AMPLITUDE:              lastbyteindex = EB_ENV3_AMPLITUDE;             break;
-    case SX_ENV3_ATTACK:                 lastbyteindex = EB_ENV3_ATTACK;                break;
-    case SX_ENV3_DECAY:                  lastbyteindex = EB_ENV3_DECAY;                 break;
-    case SX_ENV3_DELAY:                  lastbyteindex = EB_ENV3_DELAY;                 break;
-    case SX_ENV3_LFOTRIGGERMODE:         lastbyteindex = EB_ENV3_LFOTRIGGERMODE;        break;
-    case SX_ENV3_RELEASE:                lastbyteindex = EB_ENV3_RELEASE;               break;
-    case SX_ENV3_RELEASEMODE:            lastbyteindex = EB_ENV3_RELEASEMODE;           break;
-    case SX_ENV3_SUSTAIN:                lastbyteindex = EB_ENV3_SUSTAIN;               break;
-    case SX_ENV3_TRIGGERMODE:            lastbyteindex = EB_ENV3_TRIGGERMODE;           break;
-    case SX_FILTER_FMBYENV3:             lastbyteindex = EB_FILTER_FMBYENV3;            break;
-    case SX_FILTER_FMBYPRESSURE:         lastbyteindex = EB_FILTER_FMBYPRESSURE;        break;
-    case SX_FILTER_FM_AMOUNT:            lastbyteindex = EB_FILTER_FM_AMOUNT;           break;
-    case SX_FILTER_FREQ:                 lastbyteindex = EB_FILTER_FREQ;                break;
-    case SX_FILTER_FREQBYENV1AMOUNT:     lastbyteindex = EB_FILTER_FREQBYENV1AMOUNT;    break;
-    case SX_FILTER_FREQBYPRESSURE:       lastbyteindex = EB_FILTER_FREQBYPRESSURE;      break;
-    case SX_FILTER_KEYBOARDMOD:          lastbyteindex = EB_FILTER_KEYBOARDMOD;         break;
-    case SX_FILTER_LEVERMOD:             lastbyteindex = EB_FILTER_LEVERMOD;            break;
-    case SX_FILTER_RESONANCE:            lastbyteindex = EB_FILTER_RESONANCE;           break;
-    case SX_KEYBOARD_MODE:               lastbyteindex = EB_KEYBOARD_MODE;              break;
-    case SX_LFO1_AMPLITUDE:              lastbyteindex = EB_LFO1_AMPLITUDE;             break;
-    case SX_LFO1_AMPMODULATION:          lastbyteindex = EB_LFO1_AMPMODULATION;         break;
-    case SX_LFO1_LAGENABLE:              lastbyteindex = EB_LFO1_LAGENABLE;             break;
-    case SX_LFO1_RETRIGGERPOINT:         lastbyteindex = EB_LFO1_RETRIGGERPOINT;        break;
-    case SX_LFO1_SAMPLEDSOURCE:          lastbyteindex = EB_LFO1_SAMPLEDSOURCE;         break;
-    case SX_LFO1_SPEED:                  lastbyteindex = EB_LFO1_SPEED;                 break;
-    case SX_LFO1_SPEEDMODULATION:        lastbyteindex = EB_LFO1_SPEEDMODULATION;       break;
-    case SX_LFO1_TRIGGERMODE:            lastbyteindex = EB_LFO1_TRIGGERMODE;           break;
-    case SX_LFO1_WAVESHAPE:              lastbyteindex = EB_LFO1_WAVESHAPE;             break;
-    case SX_LFO2_AMPLITUDE:              lastbyteindex = EB_LFO2_AMPLITUDE;             break;
-    case SX_LFO2_AMPMODULATION:          lastbyteindex = EB_LFO2_AMPMODULATION;         break;
-    case SX_LFO2_LAGENABLE:              lastbyteindex = EB_LFO2_LAGENABLE;             break;
-    case SX_LFO2_RETRIGGERPOINT:         lastbyteindex = EB_LFO2_RETRIGGERPOINT;        break;
-    case SX_LFO2_SAMPLEDSOURCE:          lastbyteindex = EB_LFO2_SAMPLEDSOURCE;         break;
-    case SX_LFO2_SPEED:                  lastbyteindex = EB_LFO2_SPEED;                 break;
-    case SX_LFO2_SPEEDMODULATION:        lastbyteindex = EB_LFO2_SPEEDMODULATION;       break;
-    case SX_LFO2_TRIGGERMODE:            lastbyteindex = EB_LFO2_TRIGGERMODE;           break;
-    case SX_LFO2_WAVESHAPE:              lastbyteindex = EB_LFO2_WAVESHAPE;             break;
-    case SX_MIX:                         lastbyteindex = EB_MIX;                        break;
-    case SX_OSC1_CLICK:                  lastbyteindex = EB_OSC1_CLICK;                 break;
-    case SX_OSC1_FREQ:                   lastbyteindex = EB_OSC1_FREQ;                  break;
-    case SX_OSC1_FREQBYLFO1AMOUNT:       lastbyteindex = EB_OSC1_FREQBYLFO1AMOUNT;      break;
-    case SX_OSC1_KEYBOARDMOD:            lastbyteindex = EB_OSC1_KEYBOARDMOD;           break;
-    case SX_OSC1_LEVERMOD:               lastbyteindex = EB_OSC1_LEVERMOD;              break;
-    case SX_OSC1_PULSEWIDTH:             lastbyteindex = EB_OSC1_PULSEWIDTH;            break;
-    case SX_OSC1_PWBYLFO2AMOUNT:         lastbyteindex = EB_OSC1_PWBYLFO2AMOUNT;        break;
-    case SX_OSC1_WAVEFORM:               lastbyteindex = EB_OSC1_WAVEFORM;              break;
-    case SX_OSC1_WAVESHAPE:              lastbyteindex = EB_OSC1_WAVESHAPE;             break;
-    case SX_OSC2_CLICK:                  lastbyteindex = EB_OSC2_CLICK;                 break;
-    case SX_OSC2_DETUNE:                 lastbyteindex = EB_OSC2_DETUNE;                break;
-    case SX_OSC2_FREQ:                   lastbyteindex = EB_OSC2_FREQ;                  break;
-    case SX_OSC2_FREQBYLFO1AMOUNT:       lastbyteindex = EB_OSC2_FREQBYLFO1AMOUNT;      break;
-    case SX_OSC2_KEYBOARDMOD:            lastbyteindex = EB_OSC2_KEYBOARDMOD;           break;
-    case SX_OSC2_LEVERMOD:               lastbyteindex = EB_OSC2_LEVERMOD;              break;
-    case SX_OSC2_PULSEWIDTH:             lastbyteindex = EB_OSC2_PULSEWIDTH;            break;
-    case SX_OSC2_PWBYLFO2AMOUNT:         lastbyteindex = EB_OSC2_PWBYLFO2AMOUNT;        break;
-    case SX_OSC2_WAVEFORM:               lastbyteindex = EB_OSC2_WAVEFORM;              break;
-    case SX_OSC2_WAVESHAPE:              lastbyteindex = EB_OSC2_WAVESHAPE;             break;
-    case SX_OSC_SYNCMODE:                lastbyteindex = EB_OSC_SYNCMODE;               break;
-    case SX_PORTAMENTO_LEGATOENABLE:     lastbyteindex = EB_PORTAMENTO_LEGATOENABLE;    break;
-    case SX_PORTAMENTO_MODE:             lastbyteindex = EB_PORTAMENTO_MODE;            break;
-    case SX_PORTAMENTO_RATE:             lastbyteindex = EB_PORTAMENTO_RATE;            break;
-    case SX_PORTAMENTO_SPEEDBYVELOCITY:  lastbyteindex = EB_PORTAMENTO_SPEEDBYVELOCITY; break;
-    case SX_RAMP1_MODE:                  lastbyteindex = EB_RAMP1_MODE;                 break;
-    case SX_RAMP1_RATE:                  lastbyteindex = EB_RAMP1_RATE;                 break;
-    case SX_RAMP2_MODE:                  lastbyteindex = EB_RAMP2_MODE;                 break;
-    case SX_RAMP2_RATE:                  lastbyteindex = EB_RAMP2_RATE;                 break;
-    case SX_TRACK_INPUT:                 lastbyteindex = EB_TRACK_INPUT;                break;
-    case SX_TRACK_POINT1:                lastbyteindex = EB_TRACK_POINT1;               break;
-    case SX_TRACK_POINT2:                lastbyteindex = EB_TRACK_POINT2;               break;
-    case SX_TRACK_POINT3:                lastbyteindex = EB_TRACK_POINT3;               break;
-    case SX_TRACK_POINT4:                lastbyteindex = EB_TRACK_POINT4;               break;
-    case SX_TRACK_POINT5:                lastbyteindex = EB_TRACK_POINT5;               break;
-    case SX_VCA1_AMOUNT:                 lastbyteindex = EB_VCA1_AMOUNT;                break;
-    case SX_VCA1_AMPBYVELOCITY:          lastbyteindex = EB_VCA1_AMPBYVELOCITY;         break;
-    case SX_VCA2_AMPBYENV2:              lastbyteindex = EB_VCA2_AMPBYENV2;             break;
+    case SX_ENV1_AMPBYVELO            : lastbyteindex = EB_ENV1_AMPBYVELO; break;
+    case SX_ENV1_AMPLITUDE            : lastbyteindex = EB_ENV1_AMPLITUDE; break;
+    case SX_ENV1_ATTACK               : lastbyteindex = EB_ENV1_ATTACK; break;
+    case SX_ENV1_DECAY                : lastbyteindex = EB_ENV1_DECAY; break;
+    case SX_ENV1_DELAY                : lastbyteindex = EB_ENV1_DELAY; break;
+    case SX_ENV1_LFOTRIGGERMODE       : lastbyteindex = EB_ENV1_LFOTRIGGERMODE; break;
+    case SX_ENV1_RELEASE              : lastbyteindex = EB_ENV1_RELEASE; break;
+    case SX_ENV1_RELEASEMODE          : lastbyteindex = EB_ENV1_RELEASEMODE; break;
+    case SX_ENV1_SUSTAIN              : lastbyteindex = EB_ENV1_SUSTAIN; break;
+    case SX_ENV1_TRIGGERMODE          : lastbyteindex = EB_ENV1_TRIGGERMODE; break;
+    case SX_ENV2_AMPBYVELO            : lastbyteindex = EB_ENV2_AMPBYVELO; break;
+    case SX_ENV2_AMPLITUDE            : lastbyteindex = EB_ENV2_AMPLITUDE; break;
+    case SX_ENV2_ATTACK               : lastbyteindex = EB_ENV2_ATTACK; break;
+    case SX_ENV2_DECAY                : lastbyteindex = EB_ENV2_DECAY; break;
+    case SX_ENV2_DELAY                : lastbyteindex = EB_ENV2_DELAY; break;
+    case SX_ENV2_LFOTRIGGERMODE       : lastbyteindex = EB_ENV2_LFOTRIGGERMODE; break;
+    case SX_ENV2_RELEASE              : lastbyteindex = EB_ENV2_RELEASE; break;
+    case SX_ENV2_RELEASEMODE          : lastbyteindex = EB_ENV2_RELEASEMODE; break;
+    case SX_ENV2_SUSTAIN              : lastbyteindex = EB_ENV2_SUSTAIN; break;
+    case SX_ENV2_TRIGGERMODE          : lastbyteindex = EB_ENV2_TRIGGERMODE; break;
+    case SX_ENV3_AMPBYVELO            : lastbyteindex = EB_ENV3_AMPBYVELO; break;
+    case SX_ENV3_AMPLITUDE            : lastbyteindex = EB_ENV3_AMPLITUDE; break;
+    case SX_ENV3_ATTACK               : lastbyteindex = EB_ENV3_ATTACK; break;
+    case SX_ENV3_DECAY                : lastbyteindex = EB_ENV3_DECAY; break;
+    case SX_ENV3_DELAY                : lastbyteindex = EB_ENV3_DELAY; break;
+    case SX_ENV3_LFOTRIGGERMODE       : lastbyteindex = EB_ENV3_LFOTRIGGERMODE; break;
+    case SX_ENV3_RELEASE              : lastbyteindex = EB_ENV3_RELEASE; break;
+    case SX_ENV3_RELEASEMODE          : lastbyteindex = EB_ENV3_RELEASEMODE; break;
+    case SX_ENV3_SUSTAIN              : lastbyteindex = EB_ENV3_SUSTAIN; break;
+    case SX_ENV3_TRIGGERMODE          : lastbyteindex = EB_ENV3_TRIGGERMODE; break;
+    case SX_FILTER_FMBYENV3           : lastbyteindex = EB_FILTER_FMBYENV3; break;
+    case SX_FILTER_FMBYPRESSURE       : lastbyteindex = EB_FILTER_FMBYPRESSURE; break;
+    case SX_FILTER_FM_AMOUNT          : lastbyteindex = EB_FILTER_FM_AMOUNT; break;
+    case SX_FILTER_FREQ               : lastbyteindex = EB_FILTER_FREQ; break;
+    case SX_FILTER_FREQBYENV1AMOUNT   : lastbyteindex = EB_FILTER_FREQBYENV1AMOUNT; break;
+    case SX_FILTER_FREQBYPRESSURE     : lastbyteindex = EB_FILTER_FREQBYPRESSURE; break;
+    case SX_FILTER_KEYBOARDMOD        : lastbyteindex = EB_FILTER_KEYBOARDMOD; break;
+    case SX_FILTER_LEVERMOD           : lastbyteindex = EB_FILTER_LEVERMOD; break;
+    case SX_FILTER_RESONANCE          : lastbyteindex = EB_FILTER_RESONANCE; break;
+    case SX_KEYBOARD_MODE             : lastbyteindex = EB_KEYBOARD_MODE; break;
+    case SX_LFO1_AMPLITUDE            : lastbyteindex = EB_LFO1_AMPLITUDE; break;
+    case SX_LFO1_AMPMODULATION        : lastbyteindex = EB_LFO1_AMPMODULATION; break;
+    case SX_LFO1_LAGENABLE            : lastbyteindex = EB_LFO1_LAGENABLE; break;
+    case SX_LFO1_RETRIGGERPOINT       : lastbyteindex = EB_LFO1_RETRIGGERPOINT; break;
+    case SX_LFO1_SAMPLEDSOURCE        : lastbyteindex = EB_LFO1_SAMPLEDSOURCE; break;
+    case SX_LFO1_SPEED                : lastbyteindex = EB_LFO1_SPEED; break;
+    case SX_LFO1_SPEEDMODULATION      : lastbyteindex = EB_LFO1_SPEEDMODULATION; break;
+    case SX_LFO1_TRIGGERMODE          : lastbyteindex = EB_LFO1_TRIGGERMODE; break;
+    case SX_LFO1_WAVESHAPE            : lastbyteindex = EB_LFO1_WAVESHAPE; break;
+    case SX_LFO2_AMPLITUDE            : lastbyteindex = EB_LFO2_AMPLITUDE; break;
+    case SX_LFO2_AMPMODULATION        : lastbyteindex = EB_LFO2_AMPMODULATION; break;
+    case SX_LFO2_LAGENABLE            : lastbyteindex = EB_LFO2_LAGENABLE; break;
+    case SX_LFO2_RETRIGGERPOINT       : lastbyteindex = EB_LFO2_RETRIGGERPOINT; break;
+    case SX_LFO2_SAMPLEDSOURCE        : lastbyteindex = EB_LFO2_SAMPLEDSOURCE; break;
+    case SX_LFO2_SPEED                : lastbyteindex = EB_LFO2_SPEED; break;
+    case SX_LFO2_SPEEDMODULATION      : lastbyteindex = EB_LFO2_SPEEDMODULATION; break;
+    case SX_LFO2_TRIGGERMODE          : lastbyteindex = EB_LFO2_TRIGGERMODE; break;
+    case SX_LFO2_WAVESHAPE            : lastbyteindex = EB_LFO2_WAVESHAPE; break;
+    case SX_MIX                       : lastbyteindex = EB_MIX; break;
+    case SX_OSC1_CLICK                : lastbyteindex = EB_OSC1_CLICK; break;
+    case SX_OSC1_FREQ                 : lastbyteindex = EB_OSC1_FREQ; break;
+    case SX_OSC1_FREQBYLFO1AMOUNT     : lastbyteindex = EB_OSC1_FREQBYLFO1AMOUNT; break;
+    case SX_OSC1_KEYBOARDMOD          : lastbyteindex = EB_OSC1_KEYBOARDMOD; break;
+    case SX_OSC1_LEVERMOD             : lastbyteindex = EB_OSC1_LEVERMOD; break;
+    case SX_OSC1_PULSEWIDTH           : lastbyteindex = EB_OSC1_PULSEWIDTH; break;
+    case SX_OSC1_PWBYLFO2AMOUNT       : lastbyteindex = EB_OSC1_PWBYLFO2AMOUNT; break;
+    case SX_OSC1_WAVEFORM             : lastbyteindex = EB_OSC1_WAVEFORM; break;
+    case SX_OSC1_WAVESHAPE            : lastbyteindex = EB_OSC1_WAVESHAPE; break;
+    case SX_OSC2_CLICK                : lastbyteindex = EB_OSC2_CLICK; break;
+    case SX_OSC2_DETUNE               : lastbyteindex = EB_OSC2_DETUNE; break;
+    case SX_OSC2_FREQ                 : lastbyteindex = EB_OSC2_FREQ; break;
+    case SX_OSC2_FREQBYLFO1AMOUNT     : lastbyteindex = EB_OSC2_FREQBYLFO1AMOUNT; break;
+    case SX_OSC2_KEYBOARDMOD          : lastbyteindex = EB_OSC2_KEYBOARDMOD; break;
+    case SX_OSC2_LEVERMOD             : lastbyteindex = EB_OSC2_LEVERMOD; break;
+    case SX_OSC2_PULSEWIDTH           : lastbyteindex = EB_OSC2_PULSEWIDTH; break;
+    case SX_OSC2_PWBYLFO2AMOUNT       : lastbyteindex = EB_OSC2_PWBYLFO2AMOUNT; break;
+    case SX_OSC2_WAVEFORM             : lastbyteindex = EB_OSC2_WAVEFORM; break;
+    case SX_OSC2_WAVESHAPE            : lastbyteindex = EB_OSC2_WAVESHAPE; break;
+    case SX_OSC_SYNCMODE              : lastbyteindex = EB_OSC_SYNCMODE; break;
+    case SX_PORTAMENTO_LEGATOENABLE   : lastbyteindex = EB_PORTAMENTO_LEGATOENABLE; break;
+    case SX_PORTAMENTO_MODE           : lastbyteindex = EB_PORTAMENTO_MODE; break;
+    case SX_PORTAMENTO_RATE           : lastbyteindex = EB_PORTAMENTO_RATE; break;
+    case SX_PORTAMENTO_SPEEDBYVELOCITY: lastbyteindex = EB_PORTAMENTO_SPEEDBYVELOCITY; break;
+    case SX_RAMP1_MODE                : lastbyteindex = EB_RAMP1_MODE; break;
+    case SX_RAMP1_RATE                : lastbyteindex = EB_RAMP1_RATE; break;
+    case SX_RAMP2_MODE                : lastbyteindex = EB_RAMP2_MODE; break;
+    case SX_RAMP2_RATE                : lastbyteindex = EB_RAMP2_RATE; break;
+    case SX_TRACK_INPUT               : lastbyteindex = EB_TRACK_INPUT; break;
+    case SX_TRACK_POINT1              : lastbyteindex = EB_TRACK_POINT1; break;
+    case SX_TRACK_POINT2              : lastbyteindex = EB_TRACK_POINT2; break;
+    case SX_TRACK_POINT3              : lastbyteindex = EB_TRACK_POINT3; break;
+    case SX_TRACK_POINT4              : lastbyteindex = EB_TRACK_POINT4; break;
+    case SX_TRACK_POINT5              : lastbyteindex = EB_TRACK_POINT5; break;
+    case SX_VCA1_AMOUNT               : lastbyteindex = EB_VCA1_AMOUNT; break;
+    case SX_VCA1_AMPBYVELOCITY        : lastbyteindex = EB_VCA1_AMPBYVELOCITY; break;
+    case SX_VCA2_AMPBYENV2            : lastbyteindex = EB_VCA2_AMPBYENV2; break;
     case SX_UNISON_DETUNE:
       lastbyteindex = EB_UNISON_DETUNE;
       UnisonDetune[device] = value;
       return;
-    default: return;
+    default:
+      return;
       // Matrix Modulation is missing because is doesn't have SX_ parameters despite it has EB_
   }
   EditBuffer[device][lastbyteindex] = value;
@@ -537,19 +547,19 @@ void update_EditBuffer(unsigned char device, unsigned char param, unsigned char 
 /////////////////////////////////////////////////////////////////////////////
 //  Display info on the most recent pot changes
 /////////////////////////////////////////////////////////////////////////////
-void LivePanel_DisplayAin( char param, byte value)
+void LivePanel_DisplayAin(char param, byte value)
 {
-  
   unsigned char ain_val;
   unsigned char valtype = PotConfigMap[last_ain_pin + Alt * 32].valtype;
 
   RefreshSoftPanel = 1; // soft panel display may have been overwritten, make sure it completely refreshes on a button click
 
   lcd.setCursor(4, 0);
-  lcd.print(strcpy_P(bufferProgmem, (PGM_P)pgm_read_word(&(PotDescription [last_ain_pin + Alt * 32]))));
+  lcd.print(strcpy_P(bufferProgmem, (PGM_P)pgm_read_word(&(PotDescription[last_ain_pin + Alt * 32]))));
 
 #if DEBUG_LCDparamvaluedescription
-  Serial.print (F("LCD_DisplayParamDescription ")); Serial.println(strcpy_P(bufferProgmem, (PGM_P)pgm_read_word(&(PotDescription [last_ain_pin + Alt * 32]))));
+  Serial.print(F("LCD_DisplayParamDescription "));
+  Serial.println(strcpy_P(bufferProgmem, (PGM_P)pgm_read_word(&(PotDescription[last_ain_pin + Alt * 32]))));
 #endif
 
   ain_val = value;
@@ -559,10 +569,14 @@ void LivePanel_DisplayAin( char param, byte value)
     LCD_DisplayEditBufferOrig(EditBufferOrig[lastbyteindex], valtype);
   LCD_DisplayParamValue(ain_val, valtype);
 
-  LCD_DisplayBarGraph(valtype, ain_val); // bouffe 0,8 K de RAM !!! https://zestedesavoir.com/tutoriels/374/gestion-de-la-memoire-sur-arduino/  : déjà la Macro F() dans les Serial.print
+  // bouffe 0,8 K de RAM !!! https://zestedesavoir.com/tutoriels/374/gestion-de-la-memoire-sur-arduino/  : déjà la Macro F() dans les Serial.print
+  LCD_DisplayBarGraph(valtype, ain_val);
 
 #if DEBUG_bargraph
-  Serial.print(F("valtype = ")); Serial.print(valtype, DEC); Serial.print(F(" ain_val = ")); Serial.println(ain_val, DEC);
+  Serial.print(F("valtype = "));
+  Serial.print(valtype, DEC);
+  Serial.print(F(" ain_val = "));
+  Serial.println(ain_val, DEC);
   Serial.println();
 #endif
 }
@@ -583,7 +597,7 @@ void LivePanel_HandleTransmitDelay()
 
   if (transmit_counter >= (pot_interval << 9)) // 9 = 512, 10 = 1024
   {
-    MIDI_SendVoiceParam(INTERFACE_SERIAL, lastparam , lastvalue, mThru_XCc);
+    MIDI_SendVoiceParam(INTERFACE_SERIAL, lastparam, lastvalue, mThru_XCc);
     is_transmit_delayed = 0;
     transmit_counter = 0;
   }
@@ -595,10 +609,11 @@ void LivePanel_HandleTransmitDelay()
 /////////////////////////////////////////////////////////////////////////////
 void LivePanel_Init()
 {
-  transmit_counter    = 0;
+  transmit_counter = 0;
   is_transmit_delayed = 0;
 
 #if DEBUG_adc
-  Serial.println(F("LivePanel_Init()")); Serial.println();
+  Serial.println(F("LivePanel_Init()"));
+  Serial.println();
 #endif
 }
