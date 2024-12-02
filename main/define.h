@@ -11,7 +11,6 @@
 #define NOTE_SHIFT 0 // avoid to start from  note number 0 but 36
 #define LCD_Offset 0
 
-//#define INTERFACE_SERIAL INTERFACE_SERIAL1
 #define INTERFACE_SERIAL1 1
 #define INTERFACE_SERIAL2 2
 #define INTERFACE_SERIAL3 3
@@ -52,19 +51,6 @@
 // modified eeprom512 lib buffer :
 #define MINIBUFFER 128 //default 16
 #define DELAYMINIBUFFER 5 // default 5
-
-//// augmenter la taille du buffer d'entrée pour les données midi.
-//// Par défaut, la taille du buffer est de 64 octets
-//// HardwareSerial.cpp:
-//#if (RAMEND < 1024)
-//#define SERIAL_BUFFER_SIZE 128
-//#else
-//#define SERIAL_BUFFER_SIZE 512
-//#endif
-
-
-// taille maxi de sysex prise en compte par l'appareil
-//#define SYSEXMAXSIZE 479 // NE PAS METTRE , éditer direct midi_settings.h
 
 // http://www.electronic-engineering.ch/microchip/datasheets/lcd/charset.gif
 #define CHAR_DOWN   B01111111 // ASCII left arrow
@@ -114,7 +100,6 @@
 #define EEPROM_LOCAL_CONTROL 39
 #define EEPROM_FILTER_RATIO 40
 #define EEPROM_SYS_CLK 41
-//#define EEPROM_SYS_BPM 42
 
 
 #define EEPROM_GLOBALPARAMETERS 500 // 172 bytes ! start address 500 , end adress 671 included
