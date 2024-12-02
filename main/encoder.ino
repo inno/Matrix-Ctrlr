@@ -14,11 +14,10 @@
 #include <Encoder.h>
 #include "define.h"
 
-//#define ENCODER_DO_NOT_USE_INTERRUPTS
 Encoder mainEncoder(2, 3); // encoder pin A and C. B to ground
 
 signed char incrementer = 0; // value sent to various functions
-long position  = -999; // track the encoder
+long position = -999; // track the encoder
 
 bool encoderClic;
 bool previousEncoderClic;
@@ -31,12 +30,14 @@ void encoder() // Youhouhouuuu !!!! ça marcheeee :)
   static signed char encSmooth; // several *clics* of the encoder are needed to increment/decrement (nicer touch feel)
   long newPos = mainEncoder.read(); // reading encoder position
 
-  if (newPos != position) {
+  if (newPos != position)
+  {
     if (encoder_inverted) // if Encoder has D-shaft
     {
-      if (position < newPos) { // CW turn
-        --encSmooth; // count CCW turns
-        if (encSmooth == 0 - SMOOTHING_ENCODER) {
+      if (position < newPos)
+      { // CW turn
+        if (--encSmooth == 0 - SMOOTHING_ENCODER) // count CCW turns
+        {
           incrementer = -1; // at -(encSmoothING_ENCODER)'s counts send decrementer
           encSmooth = 0; // and reset count
         }
@@ -44,9 +45,10 @@ void encoder() // Youhouhouuuu !!!! ça marcheeee :)
           incrementer = 0; // set a null incrementer
       }
 
-      if (position > newPos) { // CCW turn
-        ++encSmooth;
-        if (encSmooth == 0 + SMOOTHING_ENCODER) {
+      if (position > newPos)
+      {
+        if (++encSmooth == 0 + SMOOTHING_ENCODER) // CCW turn
+        {
           incrementer = 1; // send incrementer
           encSmooth = 0;
         }
@@ -56,9 +58,10 @@ void encoder() // Youhouhouuuu !!!! ça marcheeee :)
     }
     else // encoder has knurled shaft
     {
-      if (position > newPos) { // CCW turn
-        --encSmooth; // count CCW turns
-        if (encSmooth == 0 - SMOOTHING_ENCODER) {
+      if (position > newPos)
+      {
+        if (--encSmooth == 0 - SMOOTHING_ENCODER) // CCW turn
+        {
           incrementer = -1; // at -(encSmoothING_ENCODER)'s counts send decrementer
           encSmooth = 0; // and reset count
         }
@@ -66,9 +69,10 @@ void encoder() // Youhouhouuuu !!!! ça marcheeee :)
           incrementer = 0; // set a null incrementer
       }
 
-      if (position < newPos) { // CW turn
-        ++encSmooth;
-        if (encSmooth == 0 + SMOOTHING_ENCODER) {
+      if (position < newPos)
+      {
+        if (++encSmooth == 0 + SMOOTHING_ENCODER) // CW turn
+        {
           incrementer = 1; // send incrementer
           encSmooth = 0;
         }
@@ -77,9 +81,10 @@ void encoder() // Youhouhouuuu !!!! ça marcheeee :)
       }
     }
 
-    if (incrementer != 0) { // we only send +1 or 1 value, null is useless
+    if (incrementer != 0)
+    { // we only send +1 or 1 value, null is useless
       // NB : using Shift button we could set a new value to encSmoothING_ENCODER to increment faster
-      SoftPanel_Handler (-1, incrementer); // no pin
+      SoftPanel_Handler(-1, incrementer); // no pin
       //   last_encoder = encoder;
       app_flags.Display_ENC_Req = 1; // update display
     }
@@ -87,8 +92,10 @@ void encoder() // Youhouhouuuu !!!! ça marcheeee :)
 
 #if DEBUG_encoder
     Serial.println(F("encoder() "));
-    Serial.print(incrementer); Serial.print(F(" Position = ")); Serial.println(position);
-    Serial.println ();
+    Serial.print(incrementer);
+    Serial.print(F(" Position = "));
+    Serial.println(position);
+    Serial.println();
 #endif
   }
 }
@@ -98,24 +105,18 @@ void encoder() // Youhouhouuuu !!!! ça marcheeee :)
 /////////////////////////////////////////////////////////
 void Encoder_Clic() // OK elle marche 15/12/2016
 {
-  // scan
-  if (digitalRead(encoderClicPin) == HIGH)
-    encoderClic = false; // pull up
-  else
-    encoderClic = true;
+  encoderClic = digitalRead(encoderClicPin) != HIGH;
 
 #if DEBUG_encoder
   if (encoderClic != previousEncoderClic)
   {
-    Serial.print(F("encoderClic = ")); Serial.println(encoderClic, DEC);
+    Serial.print(F("encoderClic = "));
+    Serial.println(encoderClic, DEC);
   }
 #endif
 
   // behaviour
-  if (encoderClic != previousEncoderClic) // state has changed
-  {
-    if (encoderClic) // do something when we push only
-      SoftPanel_Handler(SOFT_EDIT_ENC_CLIC, 0);
-  }
+  if (encoderClic && encoderClic != previousEncoderClic) // On push and state has changed
+    SoftPanel_Handler(SOFT_EDIT_ENC_CLIC, 0);
   previousEncoderClic = encoderClic;
 }
