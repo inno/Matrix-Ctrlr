@@ -12,7 +12,7 @@ bool matrix_model_C;
 bool matrix_model_D;
 bool matrix_modele; // indicate if matrix6 or 1000
 unsigned char device; // matrix hardware var : define Matrix1000 connected to i2c output (up to 4 matrix1000 is possible)
-unsigned char router_device;	// define IIC port
+unsigned char router_device; // define IIC port
 unsigned char device_arp;
 
 //////////////////////////////////////////////////////////////////////////////
@@ -21,26 +21,42 @@ unsigned char device_arp;
 void Device_Init(unsigned char device)
 {
   Matrix_Modele_Init(); // load modele 1000 or 6
-  
+
   // set interface
-  switch (device) {
-    case MATRIX_DEVICE_A: INTERFACE_SERIAL = INTERFACE_SERIAL1; matrix_modele = matrix_model_A; break;
-    case MATRIX_DEVICE_B: INTERFACE_SERIAL = INTERFACE_SERIAL2; matrix_modele = matrix_model_B; break;
+  switch (device)
+  {
+    case MATRIX_DEVICE_A:
+      INTERFACE_SERIAL = INTERFACE_SERIAL1;
+      matrix_modele = matrix_model_A;
+      break;
+    case MATRIX_DEVICE_B:
+      INTERFACE_SERIAL = INTERFACE_SERIAL2;
+      matrix_modele = matrix_model_B;
+      break;
 #if SOFTSERIAL_ENABLED
-    case MATRIX_DEVICE_C: INTERFACE_SERIAL = INTERFACE_SERIAL4; matrix_modele = matrix_model_C; break;
-    case MATRIX_DEVICE_D: INTERFACE_SERIAL = INTERFACE_SERIAL5; matrix_modele = matrix_model_D; break;
+    case MATRIX_DEVICE_C:
+      INTERFACE_SERIAL = INTERFACE_SERIAL4;
+      matrix_modele = matrix_model_C;
+      break;
+    case MATRIX_DEVICE_D:
+      INTERFACE_SERIAL = INTERFACE_SERIAL5;
+      matrix_modele = matrix_model_D;
+      break;
 #endif
     default: break;
   }
-  
+
   if (matrix_modele == MATRIX_6)
     MIDI_EnterRemoteEditMode(INTERFACE_SERIAL);
-    
+
   Show_Selected_Device(device);
 
 #if DEBUG_device
   Serial.print(F("Device_Init() "));
-  Serial.print(F("/ read intEEPROM_addr[")); Serial.print(EEPROM_DEVICE, DEC); Serial.print(F("] is device : ")); Serial.println(device + 0x0a, HEX);
+  Serial.print(F("/ read intEEPROM_addr["));
+  Serial.print(EEPROM_DEVICE, DEC);
+  Serial.print(F("] is device : "));
+  Serial.println(device + 0x0a, HEX);
   Serial.println();
 #endif
 }
@@ -58,13 +74,25 @@ void Matrix_Modele_Init(void)
 #if DEBUG_device
   Serial.print(F("Matrix_Modele_Init() / "));
   Serial.print(F("device A is "));
-  if (matrix_model_A) Serial.print(F("Matrix6 / ")); else Serial.print(F("Matrix1000 / "));
+  if (matrix_model_A)
+    Serial.print(F("Matrix6 / "));
+  else
+    Serial.print(F("Matrix1000 / "));
   Serial.print(F("device B is "));
-  if (matrix_model_B) Serial.print(F("Matrix6 / ")); else Serial.print(F("Matrix1000 / "));
+  if (matrix_model_B)
+    Serial.print(F("Matrix6 / "));
+  else
+    Serial.print(F("Matrix1000 / "));
   Serial.print(F("device C is "));
-  if (matrix_model_C) Serial.print(F("Matrix6 / ")); else Serial.print(F("Matrix1000 / "));
+  if (matrix_model_C)
+    Serial.print(F("Matrix6 / "));
+  else
+    Serial.print(F("Matrix1000 / "));
   Serial.print(F("device D is "));
-  if (matrix_model_D) Serial.print(F("Matrix6")); else Serial.print(F("Matrix1000"));
+  if (matrix_model_D)
+    Serial.print(F("Matrix6"));
+  else
+    Serial.print(F("Matrix1000"));
   Serial.println();
 #endif
 }
@@ -72,7 +100,7 @@ void Matrix_Modele_Init(void)
 /////////////////////////////////////////////////////////////////////////////
 /// Define device
 ////////////////////////////////////////////////////////////////////////////
-void Device_Select(unsigned char pin)  // unsigned char Device_Select(unsigned char pin) return device;
+void Device_Select(unsigned char pin) // unsigned char Device_Select(unsigned char pin) return device;
 {
   //SoftPanel.Mode = Device;
   RefreshSoftPanel = true;
@@ -101,14 +129,13 @@ void Device_Select(unsigned char pin)  // unsigned char Device_Select(unsigned c
       matrix_modele = matrix_model_D;
       break;
 
-    default:
-      break;
-
+    default: break;
   }
 
 #if DEBUG_device
   Serial.print(F("Device_Select() / "));
-  Serial.print(F("device is ")); Serial.print(device + 0x0a, HEX); //Serial.print(F(", written in ROM addr = ")); Serial.println(EEPROM_DEVICE);
+  Serial.print(F("device is "));
+  Serial.print(device + 0x0a, HEX); //Serial.print(F(", written in ROM addr = ")); Serial.println(EEPROM_DEVICE);
   if (matrix_modele == MATRIX_6)
     Serial.println(F(" & modele is Matrix 6 "));
   else
@@ -128,35 +155,26 @@ void Device_Select(unsigned char pin)  // unsigned char Device_Select(unsigned c
   // set interface
   switch (device)
   {
-    case MATRIX_DEVICE_A:
-      INTERFACE_SERIAL = INTERFACE_SERIAL1;
-      break;
+    case MATRIX_DEVICE_A: INTERFACE_SERIAL = INTERFACE_SERIAL1; break;
 
-    case MATRIX_DEVICE_B:
-      INTERFACE_SERIAL = INTERFACE_SERIAL2;
-      break;
+    case MATRIX_DEVICE_B: INTERFACE_SERIAL = INTERFACE_SERIAL2; break;
 
 #if SOFTSERIAL_ENABLED
-    case MATRIX_DEVICE_C:
-      INTERFACE_SERIAL = INTERFACE_SERIAL4;
-      break;
+    case MATRIX_DEVICE_C: INTERFACE_SERIAL = INTERFACE_SERIAL4; break;
 
-    case MATRIX_DEVICE_D:
-      INTERFACE_SERIAL = INTERFACE_SERIAL5;
-      break;
+    case MATRIX_DEVICE_D: INTERFACE_SERIAL = INTERFACE_SERIAL5; break;
 #endif
 
-    default:
-      break;
+    default: break;
   }
 #if DEBUG_device
-  Serial.print(F("interface serial = ")); Serial.println(INTERFACE_SERIAL, DEC); 
+  Serial.print(F("interface serial = "));
+  Serial.println(INTERFACE_SERIAL, DEC);
 #endif
 
   // send a special sysex if device is a Matrix6 in order to receive Livepanel order
   if (matrix_modele == MATRIX_6)
     MIDI_EnterRemoteEditMode(INTERFACE_SERIAL);
-
 
   ///////////////////////// VISUELS : ///////////////////////////////////
   // set LED of Device area:
@@ -165,7 +183,6 @@ void Device_Select(unsigned char pin)  // unsigned char Device_Select(unsigned c
   UpdateDinStates();
   // update display if in Patch, Edit, etc mode :
   SoftPanel_DisplayHandler();
-
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -174,11 +191,13 @@ void Device_Select(unsigned char pin)  // unsigned char Device_Select(unsigned c
 void Show_Selected_Device(unsigned char device)
 {
 #if DEBUG_device
-  Serial.print(F("Show_Selected_Device()/ LED_DEVICE On is : ")); Serial.println(device + 0x0A, HEX);
+  Serial.print(F("Show_Selected_Device()/ LED_DEVICE On is : "));
+  Serial.println(device + 0x0A, HEX);
   Serial.println();
 #endif
 
-  switch (device) {
+  switch (device)
+  {
     case MATRIX_DEVICE_A: //
       DOUT_PinSet1(DIN_ConfigMap[DIN_MATRIX_A].dout_pin); // set the A LED On
       DOUT_PinSet0(DIN_ConfigMap[DIN_MATRIX_B].dout_pin); // rest is Off
@@ -215,27 +234,25 @@ void Show_Selected_Device(unsigned char device)
 void ChooseEditBufferOrig(unsigned char device)
 {
 #if DEBUG_device
-  Serial.print(F("ChooseEditBufferOrig()")); Serial.print(F("/ device = ")); Serial.println(device + 0x0a, HEX);
+  Serial.print(F("ChooseEditBufferOrig()"));
+  Serial.print(F("/ device = "));
+  Serial.println(device + 0x0a, HEX);
 #endif
 
   Read_Patch_From_BS(device, uBank[device], uPatch[device]); // read into BS
 }
 
-void ChooseUnisonDetuneOrig(unsigned char device)
-{
-  UnisonDetune[device] = UnisonDetuneOrig;
-}
-void ChooseArpParametersOrig(unsigned char device)
-{
-
-}
+void ChooseUnisonDetuneOrig(unsigned char device) { UnisonDetune[device] = UnisonDetuneOrig; }
+void ChooseArpParametersOrig(unsigned char device) {}
 /////////////////////////////////////////////////////////////////
 // Copy EditBufferOrig into EditBuffer
 ////////////////////////////////////////////////////////////////
 void CopyEditBufferOrigToEditBuffer(unsigned char device)
 {
 #if DEBUG_device
-  Serial.print(F("CopyEditBufferOrigToEditBuffer()")); Serial.print(F("/ device = ")); Serial.println(device + 0x0a, HEX);
+  Serial.print(F("CopyEditBufferOrigToEditBuffer()"));
+  Serial.print(F("/ device = "));
+  Serial.println(device + 0x0a, HEX);
 #endif
 
   for (unsigned char i = 0; i < 134; ++i)
