@@ -20,7 +20,7 @@ unsigned char device_arp;
 //////////////////////////////////////////////////////////////////////////////
 void Device_Init(unsigned char device)
 {
-  Matrix_Modele_Init(); // load modele 1000 or 6
+  Matrix_Modele_Init();
 
   // set interface
   switch (device)
@@ -100,31 +100,30 @@ void Matrix_Modele_Init(void)
 /////////////////////////////////////////////////////////////////////////////
 /// Define device
 ////////////////////////////////////////////////////////////////////////////
-void Device_Select(unsigned char pin) // unsigned char Device_Select(unsigned char pin) return device;
+void Device_Select(unsigned char pin)
 {
-  //SoftPanel.Mode = Device;
   RefreshSoftPanel = true;
 
   ///////////////////////// commande : ///////////////////////////////////
   // set device
   switch (pin)
   {
-    case DIN_MATRIX_A: //
+    case DIN_MATRIX_A:
       device = MATRIX_DEVICE_A; // port midi
       matrix_modele = matrix_model_A; // regle de gestion des sysex
       break;
 
-    case DIN_MATRIX_B: //
+    case DIN_MATRIX_B:
       device = MATRIX_DEVICE_B;
       matrix_modele = matrix_model_B;
       break;
 
-    case DIN_MATRIX_C: //
+    case DIN_MATRIX_C:
       device = MATRIX_DEVICE_C;
       matrix_modele = matrix_model_C;
       break;
 
-    case DIN_MATRIX_D: //
+    case DIN_MATRIX_D:
       device = MATRIX_DEVICE_D;
       matrix_modele = matrix_model_D;
       break;
@@ -135,36 +134,24 @@ void Device_Select(unsigned char pin) // unsigned char Device_Select(unsigned ch
 #if DEBUG_device
   Serial.print(F("Device_Select() / "));
   Serial.print(F("device is "));
-  Serial.print(device + 0x0a, HEX); //Serial.print(F(", written in ROM addr = ")); Serial.println(EEPROM_DEVICE);
+  Serial.print(device + 0x0a, HEX);
   if (matrix_modele == MATRIX_6)
     Serial.println(F(" & modele is Matrix 6 "));
   else
     Serial.println(F(" & modele is Matrix 1000 "));
 #endif
 
-  //  Choose EditBufferOrig, UnisonDetuneOrig, ArpParametersOrig, sequenceOrig :
   PATCH_Load(uBank[device], uPatch[device]);
-
-  // store in eeprom which device is edited -> NO, only when a patch is saved , don't use too much write.eeprom
-
-  // envoie le patch >>> surtout pas ! on perd les reglages sinon, et on coupe les notes
-  //  SendEditBuffer();
-
-  // define which EditBuffer[device] to use >> euhh ??? fait automatiquement dans le debut de la fonction par la variable device
 
   // set interface
   switch (device)
   {
     case MATRIX_DEVICE_A: INTERFACE_SERIAL = INTERFACE_SERIAL1; break;
-
     case MATRIX_DEVICE_B: INTERFACE_SERIAL = INTERFACE_SERIAL2; break;
-
 #if SOFTSERIAL_ENABLED
     case MATRIX_DEVICE_C: INTERFACE_SERIAL = INTERFACE_SERIAL4; break;
-
     case MATRIX_DEVICE_D: INTERFACE_SERIAL = INTERFACE_SERIAL5; break;
 #endif
-
     default: break;
   }
 #if DEBUG_device
@@ -177,11 +164,8 @@ void Device_Select(unsigned char pin) // unsigned char Device_Select(unsigned ch
     MIDI_EnterRemoteEditMode(INTERFACE_SERIAL);
 
   ///////////////////////// VISUELS : ///////////////////////////////////
-  // set LED of Device area:
   Show_Selected_Device(device);
-  // maj des LEDs Livepanel
   UpdateDinStates();
-  // update display if in Patch, Edit, etc mode :
   SoftPanel_DisplayHandler();
 }
 
@@ -198,28 +182,28 @@ void Show_Selected_Device(unsigned char device)
 
   switch (device)
   {
-    case MATRIX_DEVICE_A: //
+    case MATRIX_DEVICE_A:
       DOUT_PinSet1(DIN_ConfigMap[DIN_MATRIX_A].dout_pin); // set the A LED On
       DOUT_PinSet0(DIN_ConfigMap[DIN_MATRIX_B].dout_pin); // rest is Off
       DOUT_PinSet0(DIN_ConfigMap[DIN_MATRIX_C].dout_pin);
       DOUT_PinSet0(DIN_ConfigMap[DIN_MATRIX_D].dout_pin);
       break;
 
-    case MATRIX_DEVICE_B: //
+    case MATRIX_DEVICE_B:
       DOUT_PinSet1(DIN_ConfigMap[DIN_MATRIX_B].dout_pin); // set the B LED On
       DOUT_PinSet0(DIN_ConfigMap[DIN_MATRIX_A].dout_pin); // rest is Off
       DOUT_PinSet0(DIN_ConfigMap[DIN_MATRIX_C].dout_pin);
       DOUT_PinSet0(DIN_ConfigMap[DIN_MATRIX_D].dout_pin);
       break;
 
-    case MATRIX_DEVICE_C: //
+    case MATRIX_DEVICE_C:
       DOUT_PinSet1(DIN_ConfigMap[DIN_MATRIX_C].dout_pin); // set the C LED On
       DOUT_PinSet0(DIN_ConfigMap[DIN_MATRIX_A].dout_pin);
       DOUT_PinSet0(DIN_ConfigMap[DIN_MATRIX_B].dout_pin);
       DOUT_PinSet0(DIN_ConfigMap[DIN_MATRIX_D].dout_pin);
       break;
 
-    case MATRIX_DEVICE_D: //
+    case MATRIX_DEVICE_D:
       DOUT_PinSet1(DIN_ConfigMap[DIN_MATRIX_D].dout_pin); // set the D LED On
       DOUT_PinSet0(DIN_ConfigMap[DIN_MATRIX_A].dout_pin);
       DOUT_PinSet0(DIN_ConfigMap[DIN_MATRIX_B].dout_pin);
@@ -239,7 +223,7 @@ void ChooseEditBufferOrig(unsigned char device)
   Serial.println(device + 0x0a, HEX);
 #endif
 
-  Read_Patch_From_BS(device, uBank[device], uPatch[device]); // read into BS
+  Read_Patch_From_BS(device, uBank[device], uPatch[device]);
 }
 
 void ChooseUnisonDetuneOrig(unsigned char device) { UnisonDetune[device] = UnisonDetuneOrig; }
@@ -257,5 +241,4 @@ void CopyEditBufferOrigToEditBuffer(unsigned char device)
 
   for (unsigned char i = 0; i < 134; ++i)
     EditBuffer[device][i] = EditBufferOrig[i];
-  //memcpy(EditBuffer[device], EditBufferOrig, 134); // more C langage ;)
 }
