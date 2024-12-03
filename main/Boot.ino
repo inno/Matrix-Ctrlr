@@ -3,7 +3,6 @@
 #include "memo.h"
 #include "oner.h"
 
-
 ///////////////////////////////////////////////////////////
 // Boot sequence
 ///////////////////////////////////////////////////////////
@@ -12,7 +11,8 @@ void Boot(void)
   booting = 1;
 
   delay(200);
-  Serial.print(F("Matrix Ctrlr v")); Serial.println(firmware);
+  Serial.print(F("Matrix Ctrlr v"));
+  Serial.println(firmware);
   Serial.println(F("Boot() "));
 
   for (unsigned char i = 0; i < NBR_LED; ++i)
@@ -23,7 +23,8 @@ void Boot(void)
   }
 
   // show firmware version on display
-  Display_FW(); delay(500);
+  Display_FW();
+  delay(500);
 
   lcd.setCursor(0, 0);
   lcd.print(F("--- Boot  System ---"));
@@ -31,7 +32,7 @@ void Boot(void)
   /////////////////////// check formatting ////////////////////////
 
   // check internal eeprom formated previously
-  if ( Check_IntEEPROM_Format())
+  if (Check_IntEEPROM_Format())
     FORMAT_Memory(4);
 
   /////////////////////// recall system config ////////////////////////
@@ -42,18 +43,19 @@ void Boot(void)
 
   // stabilise analog inputs, but first check for a working JTR value
   filter_ratio = EEPROM.read(EEPROM_FILTER_RATIO);
-  if (filter_ratio == 0 || filter_ratio > 9) {
+  if (filter_ratio == 0 || filter_ratio > 9)
+  {
     filter_ratio = 1;
     EEPROM.update(filter_ratio, EEPROM_FILTER_RATIO);
   }
 
   // recall interface behaviour:
-  encoder_inverted = EEPROM.read(EEPROM_ENCODER_INVERTED);  // read encoder config
+  encoder_inverted = EEPROM.read(EEPROM_ENCODER_INVERTED); // read encoder config
   mThru_XCc = EEPROM.read(EEPROM_MTHRU_XCC);
   systmClock = EEPROM.read(EEPROM_SYS_CLK);
   localControl = EEPROM.read(EEPROM_LOCAL_CONTROL);
 
-  delayMicroseconds (50);
+  delayMicroseconds(50);
   for (unsigned char k = 0; k < 128; k++)
     ReadAnalog();
   for (unsigned char k = 0; k < 32; k++)
@@ -109,7 +111,8 @@ void Boot(void)
   Matrix_Modele_Init();
 
   // on each device first :
-  for (unsigned char d = MATRIX_DEVICE_A; d <= MATRIX_DEVICE_D; d++) {
+  for (unsigned char d = MATRIX_DEVICE_A; d <= MATRIX_DEVICE_D; d++)
+  {
     // recall device configuration
     Device_Init(d);
     // recall last patch (rappeler le dernier patch et bank sauvé, charger l'EditBuffer[device] depuis les 24LC512, l'envoyer)
@@ -119,7 +122,8 @@ void Boot(void)
   // then on the lastdevice saved :
   device = EEPROM.read(EEPROM_DEVICE);
 #if DEBUG_device
-  Serial.print(F("Boot() / device = ")); Serial.println(device, DEC);
+  Serial.print(F("Boot() / device = "));
+  Serial.println(device, DEC);
 #endif
 
   // load patch and set device of the lastdevice saved :
@@ -155,6 +159,6 @@ void Boot(void)
   // on est prêt à démarrer :)
   send_start = send_tick = true;
 
-  Serial.println(F("End of Boot.")); Serial.println();
-
+  Serial.println(F("End of Boot."));
+  Serial.println();
 }
