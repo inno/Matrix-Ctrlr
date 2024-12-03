@@ -5,7 +5,6 @@
 #include "ui_patch.h"
 #include <EEPROM.h>
 
-//matrix_model_t matrix_model;
 bool matrix_model_A;
 bool matrix_model_B;
 bool matrix_model_C;
@@ -74,25 +73,13 @@ void Matrix_Modele_Init(void)
 #if DEBUG_device
   Serial.print(F("Matrix_Modele_Init() / "));
   Serial.print(F("device A is "));
-  if (matrix_model_A)
-    Serial.print(F("Matrix6 / "));
-  else
-    Serial.print(F("Matrix1000 / "));
+  Serial.print(matrix_model_A ? F("Matrix6 / ") : F("Matrix1000 / "));
   Serial.print(F("device B is "));
-  if (matrix_model_B)
-    Serial.print(F("Matrix6 / "));
-  else
-    Serial.print(F("Matrix1000 / "));
+  Serial.print(matrix_model_B ? F("Matrix6 / ") : F("Matrix1000 / "));
   Serial.print(F("device C is "));
-  if (matrix_model_C)
-    Serial.print(F("Matrix6 / "));
-  else
-    Serial.print(F("Matrix1000 / "));
+  Serial.print(matrix_model_C ? F("Matrix6 / ") : F("Matrix1000 / "));
   Serial.print(F("device D is "));
-  if (matrix_model_D)
-    Serial.print(F("Matrix6"));
-  else
-    Serial.print(F("Matrix1000"));
+  Serial.print(matrix_model_D ? F("Matrix6 / ") : F("Matrix1000 / "));
   Serial.println();
 #endif
 }
@@ -104,6 +91,7 @@ void Device_Select(unsigned char pin)
 {
   RefreshSoftPanel = true;
 
+
   ///////////////////////// commande : ///////////////////////////////////
   // set device
   switch (pin)
@@ -112,33 +100,25 @@ void Device_Select(unsigned char pin)
       device = MATRIX_DEVICE_A; // port midi
       matrix_modele = matrix_model_A; // regle de gestion des sysex
       break;
-
     case DIN_MATRIX_B:
       device = MATRIX_DEVICE_B;
       matrix_modele = matrix_model_B;
       break;
-
     case DIN_MATRIX_C:
       device = MATRIX_DEVICE_C;
       matrix_modele = matrix_model_C;
       break;
-
     case DIN_MATRIX_D:
       device = MATRIX_DEVICE_D;
       matrix_modele = matrix_model_D;
       break;
-
     default: break;
   }
 
 #if DEBUG_device
   Serial.print(F("Device_Select() / "));
-  Serial.print(F("device is "));
-  Serial.print(device + 0x0a, HEX);
-  if (matrix_modele == MATRIX_6)
-    Serial.println(F(" & modele is Matrix 6 "));
-  else
-    Serial.println(F(" & modele is Matrix 1000 "));
+  Serial.print(F("device is "));Serial.print(device + 0x0a, HEX);
+  Serial.println(matrix_modele ? F(" & modele is Matrix 6 ") : F(" & modele is Matrix 1000 "));
 #endif
 
   PATCH_Load(uBank[device], uPatch[device]);
