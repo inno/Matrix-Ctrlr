@@ -34,8 +34,6 @@ void Boot(void)
   if ( Check_IntEEPROM_Format())
     FORMAT_Memory(4);
 
-  // automatically reboot if Formatting necessary
-
   /////////////////////// recall system config ////////////////////////
   Serial.println(F("recall system config"));
 
@@ -87,11 +85,6 @@ void Boot(void)
   for (unsigned char i = 0; i < NBR_LED; ++i)
     SR.Led_Pin_Write(i, 0);
 
-  // load softpanel (default display)
-  //SoftPanel_Init();
-
-  //  recall Zone[] definition
-  // ZONE_Init();
   ZONE_Load();
 
   /////////////////////// recall patch config ////////////////////////
@@ -133,9 +126,6 @@ void Boot(void)
   Device_Init(device);
   PATCH_Init(device);
 
-  // load EditBufferOrig, (done previously above)
-  // send Unison detune value TO DO to A, B, C, D : done in patch_init() in the loop
-
   // load &ArpParameters into ui*_arpVar of last device (is this particular case : MtrixA)
   ArpParameters_Load(MATRIX_DEVICE_A);
   Init_aChord();
@@ -155,11 +145,6 @@ void Boot(void)
   MIDI4.sendControlChange(123, 0, MIDI_CHANNEL + 2);
   MIDI5.sendControlChange(123, 0, MIDI_CHANNEL + 3);
 #endif
-
-  // METTRE CES 3 lignes dans une fonction accessible depuis la page ARP afin d'initilaiser ARP&SEQ : done above
-  //  ArpParameters_Init(); // set default arp parameters
-  //  Init_aChord();
-  //  Init_Seq();
 
   delay(200);
 
