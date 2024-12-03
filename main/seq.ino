@@ -3,389 +3,10 @@
 #include "seq.h"
 
 #define seqLengthMAX 32
-// https://programmingelectronics.com/tutorial-24-multi-dimensional-arrays-aka-matrix-old-version/
-// default seq pattern :
-const unsigned char Default_Sequence[10][32][2] PROGMEM = { // 32 steps (could be longer later), {note, velo, rest/tie}
-  { //  NULL - 0
-    {60, 100}, // step16
-    {60, 128}, //
-    {59, 100}, //
-    {59, 128}, //
-    {57, 100}, //
-    {57, 128}, //
-    {55, 100}, //
-    {55, 128}, //
-
-    {53, 100}, // step24
-    {53, 128}, //
-    {52, 100}, //
-    {52, 128}, //
-    {50, 100}, //
-    {50, 128}, //
-    {48, 100}, //
-    {0, 0}, // step31
-
-    {48, 100}, // step0
-    {48, 128}, //
-    {50, 100}, //
-    {50, 128}, //
-    {52, 100}, //
-    {52, 128}, //
-    {53, 100}, //
-    {53, 128}, //
-
-    {55, 100}, // step8
-    {55, 128}, //
-    {57, 100}, //
-    {57, 128}, //
-    {59, 100}, //
-    {59, 128}, //
-    {60, 100}, //
-    {0, 0} //
-  },
-  { //  BASIC - 1
-    {48, 100}, // step0
-    {48, 128}, //
-    {50, 100}, //
-    {50, 128}, //
-    {52, 100}, //
-    {52, 128}, //
-    {53, 100}, //
-    {53, 128}, //
-
-    {55, 100}, // step8
-    {55, 128}, //
-    {57, 100}, //
-    {57, 128}, //
-    {59, 100}, //
-    {59, 128}, //
-    {60, 100}, //
-    {0, 0}, //
-
-    {60, 100}, // step16
-    {60, 128}, //
-    {59, 100}, //
-    {59, 128}, //
-    {57, 100}, //
-    {57, 128}, //
-    {55, 100}, //
-    {55, 128}, //
-
-    {53, 100}, // step24
-    {53, 128}, //
-    {52, 100}, //
-    {52, 128}, //
-    {50, 100}, //
-    {50, 128}, //
-    {48, 100}, //
-    {0, 0} // step31
-  },
-  { //  Halloween - J.Carpenter (1978) - 3
-    {48, 80}, // step0
-    {41, 80}, //
-    {41, 80}, //
-    {48, 80}, //
-    {41, 80}, //
-    {41, 80}, //
-    {49, 80}, //
-    {41, 80}, //
-
-    {48, 80}, // step8
-    {41, 80}, //
-    {41, 80}, //
-    {48, 80}, //
-    {41, 80}, //
-    {41, 80}, //
-    {49, 80}, //
-    {41, 80}, //
-
-    {46, 80}, // step16
-    {39, 80}, //
-    {39, 80}, //
-    {46, 80}, //
-    {39, 80}, //
-    {39, 80}, //
-    {47, 80}, //
-    {39, 80}, //
-
-    {46, 80}, // step24
-    {39, 80}, //
-    {39, 80}, //
-    {46, 80}, //
-    {39, 80}, //
-    {39, 80}, //
-    {47, 80}, //
-    {39, 80} // step31
-  },
-  // more below
-  { // Billie Jean - M.Jackson - 4
-    {67, 53}, // step0
-    {60, 128},
-    {62, 50}, //
-    {60, 128},
-    {65, 39}, //
-    {60, 128},
-    {67, 45}, //
-    {60, 128},
-    {65, 49}, //
-    {60, 128},
-    {62, 51}, //
-    {60, 128},
-    {60, 55}, //
-    {60, 128},
-    {62, 50}, //
-    {60, 128},
-
-    {67, 53}, // step0
-    {60, 128},
-    {62, 50}, //
-    {60, 128},
-    {65, 39}, //
-    {60, 128},
-    {67, 45}, //
-    {60, 128},
-    {65, 49}, //
-    {60, 128},
-    {62, 51}, //
-    {60, 128},
-    {60, 55}, //
-    {60, 128},
-    {62, 50}, //
-    {60, 128}
-
-  },
-  { // Thriller - M.Jackson - 5
-    {60, 104}, // step0
-    {60, 128}, //
-    {62, 82 }, //
-    {62, 128}, //
-    {65, 86 }, //
-    {65, 128}, //
-    {67, 104}, //
-    {67, 128}, //
-
-    {62, 104}, // step16
-    {0, 0}, //
-    {0, 0}, //
-    {50, 74}, //
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-    {62, 74}, //
-
-    {60, 104}, // repeat
-    {60, 128}, //
-    {62, 82 }, //
-    {62, 128}, //
-    {65, 86 }, //
-    {65, 128}, //
-    {67, 104}, //
-    {67, 128}, //
-
-    {62, 104}, // repeat
-    {0, 0}, //
-    {0, 0}, //
-    {50, 74}, //
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-    {62, 74} //
-
-  },
-  { // I feel love - G.Moroder - 6
-    {48, 57},
-    {48, 52},
-    {48, 54},
-    {48, 55},
-    {55, 62},
-    {55, 62},
-    {58, 54},
-    {58, 55},
-
-    {48, 57},
-    {48, 52},
-    {48, 54},
-    {48, 55},
-    {55, 62},
-    {55, 62},
-    {58, 54},
-    {58, 55},
-
-    {53, 57},
-    {53, 52},
-    {53, 54},
-    {53, 55},
-    {60, 62},
-    {60, 62},
-    {63, 54},
-    {63, 55},
-
-    {55, 57},
-    {55, 52},
-    {55, 54},
-    {55, 55},
-    {62, 62},
-    {62, 62},
-    {65, 54},
-    {65, 55}
-  },
-
-  { //  Moskow disko - Telex - https://www.youtube.com/watch?v=z900sXr3bf0
-    {55, 65 }, // step0
-    {55, 59 }, //
-    {53, 49 }, //
-    {53, 42 }, //
-    {55, 51 }, //
-    {55, 50 }, //
-    {53, 53 }, //
-    {53, 54 }, //
-
-    {55, 57 }, // step8
-    {55, 64 }, //
-    {53, 67 }, //
-    {55, 46 }, //
-    { 0, 0}, //
-    { 0, 0}, //
-    { 0, 0}, //
-    { 0, 0}, //
-
-    {58, 46 }, // step16
-    {58, 41 }, //
-    {55, 59 }, //
-    {55, 57 }, //
-    {58, 55 }, //
-    { 0, 0}, //
-    { 0, 0}, //
-    { 0, 0}, //
-
-    {60, 41  }, // step34
-    {60, 46 }, //
-    {58, 34 }, //
-    {58, 39 }, //
-    {60, 67 }, //
-    { 0, 0}, //
-    { 0, 0}, //
-    { 0, 0} // step31
-  },
-
-  { //  Fame bassline https://www.youtube.com/watch?v=qjA_pDFoHnc
-    {36, 80}, // step0
-    {36, 80}, //
-    {36, 97}, //
-    {36, 80}, //
-    {36, 80}, //
-    {36, 80}, //
-    {48, 97}, //
-    {48, 80}, //
-
-    {36, 80}, // step8
-    {36, 80}, //
-    {36, 80}, //
-    {36, 80}, //
-    {48, 80}, //
-    {48, 97}, //
-    {48, 80}, //
-    {48, 80}, //
-
-    {36, 80}, // repeat
-    {36, 80}, //
-    {36, 97}, //
-    {36, 80}, //
-    {36, 80}, //
-    {36, 80}, //
-    {48, 97}, //
-    {48, 80}, //
-
-    {36, 80}, //
-    {36, 80}, //
-    {36, 80}, //
-    {36, 80}, //
-    {48, 80}, //
-    {48, 97}, //
-    {48, 80}, //
-    {48, 80}, //
-
-  },
-  { //  NULL - 9
-    {0, 0}, // step0
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-
-    {0, 0}, // step8
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-
-    {0, 0}, // step16
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-
-    {0, 0}, // step34
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0} // step31
-  },
-  { //  NULL - 10
-    {0, 0}, // step0
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-
-    {0, 0}, // step8
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-
-    {0, 0}, // step16
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-
-    {0, 0}, // step34
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0}, //
-    {0, 0} // step31
-  }
-
-};
 
 // sequence pattern populated with zeros :
-unsigned char sequence[32][2]; //
-unsigned char sequenceOrig[32][2]; //
+unsigned char sequence[32][2];
+unsigned char sequenceOrig[32][2];
 unsigned char seqNbr;
 unsigned char seqLength;
 unsigned char seqRecStep;
@@ -407,8 +28,6 @@ signed char skipSeqStep;
 //    2 : fill the array by entering pitches with your keyboard on the right midi channel (need a routing in router while noteOn/Off}
 //    3 : define the length by the quantity of received pitches
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // sequence Reset (or Init)
@@ -471,11 +90,15 @@ void SerialPrintSeq(void)
   Serial.println(F("SeqStack = {"));
   for (unsigned char i = 0; i < 32; ++i)
   {
-    Serial.print(F("(")); Serial.print(sequence[i][0], HEX); Serial.print(F(",")); Serial.print(sequence[i][1], HEX); Serial.print(F("),"));
-
+    Serial.print(F("("));
+    Serial.print(sequence[i][0], HEX);
+    Serial.print(F(","));
+    Serial.print(sequence[i][1], HEX);
+    Serial.print(F("),"));
   }
   Serial.println(F("};"));
-  Serial.print(F("SeqLength : ")); Serial.println(seqLength, DEC);
+  Serial.print(F("SeqLength : "));
+  Serial.println(seqLength, DEC);
   Serial.println();
 
 #endif
@@ -484,9 +107,9 @@ void SerialPrintSeq(void)
 /////////////////////////////////////////////////////////////////////////////////////
 // Populate the sequnce array with pitch, velocity and seqOption (rest or tie)
 //////////////////////////////////////////////////////////////////////////////////////
-void Rec_Seq(byte pitch, byte velo, byte channel, unsigned char opt) // 0.97a c'est bon tout marche pour remplir le tableau
+void Rec_Seq(byte pitch, byte velo, byte channel,
+  unsigned char opt) // 0.97a c'est bon tout marche pour remplir le tableau
 {
-
   if (ui_seqRec && (channel == MIDI_CHANNEL)) // if we record the sequence and receive on right channel
   {
     // we can't play sequence
@@ -504,14 +127,14 @@ void Rec_Seq(byte pitch, byte velo, byte channel, unsigned char opt) // 0.97a c'
     // seqLength is (secReqStep - 1) as we just incremented
     seqLength = seqRecStep; // ou - 1  ?
 
-    if (seqLength > 32) {
+    if (seqLength > 32)
+    {
       // we have reach the end of the seq
       // do we initialise the array or keep for further modification ?
       Init_Seq();
       // i choose to init, but we could imagine navigate inside the steps with +/- keys in order to change pitch values on specific step
       // TO DO & IMPROVE
       seqLength = seqRecStep = 0; // rtz if higher than max
-
     }
 
 #if DEBUG_SEQ
@@ -519,7 +142,8 @@ void Rec_Seq(byte pitch, byte velo, byte channel, unsigned char opt) // 0.97a c'
 #endif
 
     // update display lcd :
-    if (SoftPanel.Mode == Arp) UI_Display_Arp();
+    if (SoftPanel.Mode == Arp)
+      UI_Display_Arp();
   }
   else if (ui_seqRec == 0) // if we don't record the sequence
   {
@@ -535,14 +159,14 @@ void Rec_Seq(byte pitch, byte velo, byte channel, unsigned char opt) // 0.97a c'
 void Insert_SeqRest(unsigned char param)
 {
 #if DEBUG_SEQ
-  Serial.print(F("param = ")); Serial.println(param, DEC);
+  Serial.print(F("param = "));
+  Serial.println(param, DEC);
 #endif
 
-  if (ui_seqRec ) // if we record the sequence and receive on right channel
+  if (ui_seqRec) // if we record the sequence and receive on right channel
   {
     // we can't play sequence
     ui_seqPlay = false;
-
 
     sequence[seqRecStep][0] = 60; // 1st element is note number
     sequence[seqRecStep][1] = param; // 2nd element is velocity of that note, rest or tie i.e 0, 1 or 2
@@ -553,14 +177,14 @@ void Insert_SeqRest(unsigned char param)
     // seqLength is (secReqStep - 1) as we just incremented
     seqLength = seqRecStep; // ou - 1  ?
 
-    if (seqLength > 32) {
+    if (seqLength > 32)
+    {
       // we have reach the end of the seq
       // do we initialise the array or keep for further modification ?
       Init_Seq();
       // i choose to init, but we could imagine navigate inside the steps with +/- keys in order to change pitch values on specific step
       // TO DO & IMPROVE
       seqLength = seqRecStep = 0; // rtz if higher than max
-
     }
 
 #if DEBUG_SEQ
@@ -568,7 +192,8 @@ void Insert_SeqRest(unsigned char param)
 #endif
 
     // update display lcd :
-    if (SoftPanel.Mode == Arp) UI_Display_Arp();
+    if (SoftPanel.Mode == Arp)
+      UI_Display_Arp();
   }
 }
 
@@ -585,7 +210,8 @@ void Play_Seq(byte pitch, byte velocity, byte channel, bool type)
     seqMonoMode = !seqMonoMode; // change state bool
 
 #if DEBUG_SEQ
-    Serial.print(F("seqMonoMode = ")); Serial.println(seqMonoMode);
+    Serial.print(F("seqMonoMode = "));
+    Serial.println(seqMonoMode);
 #endif
 
     seqTick = 0; // reset du sequencer tick
@@ -599,7 +225,6 @@ void Play_Seq(byte pitch, byte velocity, byte channel, bool type)
     return;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////
 // similar to ARP(), called on each tick of the clock 0xf9 (int or ext)
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -612,7 +237,8 @@ void SEQ(void)
   if (seqTick == 0)
   {
 #if DEBUG_SEQTIK
-    Serial.print(F("seqTick = ")); Serial.println( seqTick);
+    Serial.print(F("seqTick = "));
+    Serial.println(seqTick);
 #endif
 
     // update parameters :
@@ -631,17 +257,26 @@ void SEQ(void)
         skipBack++;
       else // else normal note
       {
-        MIDI1.sendNoteOn(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), sequence[seqPlayStep][1] - sequence[0][1] + playSeqTrigger[1], MIDI_CHANNEL);
+        MIDI1.sendNoteOn(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36),
+          sequence[seqPlayStep][1] - sequence[0][1] + playSeqTrigger[1], MIDI_CHANNEL);
         if (arp_send_notes)
-          MIDI3.sendNoteOn(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), sequence[seqPlayStep][1] - sequence[0][1] + playSeqTrigger[1], MIDI_CHANNEL);
+          MIDI3.sendNoteOn(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36),
+            sequence[seqPlayStep][1] - sequence[0][1] + playSeqTrigger[1], MIDI_CHANNEL);
 
         // update display lcd :
         if (SoftPanel.Mode == Arp && SoftPanel.Page == SOFT_PAGE2)
           app_flags.Display_ARP_Req = 1;
       }
 #if DEBUG_SEQ
-      Serial.print(F("seqPlayStep = ")); Serial.println(seqPlayStep, DEC); Serial.println();
-      Serial.print(F("play_Seq de seq.ino NteOn interface 1 :: pitch: $")); Serial.print(sequence[seqPlayStep][0], HEX); Serial.print(F(" velo: $")); Serial.print(sequence[seqPlayStep][1], HEX); Serial.print(F(" channel: $")); Serial.println (MIDI_CHANNEL, HEX);
+      Serial.print(F("seqPlayStep = "));
+      Serial.println(seqPlayStep, DEC);
+      Serial.println();
+      Serial.print(F("play_Seq de seq.ino NteOn interface 1 :: pitch: $"));
+      Serial.print(sequence[seqPlayStep][0], HEX);
+      Serial.print(F(" velo: $"));
+      Serial.print(sequence[seqPlayStep][1], HEX);
+      Serial.print(F(" channel: $"));
+      Serial.println(MIDI_CHANNEL, HEX);
 
 #endif
     }
@@ -654,9 +289,11 @@ void SEQ(void)
     //if it was a tie note, get previous pitch and send note off
     if (sequence[seqPlayStep][1] > 127)
     {
-      MIDI1.sendNoteOff(sequence[seqPlayStep - skipBack][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
+      MIDI1.sendNoteOff(
+        sequence[seqPlayStep - skipBack][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
       if (arp_send_notes)
-        MIDI3.sendNoteOff(sequence[seqPlayStep - skipBack][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
+        MIDI3.sendNoteOff(
+          sequence[seqPlayStep - skipBack][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
     }
     else if (sequence[seqPlayStep][1] != 0)
     {
@@ -672,9 +309,15 @@ void SEQ(void)
     skipSeqStep = 0; //reset
 
 #if DEBUG_SEQ
-    Serial.print(F("seqPlayStep = ")); Serial.println(seqPlayStep, DEC); Serial.println();
+    Serial.print(F("seqPlayStep = "));
+    Serial.println(seqPlayStep, DEC);
+    Serial.println();
     Serial.print(F("kill last resting note when latching Key, pitch = $"));
-    Serial.print(sequence[seqPlayStep][0], HEX); Serial.print(F(" velo = $")); Serial.print(sequence[seqPlayStep][1], HEX); Serial.print(F(" channel = $")); Serial.println (MIDI_CHANNEL, HEX);
+    Serial.print(sequence[seqPlayStep][0], HEX);
+    Serial.print(F(" velo = $"));
+    Serial.print(sequence[seqPlayStep][1], HEX);
+    Serial.print(F(" channel = $"));
+    Serial.println(MIDI_CHANNEL, HEX);
 #endif
   }
 
@@ -682,7 +325,8 @@ void SEQ(void)
   if (seqTick == sGate)
   {
 #if DEBUG_SEQTIK
-    Serial.print(F("seqTick = ")); Serial.println( seqTick);
+    Serial.print(F("seqTick = "));
+    Serial.println(seqTick);
 #endif
     // extract an element E contained in sequence array, and play it as NoteOff after a delay corresponding to sGate
     if (ui_seqPlay && seqTrig)
@@ -692,17 +336,21 @@ void SEQ(void)
       else if (sequence[seqPlayStep][1] > 127) // if it's a 'tie'
       {
         // play pitch of previous note with a zero velocity
-        MIDI1.sendNoteOff(sequence[seqPlayStep - skipBack][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
+        MIDI1.sendNoteOff(
+          sequence[seqPlayStep - skipBack][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
         if (arp_send_notes)
-          MIDI3.sendNoteOff(sequence[seqPlayStep - skipBack][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
+          MIDI3.sendNoteOff(
+            sequence[seqPlayStep - skipBack][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
         // reset counter
         skipBack = 0;
       }
       else // play note off normally
       {
-        MIDI1.sendNoteOff(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), sequence[seqPlayStep][1] - sequence[0][1] + playSeqTrigger[1], MIDI_CHANNEL);
+        MIDI1.sendNoteOff(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36),
+          sequence[seqPlayStep][1] - sequence[0][1] + playSeqTrigger[1], MIDI_CHANNEL);
         if (arp_send_notes)
-          MIDI3.sendNoteOff(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), sequence[seqPlayStep][1] - sequence[0][1] + playSeqTrigger[1], MIDI_CHANNEL);
+          MIDI3.sendNoteOff(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36),
+            sequence[seqPlayStep][1] - sequence[0][1] + playSeqTrigger[1], MIDI_CHANNEL);
       }
 
       // chnage state of released trigger
@@ -713,8 +361,15 @@ void SEQ(void)
       if (seqPlayStep > seqLength - 1) // ça MARCHE !!! 0.97b :) RTZ when reaching end
         seqPlayStep = 0;
 #if DEBUG_SEQ
-      Serial.print(F("seqPlayStep = ")); Serial.println(seqPlayStep, DEC); Serial.println();
-      Serial.print(F("play_Seq de seq.ino NteOff interface 1 :: pitch: $")); Serial.print(sequence[seqPlayStep][0], HEX); Serial.print(F(" velo: $")); Serial.print(sequence[seqPlayStep][1], HEX); Serial.print(F(" channel: $")); Serial.println (MIDI_CHANNEL, HEX);
+      Serial.print(F("seqPlayStep = "));
+      Serial.println(seqPlayStep, DEC);
+      Serial.println();
+      Serial.print(F("play_Seq de seq.ino NteOff interface 1 :: pitch: $"));
+      Serial.print(sequence[seqPlayStep][0], HEX);
+      Serial.print(F(" velo: $"));
+      Serial.print(sequence[seqPlayStep][1], HEX);
+      Serial.print(F(" channel: $"));
+      Serial.println(MIDI_CHANNEL, HEX);
 #endif
     }
   }
@@ -726,7 +381,6 @@ void SEQ(void)
   // non ! on fixe la durée de note et le reset se fera au double. travailler sur les gates plutot
   if (seqTick == (sGate + sGate))
     seqTick = 0;
-
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -739,7 +393,8 @@ void SEQ2(bool trig)
   if (trig == true) // play noteOn
   {
 #if DEBUG_SEQTIK
-    Serial.print(F("seqTick = ")); Serial.println( seqTick);
+    Serial.print(F("seqTick = "));
+    Serial.println(seqTick);
 #endif
 
     // update parameters :
@@ -764,18 +419,27 @@ void SEQ2(bool trig)
         ++skipBack;
       else // else normal note
       {
-        MIDI1.sendNoteOn(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), sequence[seqPlayStep][1] - sequence[0][1] + playSeqTrigger[1], MIDI_CHANNEL);
+        MIDI1.sendNoteOn(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36),
+          sequence[seqPlayStep][1] - sequence[0][1] + playSeqTrigger[1], MIDI_CHANNEL);
         // NOTA : limits 0 & 127 are automatically made by sendNoteOn function Edit : pas tout à fait, ça revient à zero si >127
         if (arp_send_notes)
-          MIDI3.sendNoteOn(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), sequence[seqPlayStep][1] - sequence[0][1] + playSeqTrigger[1], MIDI_CHANNEL);
+          MIDI3.sendNoteOn(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36),
+            sequence[seqPlayStep][1] - sequence[0][1] + playSeqTrigger[1], MIDI_CHANNEL);
 
         // update display lcd :
         if (SoftPanel.Mode == Arp && SoftPanel.Page == SOFT_PAGE2)
           app_flags.Display_ARP_Req = 1;
       }
 #if DEBUG_SEQ
-      Serial.print(F("seqPlayStep = ")); Serial.println(seqPlayStep, DEC); Serial.println();
-      Serial.print(F("play_Seq de seq.ino NteOn interface 1 :: pitch: $")); Serial.print(sequence[seqPlayStep][0], HEX); Serial.print(F(" velo: $")); Serial.print(sequence[seqPlayStep][1], HEX); Serial.print(F(" channel: $")); Serial.println (MIDI_CHANNEL, HEX);
+      Serial.print(F("seqPlayStep = "));
+      Serial.println(seqPlayStep, DEC);
+      Serial.println();
+      Serial.print(F("play_Seq de seq.ino NteOn interface 1 :: pitch: $"));
+      Serial.print(sequence[seqPlayStep][0], HEX);
+      Serial.print(F(" velo: $"));
+      Serial.print(sequence[seqPlayStep][1], HEX);
+      Serial.print(F(" channel: $"));
+      Serial.println(MIDI_CHANNEL, HEX);
 
 #endif
     }
@@ -788,9 +452,11 @@ void SEQ2(bool trig)
     //if it was a tie note, get previous pitch and send note off
     if (sequence[seqPlayStep][1] > 127)
     {
-      MIDI1.sendNoteOff(sequence[seqPlayStep - skipBack][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
+      MIDI1.sendNoteOff(
+        sequence[seqPlayStep - skipBack][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
       if (arp_send_notes)
-        MIDI3.sendNoteOff(sequence[seqPlayStep - skipBack][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
+        MIDI3.sendNoteOff(
+          sequence[seqPlayStep - skipBack][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
     }
     else if (sequence[seqPlayStep][1] != 0)
     {
@@ -806,9 +472,15 @@ void SEQ2(bool trig)
     skipSeqStep = 0; //reset
 
 #if DEBUG_SEQ
-    Serial.print(F("seqPlayStep = ")); Serial.println(seqPlayStep, DEC); Serial.println();
+    Serial.print(F("seqPlayStep = "));
+    Serial.println(seqPlayStep, DEC);
+    Serial.println();
     Serial.print(F("kill last resting note when latching Key, pitch = $"));
-    Serial.print(sequence[seqPlayStep][0], HEX); Serial.print(F(" velo = $")); Serial.print(sequence[seqPlayStep][1], HEX); Serial.print(F(" channel = $")); Serial.println (MIDI_CHANNEL, HEX);
+    Serial.print(sequence[seqPlayStep][0], HEX);
+    Serial.print(F(" velo = $"));
+    Serial.print(sequence[seqPlayStep][1], HEX);
+    Serial.print(F(" channel = $"));
+    Serial.println(MIDI_CHANNEL, HEX);
 #endif
   }
 
@@ -816,7 +488,8 @@ void SEQ2(bool trig)
   if (trig == false) // play noteOff
   {
 #if DEBUG_SEQTIK
-    Serial.print(F("seqTick = ")); Serial.println( seqTick);
+    Serial.print(F("seqTick = "));
+    Serial.println(seqTick);
 #endif
     // extract an element E contained in sequence array, and play it as NoteOff after a delay corresponding to sGate
     if (ui_seqPlay && seqTrig)
@@ -826,25 +499,36 @@ void SEQ2(bool trig)
       else if (sequence[seqPlayStep][1] > 127) // if it's a 'tie'
       {
         // play pitch of previous note with a zero velocity
-        MIDI1.sendNoteOff(sequence[seqPlayStep - skipBack][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
+        MIDI1.sendNoteOff(
+          sequence[seqPlayStep - skipBack][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
         if (arp_send_notes)
-          MIDI3.sendNoteOff(sequence[seqPlayStep - skipBack][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
+          MIDI3.sendNoteOff(
+            sequence[seqPlayStep - skipBack][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
         // reset counter
         skipBack = 0;
       }
       else // play note off normally
       {
-        MIDI1.sendNoteOff(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), sequence[seqPlayStep][1] - sequence[0][1] + playSeqTrigger[1], MIDI_CHANNEL);
+        MIDI1.sendNoteOff(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36),
+          sequence[seqPlayStep][1] - sequence[0][1] + playSeqTrigger[1], MIDI_CHANNEL);
         if (arp_send_notes)
-          MIDI3.sendNoteOff(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), sequence[seqPlayStep][1] - sequence[0][1] + playSeqTrigger[1], MIDI_CHANNEL);
+          MIDI3.sendNoteOff(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36),
+            sequence[seqPlayStep][1] - sequence[0][1] + playSeqTrigger[1], MIDI_CHANNEL);
       }
 
       // chnage state of released trigger
       playSeqTrigger[3] = true;
 
 #if DEBUG_SEQ
-      Serial.print(F("seqPlayStep = ")); Serial.println(seqPlayStep, DEC); Serial.println();
-      Serial.print(F("play_Seq de seq.ino NteOff interface 1 :: pitch: $")); Serial.print(sequence[seqPlayStep][0], HEX); Serial.print(F(" velo: $")); Serial.print(sequence[seqPlayStep][1], HEX); Serial.print(F(" channel: $")); Serial.println (MIDI_CHANNEL, HEX);
+      Serial.print(F("seqPlayStep = "));
+      Serial.println(seqPlayStep, DEC);
+      Serial.println();
+      Serial.print(F("play_Seq de seq.ino NteOff interface 1 :: pitch: $"));
+      Serial.print(sequence[seqPlayStep][0], HEX);
+      Serial.print(F(" velo: $"));
+      Serial.print(sequence[seqPlayStep][1], HEX);
+      Serial.print(F(" channel: $"));
+      Serial.println(MIDI_CHANNEL, HEX);
 #endif
     }
   }
