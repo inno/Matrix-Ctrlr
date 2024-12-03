@@ -155,8 +155,8 @@ void setPin(byte outputPin) { PORTA = controlPins[outputPin]; }
 // MIDI INTERFACE DECLARATIONS
 ////////////////////////////////////////////////////////////////////////////////////////////
 #if SOFTSERIAL_ENABLED
-SoftwareSerial mSerial4(A12, A13); // MIDI4 in out
-SoftwareSerial mSerial5(A14, A15); // MIDI5 in out
+SoftwareSerial mSerial4(A12, A13); // MIDI_C in out
+SoftwareSerial mSerial5(A14, A15); // MIDI_D in out
 #endif
 
 USING_NAMESPACE_MIDI;
@@ -179,12 +179,12 @@ struct smallSysEx : public MIDI_NAMESPACE::DefaultSettings
   static const unsigned SysExMaxSize = 32;
 };
 
-MIDI_CREATE_CUSTOM_INSTANCE(HardwareSerial, Serial3, MIDI1, Matrix1000Settings); // A DIN Midi
-MIDI_CREATE_CUSTOM_INSTANCE(HardwareSerial, Serial2, MIDI2, smallSysEx); // port B DIN
-MIDI_CREATE_CUSTOM_INSTANCE(HardwareSerial, Serial1, MIDI3, MatrixCtrlrSettings); // CORE DIN Midi
+MIDI_CREATE_CUSTOM_INSTANCE(HardwareSerial, Serial3, MIDI_A, Matrix1000Settings); // A DIN Midi
+MIDI_CREATE_CUSTOM_INSTANCE(HardwareSerial, Serial2, MIDI_B, smallSysEx); // port B DIN
+MIDI_CREATE_CUSTOM_INSTANCE(HardwareSerial, Serial1, MIDI_CORE, MatrixCtrlrSettings); // CORE DIN Midi
 #if SOFTSERIAL_ENABLED // additional midi ports
-MIDI_CREATE_CUSTOM_INSTANCE(SoftwareSerial, mSerial4, MIDI4, smallSysEx); // TX4 port C out
-MIDI_CREATE_CUSTOM_INSTANCE(SoftwareSerial, mSerial5, MIDI5, Matrix1000Settings); // TX5 port D out
+MIDI_CREATE_CUSTOM_INSTANCE(SoftwareSerial, mSerial4, MIDI_C, smallSysEx); // TX4 port C out
+MIDI_CREATE_CUSTOM_INSTANCE(SoftwareSerial, mSerial5, MIDI_D, Matrix1000Settings); // TX5 port D out
 #endif
 
 unsigned char INTERFACE_SERIAL;
@@ -250,13 +250,13 @@ void setup()
     ReadDigital(); //READING DIGITAL INPUTS//
 
   // init midi ports
-  MIDI1.begin(MIDI_CHANNEL_OMNI);
-  MIDI2.begin(MIDI_CHANNEL_OMNI);
-  MIDI3.begin(MIDI_CHANNEL_OMNI);
+  MIDI_A.begin(MIDI_CHANNEL_OMNI);
+  MIDI_B.begin(MIDI_CHANNEL_OMNI);
+  MIDI_CORE.begin(MIDI_CHANNEL_OMNI);
 
 #if SOFTSERIAL_ENABLED
-  MIDI4.begin(MIDI_CHANNEL_OMNI);
-  MIDI5.begin(MIDI_CHANNEL_OMNI);
+  MIDI_C.begin(MIDI_CHANNEL_OMNI);
+  MIDI_D.begin(MIDI_CHANNEL_OMNI);
 #endif
   // Connect the midi callbacks to the library,
   enableMidiCallbacks();
@@ -295,8 +295,8 @@ void loop()
 #endif
 
   // first, read midi !
-  MIDI3.read(); // NRT : stable 2/4/2016 // Core IN
-  MIDI1.read(); // Matrix A IN
+  MIDI_CORE.read(); // NRT : stable 2/4/2016 // Core IN
+  MIDI_A.read(); // Matrix A IN
 
   //-------------------------------------------------------//
   //READING AND SMOOTHING ANALOG//

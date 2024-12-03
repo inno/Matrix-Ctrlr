@@ -44,7 +44,7 @@ void mClockInit()
 ////////////////////////////////////////////////////////////////////////////////////////////
 void onClockStart()
 {
-  MIDI3.sendRealTime(Start);
+  MIDI_CORE.sendRealTime(Start);
   send_start = false;
   Serial.println("send_start");
   ticks = 0;
@@ -59,7 +59,7 @@ void onClockStart()
 ////////////////////////////////////////////////////////////////////////////////////////////
 void onClockStop()
 {
-  //MIDI3.sendRealTime(Stop);
+  //MIDI_CORE.sendRealTime(Stop);
   send_stop = false;
   prev_ticks = ticks ;
   Serial.println("send_stop");
@@ -75,7 +75,7 @@ void ClockOut96PPQN(uint32_t * tick_)
     if (systmClock == INTCLK)    // if internal MIDI clock source
     {
       // Send MIDI_CLOCK to external gears -> core out
-      MIDI3.sendRealTime(Clock);
+      MIDI_CORE.sendRealTime(Clock);
 
       // heartbeat :
       if (ticks > 5)

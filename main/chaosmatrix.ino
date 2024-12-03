@@ -1467,12 +1467,12 @@ void MIDI_Rcv_Diagnostics(unsigned char interface, byte order1, byte order2)
     elapsedTime = 0;  //reset tmpMessage
 
     // send a midi response on all midi out
-    sysex[6] = 0x0a; MIDI1.sendSysEx (sizeof(sysex), sysex, true);
-    sysex[6] = 0x0b; MIDI2.sendSysEx (sizeof(sysex), sysex, true);
-    sysex[6] = 0x09; MIDI3.sendSysEx (sizeof(sysex), sysex, true);
+    sysex[6] = 0x0a; MIDI_A.sendSysEx (sizeof(sysex), sysex, true);
+    sysex[6] = 0x0b; MIDI_B.sendSysEx (sizeof(sysex), sysex, true);
+    sysex[6] = 0x09; MIDI_CORE.sendSysEx (sizeof(sysex), sysex, true);
 #if SOFTSERIAL_ENABLED
-    sysex[6] = 0x0c; MIDI4.sendSysEx (sizeof(sysex), sysex, true);
-    sysex[6] = 0x0d; MIDI5.sendSysEx (sizeof(sysex), sysex, true);
+    sysex[6] = 0x0c; MIDI_C.sendSysEx (sizeof(sysex), sysex, true);
+    sysex[6] = 0x0d; MIDI_D.sendSysEx (sizeof(sysex), sysex, true);
 #endif
 
   }

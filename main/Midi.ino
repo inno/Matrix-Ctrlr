@@ -66,24 +66,24 @@ void MIDI_SendPatchProgramSingle(unsigned char interface, unsigned char program)
 {
   switch (interface) {
     case  INTERFACE_SERIAL1:
-      MIDI1.sendProgramChange(program, MIDI_CHANNEL);
+      MIDI_A.sendProgramChange(program, MIDI_CHANNEL);
       break;
 
     case INTERFACE_SERIAL2:
-      MIDI2.sendProgramChange(program, MIDI_CHANNEL + 1);
+      MIDI_B.sendProgramChange(program, MIDI_CHANNEL + 1);
       break;
 
     case INTERFACE_SERIAL3:
-      MIDI3.sendProgramChange(program, MIDI_CHANNEL + device - MATRIX_DEVICE_A);
+      MIDI_CORE.sendProgramChange(program, MIDI_CHANNEL + device - MATRIX_DEVICE_A);
       break;
 
 #if SOFTSERIAL_ENABLED
     case INTERFACE_SERIAL4:
-      MIDI4.sendProgramChange(program, MIDI_CHANNEL + 2);
+      MIDI_C.sendProgramChange(program, MIDI_CHANNEL + 2);
       break;
 
     case INTERFACE_SERIAL5:
-      MIDI5.sendProgramChange(program, MIDI_CHANNEL + 3);
+      MIDI_D.sendProgramChange(program, MIDI_CHANNEL + 3);
       break;
 #endif
 
@@ -116,34 +116,34 @@ void MIDI_SendPatchNumberSingle(unsigned char interface, unsigned char bank, uns
 
   switch (interface) {
     case  INTERFACE_SERIAL1:
-      MIDI1.sendControlChange (0x00, bank, MIDI_CHANNEL);
-      MIDI1.sendControlChange (0x20, 0, MIDI_CHANNEL);
-      MIDI1.sendProgramChange(program, MIDI_CHANNEL);
+      MIDI_A.sendControlChange (0x00, bank, MIDI_CHANNEL);
+      MIDI_A.sendControlChange (0x20, 0, MIDI_CHANNEL);
+      MIDI_A.sendProgramChange(program, MIDI_CHANNEL);
       break;
 
     case INTERFACE_SERIAL2:
-      MIDI2.sendControlChange (0x00, bank, MIDI_CHANNEL + 1);
-      MIDI2.sendControlChange (0x20, 0, MIDI_CHANNEL + 1);
-      MIDI2.sendProgramChange(program, MIDI_CHANNEL + 1);
+      MIDI_B.sendControlChange (0x00, bank, MIDI_CHANNEL + 1);
+      MIDI_B.sendControlChange (0x20, 0, MIDI_CHANNEL + 1);
+      MIDI_B.sendProgramChange(program, MIDI_CHANNEL + 1);
       break;
 
     case INTERFACE_SERIAL3:
-      MIDI3.sendControlChange (0x00, bank, MIDI_CHANNEL + device - MATRIX_DEVICE_A);
-      MIDI3.sendControlChange (0x20, 0, MIDI_CHANNEL + device - MATRIX_DEVICE_A);
-      MIDI3.sendProgramChange(program, MIDI_CHANNEL + device - MATRIX_DEVICE_A);
+      MIDI_CORE.sendControlChange (0x00, bank, MIDI_CHANNEL + device - MATRIX_DEVICE_A);
+      MIDI_CORE.sendControlChange (0x20, 0, MIDI_CHANNEL + device - MATRIX_DEVICE_A);
+      MIDI_CORE.sendProgramChange(program, MIDI_CHANNEL + device - MATRIX_DEVICE_A);
       break;
 
 #if SOFTSERIAL_ENABLED
     case INTERFACE_SERIAL4:
-      MIDI4.sendControlChange (0x20, bank, MIDI_CHANNEL + 2);
-      MIDI4.sendControlChange (0x20, 0, MIDI_CHANNEL + 2);
-      MIDI4.sendProgramChange(program, MIDI_CHANNEL + 2);
+      MIDI_C.sendControlChange (0x20, bank, MIDI_CHANNEL + 2);
+      MIDI_C.sendControlChange (0x20, 0, MIDI_CHANNEL + 2);
+      MIDI_C.sendProgramChange(program, MIDI_CHANNEL + 2);
       break;
 
     case INTERFACE_SERIAL5:
-      MIDI5.sendControlChange (0x20, bank, MIDI_CHANNEL + 3);
-      MIDI5.sendControlChange (0x20, 0, MIDI_CHANNEL + 3);
-      MIDI5.sendProgramChange(program, MIDI_CHANNEL + 3);
+      MIDI_D.sendControlChange (0x20, bank, MIDI_CHANNEL + 3);
+      MIDI_D.sendControlChange (0x20, 0, MIDI_CHANNEL + 3);
+      MIDI_D.sendProgramChange(program, MIDI_CHANNEL + 3);
       break;
 #endif
 
@@ -229,28 +229,28 @@ void MIDI_BankRequest(unsigned char interface, unsigned char bank_req)
 
   switch (interface) {
     case  INTERFACE_SERIAL1:
-      MIDI1.sendSysEx (sizeof(sysex_setbank), sysex_setbank, true);
-      MIDI1.sendSysEx (sizeof(sysex_request), sysex_request, true);
-      MIDI1.sendSysEx (sizeof(sysex_delock), sysex_delock, true);
+      MIDI_A.sendSysEx (sizeof(sysex_setbank), sysex_setbank, true);
+      MIDI_A.sendSysEx (sizeof(sysex_request), sysex_request, true);
+      MIDI_A.sendSysEx (sizeof(sysex_delock), sysex_delock, true);
       break;
 
     case INTERFACE_SERIAL2:
-      MIDI2.sendSysEx (sizeof(sysex_setbank), sysex_setbank, true);
-      MIDI2.sendSysEx (sizeof(sysex_request), sysex_request, true);
-      MIDI2.sendSysEx (sizeof(sysex_delock), sysex_delock, true);
+      MIDI_B.sendSysEx (sizeof(sysex_setbank), sysex_setbank, true);
+      MIDI_B.sendSysEx (sizeof(sysex_request), sysex_request, true);
+      MIDI_B.sendSysEx (sizeof(sysex_delock), sysex_delock, true);
       break;
 
 #if SOFTSERIAL_ENABLED
     case INTERFACE_SERIAL4:
-      MIDI4.sendSysEx (sizeof(sysex_setbank), sysex_setbank, true);
-      MIDI4.sendSysEx (sizeof(sysex_request), sysex_request, true);
-      MIDI4.sendSysEx (sizeof(sysex_delock), sysex_delock, true);
+      MIDI_C.sendSysEx (sizeof(sysex_setbank), sysex_setbank, true);
+      MIDI_C.sendSysEx (sizeof(sysex_request), sysex_request, true);
+      MIDI_C.sendSysEx (sizeof(sysex_delock), sysex_delock, true);
       break;
 
     case INTERFACE_SERIAL5:
-      MIDI5.sendSysEx (sizeof(sysex_setbank), sysex_setbank, true);
-      MIDI5.sendSysEx (sizeof(sysex_request), sysex_request, true);
-      MIDI5.sendSysEx (sizeof(sysex_delock), sysex_delock, true);
+      MIDI_D.sendSysEx (sizeof(sysex_setbank), sysex_setbank, true);
+      MIDI_D.sendSysEx (sizeof(sysex_request), sysex_request, true);
+      MIDI_D.sendSysEx (sizeof(sysex_delock), sysex_delock, true);
       break;
 #endif
 
@@ -377,16 +377,16 @@ void MIDI_SendVoiceParamSingle(unsigned char interface, unsigned char param, uns
       switch (interface)
       {
         case INTERFACE_SERIAL1:
-          MIDI3.sendControlChange( Translate_SX_CC(param), value, MIDI_CHANNEL );
+          MIDI_CORE.sendControlChange( Translate_SX_CC(param), value, MIDI_CHANNEL );
           break;
         case INTERFACE_SERIAL2:
-          MIDI3.sendControlChange( Translate_SX_CC(param), value, MIDI_CHANNEL + 1);
+          MIDI_CORE.sendControlChange( Translate_SX_CC(param), value, MIDI_CHANNEL + 1);
           break;
         case INTERFACE_SERIAL4:
-          MIDI3.sendControlChange( Translate_SX_CC(param), value, MIDI_CHANNEL + 2 );
+          MIDI_CORE.sendControlChange( Translate_SX_CC(param), value, MIDI_CHANNEL + 2 );
           break;
         case INTERFACE_SERIAL5:
-          MIDI3.sendControlChange( Translate_SX_CC(param), value, MIDI_CHANNEL + 3);
+          MIDI_CORE.sendControlChange( Translate_SX_CC(param), value, MIDI_CHANNEL + 3);
           break;
         default: break;
       }
@@ -441,23 +441,23 @@ void MIDI_HandleDelayedVoiceParam(unsigned char interface, bool midiThru)
     switch (interface)
     {
       case  INTERFACE_SERIAL1:
-        MIDI1.sendSysEx (sizeof(sysex), sysex, true);
+        MIDI_A.sendSysEx (sizeof(sysex), sysex, true);
         update_EditBuffer(MATRIX_DEVICE_A, last_delayed_enc_param, last_delayed_enc_value);
         break;
 
       case INTERFACE_SERIAL2:
-        MIDI2.sendSysEx (sizeof(sysex), sysex, true);
+        MIDI_B.sendSysEx (sizeof(sysex), sysex, true);
         update_EditBuffer(MATRIX_DEVICE_B, last_delayed_enc_param, last_delayed_enc_value);
         break;
 
 #if SOFTSERIAL_ENABLED
       case INTERFACE_SERIAL4:
-        MIDI4.sendSysEx (sizeof(sysex), sysex, true);
+        MIDI_C.sendSysEx (sizeof(sysex), sysex, true);
         update_EditBuffer(MATRIX_DEVICE_C, last_delayed_enc_param, last_delayed_enc_value);
         break;
 
       case INTERFACE_SERIAL5:
-        MIDI5.sendSysEx (sizeof(sysex), sysex, true);
+        MIDI_D.sendSysEx (sizeof(sysex), sysex, true);
         update_EditBuffer(MATRIX_DEVICE_D, last_delayed_enc_param, last_delayed_enc_value);
         break;
 #endif
@@ -474,20 +474,20 @@ void MIDI_HandleDelayedVoiceParam(unsigned char interface, bool midiThru)
     // les automations du DAW dans handleControlChange() & les CC affectants réellement le son
     if (midiThru) // accepted values CC_ with Translate_SX_CC(last_delayed_enc_param)
     {
-      // MIDI3.sendControlChange( last_delayed_enc_param, last_delayed_enc_value, MIDI_CHANNEL + interface - 1);
+      // MIDI_CORE.sendControlChange( last_delayed_enc_param, last_delayed_enc_value, MIDI_CHANNEL + interface - 1);
       switch (interface)
       {
         case INTERFACE_SERIAL1:
-          MIDI3.sendControlChange( Translate_SX_CC(last_delayed_enc_param), last_delayed_enc_value, MIDI_CHANNEL );
+          MIDI_CORE.sendControlChange( Translate_SX_CC(last_delayed_enc_param), last_delayed_enc_value, MIDI_CHANNEL );
           break;
         case INTERFACE_SERIAL2:
-          MIDI3.sendControlChange( Translate_SX_CC(last_delayed_enc_param), last_delayed_enc_value, MIDI_CHANNEL + 1);
+          MIDI_CORE.sendControlChange( Translate_SX_CC(last_delayed_enc_param), last_delayed_enc_value, MIDI_CHANNEL + 1);
           break;
         case INTERFACE_SERIAL4:
-          MIDI3.sendControlChange( Translate_SX_CC(last_delayed_enc_param), last_delayed_enc_value, MIDI_CHANNEL + 2 );
+          MIDI_CORE.sendControlChange( Translate_SX_CC(last_delayed_enc_param), last_delayed_enc_value, MIDI_CHANNEL + 2 );
           break;
         case INTERFACE_SERIAL5:
-          MIDI3.sendControlChange( Translate_SX_CC(last_delayed_enc_param), last_delayed_enc_value, MIDI_CHANNEL + 3);
+          MIDI_CORE.sendControlChange( Translate_SX_CC(last_delayed_enc_param), last_delayed_enc_value, MIDI_CHANNEL + 3);
           break;
         default: break;
       }
@@ -524,8 +524,8 @@ void MIDI_HandleMatrixModTransmitDelay(unsigned char interface)
 
     // send CC to DAW here ...
     // how managing 4 parameters : bus src dest val ?
-    MIDI3.sendSysEx (sizeof(sysex), sysex, true); // first the sysex
-    //MIDI3.sendControlChange ( 110 + last_mmbus, last_mmval, MIDI_CHANNEL + interface - 1); // 10 buses -> 119 OK then a CC
+    MIDI_CORE.sendSysEx (sizeof(sysex), sysex, true); // first the sysex
+    //MIDI_CORE.sendControlChange ( 110 + last_mmbus, last_mmval, MIDI_CHANNEL + interface - 1); // 10 buses -> 119 OK then a CC
     // send a Cc corresponding to sysex. on CORE out. message is based on interface_serial: OK 1.02a 28/8/17
     // 27/09/17 using those CC will conflict with singlePatchDataFormatX[] when XCc
     // let comment until a new solution is found :
@@ -533,19 +533,19 @@ void MIDI_HandleMatrixModTransmitDelay(unsigned char interface)
       switch (interface)
       {
       case INTERFACE_SERIAL1:
-        MIDI3.sendControlChange ( 110 + last_mmbus, last_mmval, MIDI_CHANNEL);
+        MIDI_CORE.sendControlChange ( 110 + last_mmbus, last_mmval, MIDI_CHANNEL);
         break;
       case INTERFACE_SERIAL2:
-        MIDI3.sendControlChange ( 110 + last_mmbus, last_mmval, MIDI_CHANNEL + 1);
+        MIDI_CORE.sendControlChange ( 110 + last_mmbus, last_mmval, MIDI_CHANNEL + 1);
         break;
       case INTERFACE_SERIAL3:
-        MIDI3.sendControlChange ( 110 + last_mmbus, last_mmval, MIDI_CHANNEL + 8); // normally never used
+        MIDI_CORE.sendControlChange ( 110 + last_mmbus, last_mmval, MIDI_CHANNEL + 8); // normally never used
         break;
       case INTERFACE_SERIAL4:
-        MIDI3.sendControlChange ( 110 + last_mmbus, last_mmval, MIDI_CHANNEL + 2 );
+        MIDI_CORE.sendControlChange ( 110 + last_mmbus, last_mmval, MIDI_CHANNEL + 2 );
         break;
       case INTERFACE_SERIAL5:
-        MIDI3.sendControlChange ( 110 + last_mmbus, last_mmval, MIDI_CHANNEL + 3);
+        MIDI_CORE.sendControlChange ( 110 + last_mmbus, last_mmval, MIDI_CHANNEL + 3);
         break;
       default: break;
       }
@@ -634,24 +634,24 @@ void MIDI_Send_BreathController(unsigned char interface, unsigned char value)
 
   switch (interface) {
     case INTERFACE_SERIAL1:
-      MIDI1.sendControlChange(0x02, value, MIDI_CHANNEL);
+      MIDI_A.sendControlChange(0x02, value, MIDI_CHANNEL);
       break;
 
     case INTERFACE_SERIAL2:
-      MIDI2.sendControlChange(0x02, value, MIDI_CHANNEL + 1);
+      MIDI_B.sendControlChange(0x02, value, MIDI_CHANNEL + 1);
       break;
 
       //    case INTERFACE_SERIAL3:
-      //      MIDI3.sendControlChange(0x02, value, MIDI_CHANNEL + 2);
+      //      MIDI_CORE.sendControlChange(0x02, value, MIDI_CHANNEL + 2);
       //      break;
 
 #if SOFTSERIAL_ENABLED
     case INTERFACE_SERIAL4:
-      MIDI4.sendControlChange(0x02, value, MIDI_CHANNEL + 2);
+      MIDI_C.sendControlChange(0x02, value, MIDI_CHANNEL + 2);
       break;
 
     case INTERFACE_SERIAL5:
-      MIDI5.sendControlChange(0x02, value, MIDI_CHANNEL + 3);
+      MIDI_D.sendControlChange(0x02, value, MIDI_CHANNEL + 3);
       break;
 #endif
 
@@ -682,24 +682,24 @@ void MIDI_Send_UNISONDETUNESingle(unsigned char interface, unsigned char value)
 {
   switch (interface) {
     case INTERFACE_SERIAL1:
-      MIDI1.sendControlChange(94, value, MIDI_CHANNEL);
+      MIDI_A.sendControlChange(94, value, MIDI_CHANNEL);
       break;
 
     case INTERFACE_SERIAL2:
-      MIDI2.sendControlChange(94, value, MIDI_CHANNEL + 1);
+      MIDI_B.sendControlChange(94, value, MIDI_CHANNEL + 1);
       break;
 
     case INTERFACE_SERIAL3:
-      MIDI3.sendControlChange(94, value, MIDI_CHANNEL + 8);
+      MIDI_CORE.sendControlChange(94, value, MIDI_CHANNEL + 8);
       break;
 
 #if SOFTSERIAL_ENABLED
     case INTERFACE_SERIAL4:
-      MIDI4.sendControlChange(94, value, MIDI_CHANNEL + 2);
+      MIDI_C.sendControlChange(94, value, MIDI_CHANNEL + 2);
       break;
 
     case INTERFACE_SERIAL5:
-      MIDI5.sendControlChange(94, value, MIDI_CHANNEL + 3);
+      MIDI_D.sendControlChange(94, value, MIDI_CHANNEL + 3);
       break;
 #endif
 
@@ -980,28 +980,28 @@ byte Translate_CC_SX(unsigned char ctrl)
 void MIDI_SendSysex(unsigned char interface, const byte* sysex, unsigned int sysex_len) {
   switch (interface) {
     case  INTERFACE_SERIAL1:
-      MIDI1.sendSysEx(sysex_len, sysex, true);
+      MIDI_A.sendSysEx(sysex_len, sysex, true);
       break;
 
     case INTERFACE_SERIAL2:
-      MIDI2.sendSysEx(sysex_len, sysex, true);
+      MIDI_B.sendSysEx(sysex_len, sysex, true);
       break;
 
     case INTERFACE_SERIAL3:
       unsigned char stamp;
       stamp = systmClock;
       systmClock = MIDCLK; // doing this desactive F8 on serial port
-      MIDI3.sendSysEx(sysex_len, sysex, true);
+      MIDI_CORE.sendSysEx(sysex_len, sysex, true);
       systmClock = stamp; // retrieve state
       break;
 
 #if SOFTSERIAL_ENABLED
     case INTERFACE_SERIAL4:
-      MIDI4.sendSysEx(sysex_len, sysex, true);
+      MIDI_C.sendSysEx(sysex_len, sysex, true);
       break;
 
     case INTERFACE_SERIAL5:
-      MIDI5.sendSysEx(sysex_len, sysex, true);
+      MIDI_D.sendSysEx(sysex_len, sysex, true);
       break;
 #endif
 

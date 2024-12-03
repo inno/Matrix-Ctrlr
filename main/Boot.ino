@@ -70,8 +70,8 @@ void Boot(void)
 
   if (MIDITHRU_OFF_BOOT)
   {
-    MIDI3.turnThruOff(); // disable MIDI Thru on CORE OUT
-    MIDI1.turnThruOff(); // disable MIDI Thru on Matrix A
+    MIDI_CORE.turnThruOff(); // disable MIDI Thru on CORE OUT
+    MIDI_A.turnThruOff(); // disable MIDI Thru on Matrix A
   }
   delay(300);
   // send global parameters to DAW
@@ -143,11 +143,11 @@ void Boot(void)
   lcd.print(F("-- all notes off --"));
 
   // all notes off for Devices
-  MIDI1.sendControlChange(123, 0, MIDI_CHANNEL);
-  MIDI2.sendControlChange(123, 0, MIDI_CHANNEL + 1);
+  MIDI_A.sendControlChange(123, 0, MIDI_CHANNEL);
+  MIDI_B.sendControlChange(123, 0, MIDI_CHANNEL + 1);
 #if SOFTSERIAL_ENABLED
-  MIDI4.sendControlChange(123, 0, MIDI_CHANNEL + 2);
-  MIDI5.sendControlChange(123, 0, MIDI_CHANNEL + 3);
+  MIDI_C.sendControlChange(123, 0, MIDI_CHANNEL + 2);
+  MIDI_D.sendControlChange(123, 0, MIDI_CHANNEL + 3);
 #endif
 
   delay(200);

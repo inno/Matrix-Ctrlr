@@ -586,10 +586,10 @@ void ARP2(void)
 #endif
 
       // send Note On event:
-      MIDI1.sendNoteOn(aChordPlay[aStep][0], aChordPlay[aStep][1], MIDI_CHANNEL);
+      MIDI_A.sendNoteOn(aChordPlay[aStep][0], aChordPlay[aStep][1], MIDI_CHANNEL);
       if (arp_send_notes)
       {
-        MIDI3.sendNoteOn(aChordPlay[aStep][0], aChordPlay[aStep][1], MIDI_CHANNEL);
+        MIDI_CORE.sendNoteOn(aChordPlay[aStep][0], aChordPlay[aStep][1], MIDI_CHANNEL);
       }
 
       // notice last note to kill at the very end:
@@ -609,10 +609,10 @@ void ARP2(void)
     if (aTik == aGate)
     {
       //if(AB_ArpSeq_Cfg)
-      MIDI1.sendNoteOff(aChordPlay[aStep][0], aChordPlay[aStep][1], MIDI_CHANNEL);
+      MIDI_A.sendNoteOff(aChordPlay[aStep][0], aChordPlay[aStep][1], MIDI_CHANNEL);
       if (arp_send_notes)
       {
-        MIDI3.sendNoteOff(aChordPlay[aStep][0], aChordPlay[aStep][1], MIDI_CHANNEL);
+        MIDI_CORE.sendNoteOff(aChordPlay[aStep][0], aChordPlay[aStep][1], MIDI_CHANNEL);
       }
       lastNote[0] = aChordPlay[aStep][0];
       lastNote[1] = aChordPlay[aStep][1];
@@ -686,10 +686,10 @@ void ARP2(void)
   if ((lastNote[3] == true) && (arpN == 0)) // prior 0.99l
     //  if ((lastNote[3] == true) && (active_arp = false)) // since 0.99l2 BUGGY
   {
-    MIDI1.sendNoteOff(lastNote[0], lastNote[1], lastNote[2]);
+    MIDI_A.sendNoteOff(lastNote[0], lastNote[1], lastNote[2]);
     if (arp_send_notes)
     {
-      MIDI3.sendNoteOff(lastNote[0], lastNote[1], lastNote[2]);
+      MIDI_CORE.sendNoteOff(lastNote[0], lastNote[1], lastNote[2]);
     }
     //active_arp = false;
     aTik = aStep = 0;
@@ -755,10 +755,10 @@ void ARP3(bool trig)
 #endif
 
       // send Note On event:
-      MIDI1.sendNoteOn(aChordPlay[aStep][0], aChordPlay[aStep][1], MIDI_CHANNEL);
+      MIDI_A.sendNoteOn(aChordPlay[aStep][0], aChordPlay[aStep][1], MIDI_CHANNEL);
       if (arp_send_notes)
       {
-        MIDI3.sendNoteOn(aChordPlay[aStep][0], aChordPlay[aStep][1], MIDI_CHANNEL);
+        MIDI_CORE.sendNoteOn(aChordPlay[aStep][0], aChordPlay[aStep][1], MIDI_CHANNEL);
       }
 
       // notice last note to kill at the very end:
@@ -779,10 +779,10 @@ void ARP3(bool trig)
     if (trig == false)
     {
       //if(AB_ArpSeq_Cfg)
-      MIDI1.sendNoteOff(aChordPlay[aStep][0], aChordPlay[aStep][1], MIDI_CHANNEL);
+      MIDI_A.sendNoteOff(aChordPlay[aStep][0], aChordPlay[aStep][1], MIDI_CHANNEL);
       if (arp_send_notes)
       {
-        MIDI3.sendNoteOff(aChordPlay[aStep][0], aChordPlay[aStep][1], MIDI_CHANNEL);
+        MIDI_CORE.sendNoteOff(aChordPlay[aStep][0], aChordPlay[aStep][1], MIDI_CHANNEL);
       }
       lastNote[0] = aChordPlay[aStep][0];
       lastNote[1] = aChordPlay[aStep][1];
@@ -842,10 +842,10 @@ void ARP3(bool trig)
   if ((lastNote[3] == true) && (arpN == 0)) // prior 0.99l
     //  if ((lastNote[3] == true) && (active_arp = false)) // since 0.99l2 BUGGY
   {
-    MIDI1.sendNoteOff(lastNote[0], lastNote[1], lastNote[2]);
+    MIDI_A.sendNoteOff(lastNote[0], lastNote[1], lastNote[2]);
     if (arp_send_notes)
     {
-      MIDI3.sendNoteOff(lastNote[0], lastNote[1], lastNote[2]);
+      MIDI_CORE.sendNoteOff(lastNote[0], lastNote[1], lastNote[2]);
     }
     //active_arp = false;
     aTik = aStep = 0;
@@ -896,7 +896,7 @@ void Release_aChordLatch(bool state)
     {
       while (i < latchCounter)
       {
-        MIDI1.sendNoteOff( aChordLatch[i][0], aChordLatch[i][1], aChordLatch[i][2] );
+        MIDI_A.sendNoteOff( aChordLatch[i][0], aChordLatch[i][1], aChordLatch[i][2] );
         ++i;
       }
       latchCounter = 0; // reset

@@ -34,7 +34,7 @@ signed char skipSeqStep;
 /////////////////////////////////////////////////////////////////////////////////////////
 void Init_Seq(void)
 {
-  MIDI1.sendControlChange(123, 0, MIDI_CHANNEL); // all notes off msg
+  MIDI_A.sendControlChange(123, 0, MIDI_CHANNEL); // all notes off msg
 
   //  seqSpeed = 3;
 
@@ -60,7 +60,7 @@ void Init_Seq(void)
 /////////////////////////////////////////////////////////////////////////////////////////
 void DefaultSeq_Load(unsigned char index)
 {
-  MIDI1.sendControlChange(123, 0, MIDI_CHANNEL); // all notes off msg
+  MIDI_A.sendControlChange(123, 0, MIDI_CHANNEL); // all notes off msg
 
   // set to default array depending of index
   for (unsigned char i = 0; i < 32; ++i)
@@ -257,10 +257,10 @@ void SEQ(void)
         skipBack++;
       else // else normal note
       {
-        MIDI1.sendNoteOn(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36),
+        MIDI_A.sendNoteOn(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36),
           sequence[seqPlayStep][1] - sequence[0][1] + playSeqTrigger[1], MIDI_CHANNEL);
         if (arp_send_notes)
-          MIDI3.sendNoteOn(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36),
+          MIDI_CORE.sendNoteOn(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36),
             sequence[seqPlayStep][1] - sequence[0][1] + playSeqTrigger[1], MIDI_CHANNEL);
 
         // update display lcd :
@@ -289,17 +289,17 @@ void SEQ(void)
     //if it was a tie note, get previous pitch and send note off
     if (sequence[seqPlayStep][1] > 127)
     {
-      MIDI1.sendNoteOff(
+      MIDI_A.sendNoteOff(
         sequence[seqPlayStep - skipBack][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
       if (arp_send_notes)
-        MIDI3.sendNoteOff(
+        MIDI_CORE.sendNoteOff(
           sequence[seqPlayStep - skipBack][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
     }
     else if (sequence[seqPlayStep][1] != 0)
     {
-      MIDI1.sendNoteOff(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
+      MIDI_A.sendNoteOff(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
       if (arp_send_notes)
-        MIDI3.sendNoteOff(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
+        MIDI_CORE.sendNoteOff(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
     }
 
     // chnage state of released trigger
@@ -336,20 +336,20 @@ void SEQ(void)
       else if (sequence[seqPlayStep][1] > 127) // if it's a 'tie'
       {
         // play pitch of previous note with a zero velocity
-        MIDI1.sendNoteOff(
+        MIDI_A.sendNoteOff(
           sequence[seqPlayStep - skipBack][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
         if (arp_send_notes)
-          MIDI3.sendNoteOff(
+          MIDI_CORE.sendNoteOff(
             sequence[seqPlayStep - skipBack][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
         // reset counter
         skipBack = 0;
       }
       else // play note off normally
       {
-        MIDI1.sendNoteOff(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36),
+        MIDI_A.sendNoteOff(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36),
           sequence[seqPlayStep][1] - sequence[0][1] + playSeqTrigger[1], MIDI_CHANNEL);
         if (arp_send_notes)
-          MIDI3.sendNoteOff(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36),
+          MIDI_CORE.sendNoteOff(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36),
             sequence[seqPlayStep][1] - sequence[0][1] + playSeqTrigger[1], MIDI_CHANNEL);
       }
 
@@ -419,11 +419,11 @@ void SEQ2(bool trig)
         ++skipBack;
       else // else normal note
       {
-        MIDI1.sendNoteOn(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36),
+        MIDI_A.sendNoteOn(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36),
           sequence[seqPlayStep][1] - sequence[0][1] + playSeqTrigger[1], MIDI_CHANNEL);
         // NOTA : limits 0 & 127 are automatically made by sendNoteOn function Edit : pas tout à fait, ça revient à zero si >127
         if (arp_send_notes)
-          MIDI3.sendNoteOn(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36),
+          MIDI_CORE.sendNoteOn(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36),
             sequence[seqPlayStep][1] - sequence[0][1] + playSeqTrigger[1], MIDI_CHANNEL);
 
         // update display lcd :
@@ -452,17 +452,17 @@ void SEQ2(bool trig)
     //if it was a tie note, get previous pitch and send note off
     if (sequence[seqPlayStep][1] > 127)
     {
-      MIDI1.sendNoteOff(
+      MIDI_A.sendNoteOff(
         sequence[seqPlayStep - skipBack][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
       if (arp_send_notes)
-        MIDI3.sendNoteOff(
+        MIDI_CORE.sendNoteOff(
           sequence[seqPlayStep - skipBack][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
     }
     else if (sequence[seqPlayStep][1] != 0)
     {
-      MIDI1.sendNoteOff(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
+      MIDI_A.sendNoteOff(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
       if (arp_send_notes)
-        MIDI3.sendNoteOff(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
+        MIDI_CORE.sendNoteOff(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
     }
 
     // chnage state of released trigger
@@ -499,20 +499,20 @@ void SEQ2(bool trig)
       else if (sequence[seqPlayStep][1] > 127) // if it's a 'tie'
       {
         // play pitch of previous note with a zero velocity
-        MIDI1.sendNoteOff(
+        MIDI_A.sendNoteOff(
           sequence[seqPlayStep - skipBack][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
         if (arp_send_notes)
-          MIDI3.sendNoteOff(
+          MIDI_CORE.sendNoteOff(
             sequence[seqPlayStep - skipBack][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
         // reset counter
         skipBack = 0;
       }
       else // play note off normally
       {
-        MIDI1.sendNoteOff(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36),
+        MIDI_A.sendNoteOff(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36),
           sequence[seqPlayStep][1] - sequence[0][1] + playSeqTrigger[1], MIDI_CHANNEL);
         if (arp_send_notes)
-          MIDI3.sendNoteOff(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36),
+          MIDI_CORE.sendNoteOff(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36),
             sequence[seqPlayStep][1] - sequence[0][1] + playSeqTrigger[1], MIDI_CHANNEL);
       }
 

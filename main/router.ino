@@ -47,7 +47,7 @@ void HandleNoteOff(byte channel, byte pitch, byte velocity)
   if (softMIDITHRU)
   {
     if (channel == MIDI_CHANNEL)
-      MIDI3.sendNoteOff(pitch, velocity, channel + 4);
+      MIDI_CORE.sendNoteOff(pitch, velocity, channel + 4);
   }
 
   // sending notes off to synths
@@ -64,7 +64,7 @@ void HandleNoteOff(byte channel, byte pitch, byte velocity)
     else if (ui_aHold && (SetAB == false) && (pitch < aSplit))
       Feed_aChordLatch(pitch, velocity, channel);
     else
-      MIDI1.sendNoteOff(pitch, velocity, channel);
+      MIDI_A.sendNoteOff(pitch, velocity, channel);
     // let pass last noteOff after arpegio ***
 
     if (SetAB)
@@ -83,7 +83,7 @@ void HandleNoteOff(byte channel, byte pitch, byte velocity)
       {
         if (ui_seqRec) // if we record a seq
           //don't call the seqREC() with noteOff, only noteOn are useful
-          MIDI1.sendNoteOff(pitch, velocity, channel); // to listen what you rec !
+          MIDI_A.sendNoteOff(pitch, velocity, channel); // to listen what you rec !
 
         // if we play a seq and we release the pushed key of NoteOn used before to trig the sequence // CA MARCHE TROP BIEN ! :)
         if (ui_seqPlay && seqMonoMode && (pitch == seqPushedKey))
@@ -106,7 +106,7 @@ void HandleNoteOff(byte channel, byte pitch, byte velocity)
 
         if (ui_seqPlay && seqMonoMode && (pitch != seqPushedKey)) // availability to play others notes while seq is running on the same keyboard
         {
-          MIDI1.sendNoteOff(pitch, velocity, channel);
+          MIDI_A.sendNoteOff(pitch, velocity, channel);
         }
 
 #if DEBUG_ARP
@@ -132,7 +132,7 @@ void HandleNoteOff(byte channel, byte pitch, byte velocity)
       {
         //don't call the seqREC() with noteOff, only noteOn are useful
         if (ui_seqRec) // if we record a seq
-          MIDI1.sendNoteOff(pitch, velocity, channel); // to listen what you rec !
+          MIDI_A.sendNoteOff(pitch, velocity, channel); // to listen what you rec !
 
         // if we play a seq and we release the pushed key of NoteOn used before to trig the sequence // CA MARCHE TROP BIEN ! :)
         if (ui_seqPlay && seqMonoMode && (pitch == seqPushedKey))
@@ -155,7 +155,7 @@ void HandleNoteOff(byte channel, byte pitch, byte velocity)
 
         // availability to play others notes while seq is running on the same keyboard
         if (ui_seqPlay && seqMonoMode && (pitch != seqPushedKey))
-          MIDI1.sendNoteOff(pitch, velocity, channel);
+          MIDI_A.sendNoteOff(pitch, velocity, channel);
 
 #if DEBUG_ARP
         Serial.println(F("arpegiateOption FALSE"));
@@ -166,14 +166,14 @@ void HandleNoteOff(byte channel, byte pitch, byte velocity)
     }
   }
   if (channel == MIDI_CHANNEL + 1)
-    MIDI2.sendNoteOff(pitch, velocity, channel);
+    MIDI_B.sendNoteOff(pitch, velocity, channel);
 
 #if SOFTSERIAL_ENABLED
   if (channel == MIDI_CHANNEL + 2)
-    MIDI4.sendNoteOff(pitch, velocity, channel);
+    MIDI_C.sendNoteOff(pitch, velocity, channel);
 
   if (channel == MIDI_CHANNEL + 3)
-    MIDI5.sendNoteOff(pitch, velocity, channel);
+    MIDI_D.sendNoteOff(pitch, velocity, channel);
 #endif
 
 #if DEBUG_router
@@ -227,7 +227,7 @@ void HandleNoteOn(byte channel, byte pitch, byte velocity)
 
   // MIDI THRU in software : MIDI IN A -> MIDI OUT CORE
   if (softMIDITHRU && channel == MIDI_CHANNEL)
-    MIDI3.sendNoteOn(pitch, velocity, channel + 4);
+    MIDI_CORE.sendNoteOn(pitch, velocity, channel + 4);
 
   // learn split pitch A/S if we are in ARP menu page4 :
   if (ui_aSplitLearning && channel == MIDI_CHANNEL && SoftPanel.Mode == Arp && SoftPanel.Page == SOFT_PAGE4)
@@ -268,7 +268,7 @@ void HandleNoteOn(byte channel, byte pitch, byte velocity)
           if (ui_seqRec) // if we record a seq
           {
             Rec_Seq(pitch, velocity, channel, 0); // opt = 0 for the moment TO IMPROVE
-            MIDI1.sendNoteOn(pitch, velocity, channel); // to listen what you rec !
+            MIDI_A.sendNoteOn(pitch, velocity, channel); // to listen what you rec !
 
 #if DEBUG_SEQ
             Serial.println(F("we are in Rec_Seq() inside router"));
@@ -279,7 +279,7 @@ void HandleNoteOn(byte channel, byte pitch, byte velocity)
 
           // availability to play others notes while seq is running on the same keyboard
           if (ui_seqPlay && seqMonoMode && (pitch != seqPushedKey))
-            MIDI1.sendNoteOn(pitch, velocity, channel);
+            MIDI_A.sendNoteOn(pitch, velocity, channel);
 
           if (ui_seqPlay && (seqMonoMode == false)) // if we play a seq
           {
@@ -308,7 +308,7 @@ void HandleNoteOn(byte channel, byte pitch, byte velocity)
 #endif
         }
         else
-          MIDI1.sendNoteOn(pitch, velocity, channel);
+          MIDI_A.sendNoteOn(pitch, velocity, channel);
 
         return;
       }
@@ -330,7 +330,7 @@ void HandleNoteOn(byte channel, byte pitch, byte velocity)
           if (ui_seqRec) // if we record a seq
           {
             Rec_Seq(pitch, velocity, channel, 0); // opt = 0 for the moment TO IMPROVE
-            MIDI1.sendNoteOn(pitch, velocity, channel); // to listen what you rec !
+            MIDI_A.sendNoteOn(pitch, velocity, channel); // to listen what you rec !
 
 #if DEBUG_SEQ
             Serial.println(F("we are in Rec_Seq() inside router"));
@@ -340,7 +340,7 @@ void HandleNoteOn(byte channel, byte pitch, byte velocity)
 
           // availability to play others notes while seq is running on the same keyboard
           if (ui_seqPlay && seqMonoMode && (pitch != seqPushedKey))
-            MIDI1.sendNoteOn(pitch, velocity, channel);
+            MIDI_A.sendNoteOn(pitch, velocity, channel);
 
           if (ui_seqPlay && (seqMonoMode == false)) // if we play a seq
           {
@@ -368,20 +368,20 @@ void HandleNoteOn(byte channel, byte pitch, byte velocity)
 #endif
         }
         else
-          MIDI1.sendNoteOn(pitch, velocity, channel);
+          MIDI_A.sendNoteOn(pitch, velocity, channel);
 
         return;
       }
     }
     if (channel == (MIDI_CHANNEL + 1))
-      MIDI2.sendNoteOn(pitch, velocity, channel);
+      MIDI_B.sendNoteOn(pitch, velocity, channel);
 
 #if SOFTSERIAL_ENABLED
     if (channel == MIDI_CHANNEL + 2)
-      MIDI4.sendNoteOn(pitch, velocity, channel);
+      MIDI_C.sendNoteOn(pitch, velocity, channel);
 
     if (channel == MIDI_CHANNEL + 3)
-      MIDI5.sendNoteOn(pitch, velocity, channel);
+      MIDI_D.sendNoteOn(pitch, velocity, channel);
 #endif
   }
 
@@ -448,17 +448,17 @@ void HandleControlChange(byte channel, byte controlNumber, byte value)
         if (!(channel == MIDI_CHANNEL && router_arp_tag))
         {
           if (channel == MIDI_CHANNEL + 0)
-            MIDI1.sendControlChange(controlNumber, value, channel);
+            MIDI_A.sendControlChange(controlNumber, value, channel);
 
           if (channel == MIDI_CHANNEL + 1)
-            MIDI2.sendControlChange(controlNumber, value, channel);
+            MIDI_B.sendControlChange(controlNumber, value, channel);
 
 #if SOFTSERIAL_ENABLED
           if (channel == MIDI_CHANNEL + 2)
-            MIDI4.sendControlChange(controlNumber, value, channel);
+            MIDI_C.sendControlChange(controlNumber, value, channel);
 
           if (channel == MIDI_CHANNEL + 3)
-            MIDI5.sendControlChange(controlNumber, value, channel);
+            MIDI_D.sendControlChange(controlNumber, value, channel);
 #endif
         }
         break;
@@ -483,17 +483,17 @@ void HandleControlChange(byte channel, byte controlNumber, byte value)
       case 126: // mode mono
       case 127: // mode poly
         if (channel == MIDI_CHANNEL + 0)
-          MIDI1.sendControlChange(controlNumber, value, channel);
+          MIDI_A.sendControlChange(controlNumber, value, channel);
 
         if (channel == MIDI_CHANNEL + 1)
-          MIDI2.sendControlChange(controlNumber, value, channel);
+          MIDI_B.sendControlChange(controlNumber, value, channel);
 
 #if SOFTSERIAL_ENABLED
         if (channel == MIDI_CHANNEL + 2)
-          MIDI4.sendControlChange(controlNumber, value, channel);
+          MIDI_C.sendControlChange(controlNumber, value, channel);
 
         if (channel == MIDI_CHANNEL + 3)
-          MIDI5.sendControlChange(controlNumber, value, channel);
+          MIDI_D.sendControlChange(controlNumber, value, channel);
 #endif
         break;
 
@@ -501,17 +501,17 @@ void HandleControlChange(byte channel, byte controlNumber, byte value)
         UnisonDetune[channel + MIDI_CHANNEL - 1] = value;
         // transmit stuff
         if (channel == MIDI_CHANNEL + 0)
-          MIDI1.sendControlChange(94, value, channel);
+          MIDI_A.sendControlChange(94, value, channel);
 
         if (channel == MIDI_CHANNEL + 1)
-          MIDI2.sendControlChange(94, value, channel);
+          MIDI_B.sendControlChange(94, value, channel);
 
 #if SOFTSERIAL_ENABLED
         if (channel == MIDI_CHANNEL + 2)
-          MIDI4.sendControlChange(94, value, channel);
+          MIDI_C.sendControlChange(94, value, channel);
 
         if (channel == MIDI_CHANNEL + 3)
-          MIDI5.sendControlChange(94, value, channel);
+          MIDI_D.sendControlChange(94, value, channel);
 #endif
         break;
 
@@ -541,7 +541,7 @@ void HandleControlChange(byte channel, byte controlNumber, byte value)
           UpdateDinStates();
         }
         else if (localControl)
-          MIDI3.sendControlChange(controlNumber, value, channel);
+          MIDI_CORE.sendControlChange(controlNumber, value, channel);
         break;
 
 #if DEBUG_router
@@ -634,17 +634,17 @@ void HandleAfterTouchChannel(byte channel, byte pressure)
   MIDI_Incoming = true;
 
   if (channel == MIDI_CHANNEL + 0)
-    MIDI1.sendAfterTouch(pressure, channel);
+    MIDI_A.sendAfterTouch(pressure, channel);
 
   if (channel == MIDI_CHANNEL + 1)
-    MIDI2.sendAfterTouch(pressure, channel);
+    MIDI_B.sendAfterTouch(pressure, channel);
 
 #if SOFTSERIAL_ENABLED
   if (channel == MIDI_CHANNEL + 2)
-    MIDI4.sendAfterTouch(pressure, channel);
+    MIDI_C.sendAfterTouch(pressure, channel);
 
   if (channel == MIDI_CHANNEL + 3)
-    MIDI5.sendAfterTouch(pressure, channel);
+    MIDI_D.sendAfterTouch(pressure, channel);
 #endif
 
 #if DEBUG_router
@@ -664,17 +664,17 @@ void HandlePitchBend(byte channel, int bend)
 
   // ça merdouille :/
   if (channel == MIDI_CHANNEL + 0)
-    MIDI1.sendPitchBend(bend, channel);
+    MIDI_A.sendPitchBend(bend, channel);
 
   if (channel == MIDI_CHANNEL + 1)
-    MIDI2.sendPitchBend(bend, channel);
+    MIDI_B.sendPitchBend(bend, channel);
 
 #if SOFTSERIAL_ENABLED
   if (channel == MIDI_CHANNEL + 2)
-    MIDI4.sendPitchBend(bend, channel);
+    MIDI_C.sendPitchBend(bend, channel);
 
   if (channel == MIDI_CHANNEL + 3)
-    MIDI5.sendPitchBend(bend, channel);
+    MIDI_D.sendPitchBend(bend, channel);
 #endif
 
 #if DEBUG_router
@@ -697,7 +697,7 @@ void HandleClock(void)
     ARP2();
     SEQ();
 
-    // each time a clock message 0xf8 is received on MIDI3 Input port we increment mClock :
+    // each time a clock message 0xf8 is received on MIDI_CORE Input port we increment mClock :
     if (++mClock > 23) // 24 ppqn
       mClock = 0; // reset
 
@@ -1173,24 +1173,24 @@ unsigned int HandleReceivedSysEx(byte *sysex, unsigned int length)
 void enableMidiCallbacks(void)
 {
   /////// Midi CORE IN //////////////////
-  MIDI3.setHandleNoteOff(ZoneNoteOff);
-  MIDI3.setHandleNoteOn(ZoneNoteOn);
-  MIDI3.setHandleControlChange(ZoneControlChange);
-  MIDI3.setHandleProgramChange(HandleProgramChange);
-  MIDI3.setHandleAfterTouchChannel(ZoneAfterTouchChannel);
-  MIDI3.setHandlePitchBend(ZonePitchBend);
-  MIDI3.setHandleSystemExclusive(HandleSystemExclusive);
-  MIDI3.setHandleClock(HandleClock);
-  MIDI3.setHandleStart(HandleStart);
-  MIDI3.setHandleContinue(HandleContinue);
-  MIDI3.setHandleStop(HandleStop);
+  MIDI_CORE.setHandleNoteOff(ZoneNoteOff);
+  MIDI_CORE.setHandleNoteOn(ZoneNoteOn);
+  MIDI_CORE.setHandleControlChange(ZoneControlChange);
+  MIDI_CORE.setHandleProgramChange(HandleProgramChange);
+  MIDI_CORE.setHandleAfterTouchChannel(ZoneAfterTouchChannel);
+  MIDI_CORE.setHandlePitchBend(ZonePitchBend);
+  MIDI_CORE.setHandleSystemExclusive(HandleSystemExclusive);
+  MIDI_CORE.setHandleClock(HandleClock);
+  MIDI_CORE.setHandleStart(HandleStart);
+  MIDI_CORE.setHandleContinue(HandleContinue);
+  MIDI_CORE.setHandleStop(HandleStop);
 
   /////// Midi IN A /////////////////////
-  MIDI1.setHandleNoteOff(ZoneNoteOff);
-  MIDI1.setHandleNoteOn(ZoneNoteOn);
-  MIDI1.setHandleControlChange(ZoneControlChange);
-  MIDI1.setHandleProgramChange(HandleProgramChange);
-  MIDI1.setHandleAfterTouchChannel(ZoneAfterTouchChannel);
-  MIDI1.setHandlePitchBend(ZonePitchBend);
-  MIDI1.setHandleSystemExclusive(HandleSystemExclusive);
+  MIDI_A.setHandleNoteOff(ZoneNoteOff);
+  MIDI_A.setHandleNoteOn(ZoneNoteOn);
+  MIDI_A.setHandleControlChange(ZoneControlChange);
+  MIDI_A.setHandleProgramChange(HandleProgramChange);
+  MIDI_A.setHandleAfterTouchChannel(ZoneAfterTouchChannel);
+  MIDI_A.setHandlePitchBend(ZonePitchBend);
+  MIDI_A.setHandleSystemExclusive(HandleSystemExclusive);
 }

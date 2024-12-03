@@ -57,7 +57,7 @@ void Triggers()
       else
         DOUT_PinSet(DOUT_ACTIVITY2, 1);
 
-      MIDI3.sendRealTime(Clock); // send a midi clock on core out
+      MIDI_CORE.sendRealTime(Clock); // send a midi clock on core out
       ARP2(); // we always call ARP2()
       SEQ(); // we always call seq()
 
@@ -161,7 +161,7 @@ void Triggers()
     else
       DOUT_PinSet(DOUT_ACTIVITY2, 1);
 
-    MIDI3.sendRealTime(Clock); // send a midi clock 0xf8 on core out
+    MIDI_CORE.sendRealTime(Clock); // send a midi clock 0xf8 on core out
     ARP2(); // we always call ARP2()
     SEQ(); // we always call seq()
 

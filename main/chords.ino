@@ -167,7 +167,7 @@ void PLAY_CHORD(byte pitch, byte velocity, byte channel, unsigned char chordmem,
     case ON:
       // for (unsigned char i = 0; i < 6; i++) {
       for (unsigned char i = 0; i < chordSize[chordmem]; i++) {
-        MIDI1.sendNoteOn (pitch + chordsMemoArray[chordmem - 1][i][0], velocity, channel); // fixed velocity + chordsMemoArray[chordmem - 1][i][1]
+        MIDI_A.sendNoteOn (pitch + chordsMemoArray[chordmem - 1][i][0], velocity, channel); // fixed velocity + chordsMemoArray[chordmem - 1][i][1]
       }
 
 #if DEBUG_CHORDM
@@ -181,7 +181,7 @@ void PLAY_CHORD(byte pitch, byte velocity, byte channel, unsigned char chordmem,
 
     case OFF:
       for (unsigned char i = 0; i < chordSize[chordmem]; i++) {
-        MIDI1.sendNoteOff(chordsMemoArray[chordmem - 1][i][0] + pitch, velocity, channel);
+        MIDI_A.sendNoteOff(chordsMemoArray[chordmem - 1][i][0] + pitch, velocity, channel);
       }
 
 #if DEBUG_CHORDM

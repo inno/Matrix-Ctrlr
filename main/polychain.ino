@@ -15,27 +15,27 @@ int polyDepth = 2;  // Number of channels to chain
 
 void PolyChainNoteOn(byte pitch, byte velocity)
 {
-  MIDI1.sendNoteOn(pitch, velocity, MIDI_CHANNEL);
-  MIDI2.sendNoteOn(pitch, velocity, MIDI_CHANNEL + 1);
-  // softMIDITHRU handles MIDI3
+  MIDI_A.sendNoteOn(pitch, velocity, MIDI_CHANNEL);
+  MIDI_B.sendNoteOn(pitch, velocity, MIDI_CHANNEL + 1);
+  // softMIDITHRU handles MIDI_CORE
   #if SOFTSERIAL_ENABLED
   if (polyDepth >= 3)
-    MIDI4.sendNoteOn(pitch, velocity, MIDI_CHANNEL + 2);
+    MIDI_C.sendNoteOn(pitch, velocity, MIDI_CHANNEL + 2);
     if (polyDepth == 4)
-      MIDI5.sendNoteOn(pitch, velocity, MIDI_CHANNEL + 3);
+      MIDI_D.sendNoteOn(pitch, velocity, MIDI_CHANNEL + 3);
   #endif
 }
 
 void PolyChainNoteOff(byte pitch, byte velocity)
 {
-  MIDI1.sendNoteOff(pitch, velocity, MIDI_CHANNEL);
-  MIDI2.sendNoteOff(pitch, velocity, MIDI_CHANNEL + 1);
-  // softMIDITHRU handles MIDI3
+  MIDI_A.sendNoteOff(pitch, velocity, MIDI_CHANNEL);
+  MIDI_B.sendNoteOff(pitch, velocity, MIDI_CHANNEL + 1);
+  // softMIDITHRU handles MIDI_CORE
   #if SOFTSERIAL_ENABLED
   if (polyDepth >= 3)
-    MIDI4.sendNoteOff(pitch, velocity, MIDI_CHANNEL + 2);
+    MIDI_C.sendNoteOff(pitch, velocity, MIDI_CHANNEL + 2);
     if (polyDepth == 4)
-      MIDI5.sendNoteOff(pitch, velocity, MIDI_CHANNEL + 3);
+      MIDI_D.sendNoteOff(pitch, velocity, MIDI_CHANNEL + 3);
   #endif
 }
 
@@ -138,12 +138,12 @@ extern void PolySendUnisonDetune(unsigned char interface, unsigned char value)
 }
 
 void PolySendSysex(const byte* sysex) {
-  MIDI1.sendSysEx(sizeof(sysex), sysex, true);
-  MIDI2.sendSysEx(sizeof(sysex), sysex, true);
+  MIDI_A.sendSysEx(sizeof(sysex), sysex, true);
+  MIDI_B.sendSysEx(sizeof(sysex), sysex, true);
   #if SOFTSERIAL_ENABLED
   if (polyDepth >= 3)
-    MIDI4.sendSysEx(sizeof(sysex), sysex, true);
+    MIDI_C.sendSysEx(sizeof(sysex), sysex, true);
     if (polyDepth == 4)
-      MIDI5.sendSysEx(sizeof(sysex), sysex, true);
+      MIDI_D.sendSysEx(sizeof(sysex), sysex, true);
   #endif
 }
