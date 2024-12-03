@@ -396,7 +396,7 @@ void UI_Handle_Patch(void)
         //Read_Patch_From_BS(device, uBank[device], uPatch[device]); // reload what's just been saved
         UpdateDinStates(); // mise à jour des Leds
         // send EditBuffer[device] to core out for copy/past in MidiMonitor.app if necessary
-        SendEditBuffer(device, INTERFACE_SERIAL3);
+        SendEditBuffer(device, INTERFACE_MIDI_CORE);
         MIDI_Send_UNISONDETUNE(INTERFACE_SERIAL, UnisonDetune[device]);
         break;
 
@@ -410,9 +410,9 @@ void UI_Handle_Patch(void)
           MIDI_Send_UNISONDETUNE(INTERFACE_SERIAL, UnisonDetune[device]);
         }
         // send EditBuffer[device] to core out for copy/past in MidiMonitor.app if necessary
-        SendEditBuffer(device, INTERFACE_SERIAL3);
+        SendEditBuffer(device, INTERFACE_MIDI_CORE);
         UpdateDinStates();
-        MIDI_Send_UNISONDETUNE(INTERFACE_SERIAL3, UnisonDetune[device]);
+        MIDI_Send_UNISONDETUNE(INTERFACE_MIDI_CORE, UnisonDetune[device]);
         break;
 
       case SOFT_EDIT_3: // send Orig
@@ -421,9 +421,9 @@ void UI_Handle_Patch(void)
           SendEditBufferOrig(INTERFACE_SERIAL);
           MIDI_Send_UNISONDETUNE(INTERFACE_SERIAL, UnisonDetuneOrig);
         }
-        SendEditBufferOrig(INTERFACE_SERIAL3);
+        SendEditBufferOrig(INTERFACE_MIDI_CORE);
         UpdateDinStates();
-        MIDI_Send_UNISONDETUNE(INTERFACE_SERIAL3, UnisonDetuneOrig);
+        MIDI_Send_UNISONDETUNE(INTERFACE_MIDI_CORE, UnisonDetuneOrig);
         break;
 
       case SOFT_EDIT_2: // init patch in EditBuffer
@@ -434,8 +434,8 @@ void UI_Handle_Patch(void)
           SendEditBuffer(device, INTERFACE_SERIAL);
           MIDI_Send_UNISONDETUNE(INTERFACE_SERIAL, 0);
         }
-        SendEditBuffer(device, INTERFACE_SERIAL3);
-        MIDI_Send_UNISONDETUNE(INTERFACE_SERIAL3, 0);
+        SendEditBuffer(device, INTERFACE_MIDI_CORE);
+        MIDI_Send_UNISONDETUNE(INTERFACE_MIDI_CORE, 0);
         break;
 
       case SOFT_EDIT_1: // set & request patch from the Matrix1000
@@ -468,11 +468,11 @@ void UI_Handle_Patch(void)
           ArpParameters_Load(device);
 
           // send EditBuffer[device] to core out
-          SendEditBuffer(device, INTERFACE_SERIAL3);
-          MIDI_Send_UNISONDETUNE(INTERFACE_SERIAL3, UnisonDetune[device]);
+          SendEditBuffer(device, INTERFACE_MIDI_CORE);
+          MIDI_Send_UNISONDETUNE(INTERFACE_MIDI_CORE, UnisonDetune[device]);
         }
         // send Bank et Patch number & EditBuffer[device] to Core  Midi out :
-        MIDI_SendPatchNumber(INTERFACE_SERIAL3, uBank[device], uPatch[device]);
+        MIDI_SendPatchNumber(INTERFACE_MIDI_CORE, uBank[device], uPatch[device]);
 
         break;
 
@@ -499,11 +499,11 @@ void UI_Handle_Patch(void)
           // load arp parameters
           ArpParameters_Load(device);
           // send EditBuffer[device] to core out
-          SendEditBuffer(device, INTERFACE_SERIAL3);
-          MIDI_Send_UNISONDETUNE(INTERFACE_SERIAL3, UnisonDetune[device]);
+          SendEditBuffer(device, INTERFACE_MIDI_CORE);
+          MIDI_Send_UNISONDETUNE(INTERFACE_MIDI_CORE, UnisonDetune[device]);
         }
         // send Bank et Patch number to Core  Midi out
-        MIDI_SendPatchNumber(INTERFACE_SERIAL3, uBank[device], uPatch[device]);
+        MIDI_SendPatchNumber(INTERFACE_MIDI_CORE, uBank[device], uPatch[device]);
 
         break;
 
@@ -531,13 +531,13 @@ void UI_Handle_Patch(void)
           SendEditBuffer(device, INTERFACE_SERIAL);
           MIDI_Send_UNISONDETUNE(INTERFACE_SERIAL, UnisonDetune[device]); // send Unison detune value
           ArpParameters_Load(device); // load arp parameters
-          SendEditBuffer(device, INTERFACE_SERIAL3); // send  to core out
-          MIDI_Send_UNISONDETUNE(INTERFACE_SERIAL3, UnisonDetune[device]);
+          SendEditBuffer(device, INTERFACE_MIDI_CORE); // send  to core out
+          MIDI_Send_UNISONDETUNE(INTERFACE_MIDI_CORE, UnisonDetune[device]);
           //elapsedTime = 730;
           UI_Display_Patch(); // to update patch name on display
         }
         // send Bank et Patch number & EditBuffer[device] to Core  Midi out :
-        MIDI_SendPatchNumber(INTERFACE_SERIAL3, uBank[device], uPatch[device]);
+        MIDI_SendPatchNumber(INTERFACE_MIDI_CORE, uBank[device], uPatch[device]);
 
         break;
     }

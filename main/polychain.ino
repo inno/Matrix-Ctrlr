@@ -70,26 +70,26 @@ void PolyProgramChange(byte value)
 void PolySendVoiceParam(unsigned char interface, unsigned char param, unsigned char value, bool midiThru)
 {
   // XXX Conditionally change what we're modifying based on the depth and `interface`
-  MIDI_SendVoiceParamSingle(INTERFACE_SERIAL1, param, value, midiThru);
-  MIDI_SendVoiceParamSingle(INTERFACE_SERIAL2, param, value, midiThru);
+  MIDI_SendVoiceParamSingle(INTERFACE_MIDI_A, param, value, midiThru);
+  MIDI_SendVoiceParamSingle(INTERFACE_MIDI_B, param, value, midiThru);
   #if SOFTSERIAL_ENABLED
   if (polyDepth >= 3)
-    MIDI_SendVoiceParamSingle(INTERFACE_SERIAL4, param, value, midiThru);
+    MIDI_SendVoiceParamSingle(INTERFACE_MIDI_C, param, value, midiThru);
     if (polyDepth == 4)
-      MIDI_SendVoiceParamSingle(INTERFACE_SERIAL5, param, value, midiThru);
+      MIDI_SendVoiceParamSingle(INTERFACE_MIDI_D, param, value, midiThru);
   #endif
 }
 
 void PolySendPatchProgram(unsigned char interface, unsigned char program)
 {
   // XXX Conditionally change what we're modifying based on the depth and `interface`
-  MIDI_SendPatchProgramSingle(INTERFACE_SERIAL1, program);
-  MIDI_SendPatchProgramSingle(INTERFACE_SERIAL2, program);
+  MIDI_SendPatchProgramSingle(INTERFACE_MIDI_A, program);
+  MIDI_SendPatchProgramSingle(INTERFACE_MIDI_B, program);
   #if SOFTSERIAL_ENABLED
   if (polyDepth >= 3)
-    MIDI_SendPatchProgramSingle(INTERFACE_SERIAL4, program);
+    MIDI_SendPatchProgramSingle(INTERFACE_MIDI_C, program);
     if (polyDepth == 4)
-      MIDI_SendPatchProgramSingle(INTERFACE_SERIAL5, program);
+      MIDI_SendPatchProgramSingle(INTERFACE_MIDI_D, program);
   #endif
 }
 
@@ -97,13 +97,13 @@ void PolySendPatchProgram(unsigned char interface, unsigned char program)
 void PolySendPatchNumber(unsigned char interface, unsigned char bank, unsigned char program)
 {
   // XXX Conditionally change what we're modifying based on the depth and `interface`
-  MIDI_SendPatchNumberSingle(INTERFACE_SERIAL1, bank, program);
-  MIDI_SendPatchNumberSingle(INTERFACE_SERIAL2, bank, program);
+  MIDI_SendPatchNumberSingle(INTERFACE_MIDI_A, bank, program);
+  MIDI_SendPatchNumberSingle(INTERFACE_MIDI_B, bank, program);
   #if SOFTSERIAL_ENABLED
   if (polyDepth >= 3)
-    MIDI_SendPatchNumberSingle(INTERFACE_SERIAL4, bank, program);
+    MIDI_SendPatchNumberSingle(INTERFACE_MIDI_C, bank, program);
     if (polyDepth == 4)
-      MIDI_SendPatchNumberSingle(INTERFACE_SERIAL5, bank, program);
+      MIDI_SendPatchNumberSingle(INTERFACE_MIDI_D, bank, program);
   #endif
 }
 
@@ -111,29 +111,29 @@ void PolySendEditBuffer(unsigned char device, unsigned char interface)
 {
   bool orig_matrix_modele = matrix_modele;
   matrix_modele = matrix_model_A;
-  SendEditBufferSingle(device, INTERFACE_SERIAL1);
+  SendEditBufferSingle(device, INTERFACE_MIDI_A);
   matrix_modele = matrix_model_B;
-  SendEditBufferSingle(device, INTERFACE_SERIAL2);
+  SendEditBufferSingle(device, INTERFACE_MIDI_B);
   #if SOFTSERIAL_ENABLED
   if (polyDepth >= 3)
     matrix_modele = matrix_model_C;
-    SendEditBufferSingle(device, INTERFACE_SERIAL4);
+    SendEditBufferSingle(device, INTERFACE_MIDI_C);
     if (polyDepth == 4)
       matrix_modele = matrix_model_D;
-      SendEditBufferSingle(device, INTERFACE_SERIAL5);
+      SendEditBufferSingle(device, INTERFACE_MIDI_D);
   #endif
   matrix_modele = orig_matrix_modele;
 }
 
 extern void PolySendUnisonDetune(unsigned char interface, unsigned char value)
 {
-   MIDI_Send_UNISONDETUNESingle(INTERFACE_SERIAL1, value);
-   MIDI_Send_UNISONDETUNESingle(INTERFACE_SERIAL2, value);
+   MIDI_Send_UNISONDETUNESingle(INTERFACE_MIDI_A, value);
+   MIDI_Send_UNISONDETUNESingle(INTERFACE_MIDI_B, value);
   #if SOFTSERIAL_ENABLED
   if (polyDepth >= 3)
-    MIDI_Send_UNISONDETUNESingle(INTERFACE_SERIAL4, value);
+    MIDI_Send_UNISONDETUNESingle(INTERFACE_MIDI_C, value);
     if (polyDepth == 4)
-      MIDI_Send_UNISONDETUNESingle(INTERFACE_SERIAL5, value);
+      MIDI_Send_UNISONDETUNESingle(INTERFACE_MIDI_D, value);
   #endif
 }
 

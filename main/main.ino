@@ -179,12 +179,12 @@ struct smallSysEx : public MIDI_NAMESPACE::DefaultSettings
   static const unsigned SysExMaxSize = 32;
 };
 
-MIDI_CREATE_CUSTOM_INSTANCE(HardwareSerial, Serial3, MIDI_A, Matrix1000Settings); // A DIN Midi
-MIDI_CREATE_CUSTOM_INSTANCE(HardwareSerial, Serial2, MIDI_B, smallSysEx); // port B DIN
-MIDI_CREATE_CUSTOM_INSTANCE(HardwareSerial, Serial1, MIDI_CORE, MatrixCtrlrSettings); // CORE DIN Midi
-#if SOFTSERIAL_ENABLED // additional midi ports
-MIDI_CREATE_CUSTOM_INSTANCE(SoftwareSerial, mSerial4, MIDI_C, smallSysEx); // TX4 port C out
-MIDI_CREATE_CUSTOM_INSTANCE(SoftwareSerial, mSerial5, MIDI_D, Matrix1000Settings); // TX5 port D out
+MIDI_CREATE_CUSTOM_INSTANCE(HardwareSerial, Serial3, MIDI_A, Matrix1000Settings);
+MIDI_CREATE_CUSTOM_INSTANCE(HardwareSerial, Serial2, MIDI_B, smallSysEx);
+MIDI_CREATE_CUSTOM_INSTANCE(HardwareSerial, Serial1, MIDI_CORE, MatrixCtrlrSettings);
+#if SOFTSERIAL_ENABLED
+MIDI_CREATE_CUSTOM_INSTANCE(SoftwareSerial, mSerial4, MIDI_C, smallSysEx);
+MIDI_CREATE_CUSTOM_INSTANCE(SoftwareSerial, mSerial5, MIDI_D, Matrix1000Settings);
 #endif
 
 unsigned char INTERFACE_SERIAL;
@@ -294,9 +294,8 @@ void loop()
   looptime = looptime1 = micros();
 #endif
 
-  // first, read midi !
-  MIDI_CORE.read(); // NRT : stable 2/4/2016 // Core IN
-  MIDI_A.read(); // Matrix A IN
+  MIDI_CORE.read();
+  MIDI_A.read();
 
   //-------------------------------------------------------//
   //READING AND SMOOTHING ANALOG//

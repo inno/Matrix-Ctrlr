@@ -888,7 +888,7 @@ void UI_Handle_Arp()
 
     case DIN_ARP:
       if (Shift)
-        SendSingleArpData(INTERFACE_SERIAL3, uPatch[device]);
+        SendSingleArpData(INTERFACE_MIDI_CORE, uPatch[device]);
       break;
   }
 

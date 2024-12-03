@@ -70,18 +70,18 @@ void Boot(void)
 
   if (MIDITHRU_OFF_BOOT)
   {
-    MIDI_CORE.turnThruOff(); // disable MIDI Thru on CORE OUT
-    MIDI_A.turnThruOff(); // disable MIDI Thru on Matrix A
+    MIDI_CORE.turnThruOff();
+    MIDI_A.turnThruOff();
   }
   delay(300);
   // send global parameters to DAW
-  SendGlobalParameters(INTERFACE_SERIAL3);
+  SendGlobalParameters(INTERFACE_MIDI_CORE);
 
   // and to devices
-  SendGlobalParameters(INTERFACE_SERIAL1);
-  SendGlobalParameters(INTERFACE_SERIAL2);
-  SendGlobalParameters(INTERFACE_SERIAL4);
-  SendGlobalParameters(INTERFACE_SERIAL5);
+  SendGlobalParameters(INTERFACE_MIDI_A);
+  SendGlobalParameters(INTERFACE_MIDI_B);
+  SendGlobalParameters(INTERFACE_MIDI_C);
+  SendGlobalParameters(INTERFACE_MIDI_D);
 
   // enfin éteint les LEDS
   for (unsigned char i = 0; i < NBR_LED; ++i)

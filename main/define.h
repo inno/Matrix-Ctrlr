@@ -11,13 +11,13 @@
 #define NOTE_SHIFT 0 // avoid to start from  note number 0 but 36
 #define LCD_Offset 0
 
-#define INTERFACE_SERIAL1 1
-#define INTERFACE_SERIAL2 2
-#define INTERFACE_SERIAL3 3
+#define INTERFACE_MIDI_A 1
+#define INTERFACE_MIDI_B 2
+#define INTERFACE_MIDI_CORE 3
 
 #if SOFTSERIAL_ENABLED
-#define INTERFACE_SERIAL4 4
-#define INTERFACE_SERIAL5 5
+#define INTERFACE_MIDI_C 4
+#define INTERFACE_MIDI_D 5
 #endif
 
 #define encoder0PinA  2

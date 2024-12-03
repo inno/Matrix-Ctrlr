@@ -613,7 +613,7 @@ void UI_Handle_Cfg()
         STORE_GlobalParameters();
         READ_GlobalParameters();
         SendGlobalParameters(INTERFACE_SERIAL); // edited matrix
-        SendGlobalParameters(INTERFACE_SERIAL3); // core OUT to DAW
+        SendGlobalParameters(INTERFACE_MIDI_CORE); // core OUT to DAW
         break;
 
       case SOFT_EDIT_INC: //
@@ -708,7 +708,7 @@ void UI_Handle_Cfg()
         STORE_GlobalParameters(); // save Masters Parameters into internal eeprom before leaving
         READ_GlobalParameters();
         SendGlobalParameters(INTERFACE_SERIAL); // edited matrix
-        SendGlobalParameters(INTERFACE_SERIAL3); // core OUT to DAW
+        SendGlobalParameters(INTERFACE_MIDI_CORE); // core OUT to DAW
         SoftPanel.Page = SOFT_PAGE22;
         break;
 
@@ -735,7 +735,7 @@ void UI_Handle_Cfg()
           GlobalParameters[13] = 0;
         //
         //        SendGlobalParameters(INTERFACE_SERIAL); // edited matrix
-        //        SendGlobalParameters(INTERFACE_SERIAL3); // core OUT to DAW
+        //        SendGlobalParameters(INTERFACE_MIDI_CORE); // core OUT to DAW
         break;
 
       case SOFT_EDIT_INC: //
@@ -767,7 +767,7 @@ void UI_Handle_Cfg()
       /*
         // ceci deconne et ne met pas à jour en temps réel les valeurs des Globalparam : normal c'est pas dans les conditions !
            SendGlobalParameters(INTERFACE_SERIAL); // matrix à éditer
-           SendGlobalParameters(INTERFACE_SERIAL3); // core OUT to DAW
+           SendGlobalParameters(INTERFACE_MIDI_CORE); // core OUT to DAW
       */
 
 
@@ -1070,7 +1070,7 @@ void UI_Handle_Cfg()
 
       case SOFT_EDIT_1: // l
         // dump bank selected in Patch to CORE OUT & selected device
-        DumpCtrlrBank(INTERFACE_SERIAL3, uBank[device]);
+        DumpCtrlrBank(INTERFACE_MIDI_CORE, uBank[device]);
         DumpCtrlrBank(INTERFACE_SERIAL, uBank[device]);
         break;
 
@@ -1078,12 +1078,12 @@ void UI_Handle_Cfg()
         break;
 
       case SOFT_EDIT_3:
-        SendCtrlrSystemCfg(INTERFACE_SERIAL3);
+        SendCtrlrSystemCfg(INTERFACE_MIDI_CORE);
         break;
 
       case SOFT_EDIT_4:
         // dump Global Parameters to CORE OUT & selected device
-        SendGlobalParameters(INTERFACE_SERIAL3);
+        SendGlobalParameters(INTERFACE_MIDI_CORE);
         SendGlobalParameters(INTERFACE_SERIAL);
         break;
 
@@ -1092,13 +1092,13 @@ void UI_Handle_Cfg()
         for (unsigned char i = 0; i <= uBANK_MAX; ++i)
         {
           // specify bank (in sysex) first:
-          MIDI_SetBank(INTERFACE_SERIAL3, i);
+          MIDI_SetBank(INTERFACE_MIDI_CORE, i);
           // then dump 100 patches on core out
-          DumpCtrlrBank(INTERFACE_SERIAL3, i);
+          DumpCtrlrBank(INTERFACE_MIDI_CORE, i);
         }
         // ends with Globals
-        SendGlobalParameters(INTERFACE_SERIAL3);
-        SendCtrlrSystemCfg(INTERFACE_SERIAL3);
+        SendGlobalParameters(INTERFACE_MIDI_CORE);
+        SendCtrlrSystemCfg(INTERFACE_MIDI_CORE);
         break;
 
       default:

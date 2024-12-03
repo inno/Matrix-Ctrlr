@@ -25,20 +25,20 @@ void Device_Init(unsigned char device)
   switch (device)
   {
     case MATRIX_DEVICE_A:
-      INTERFACE_SERIAL = INTERFACE_SERIAL1;
+      INTERFACE_SERIAL = INTERFACE_MIDI_A;
       matrix_modele = matrix_model_A;
       break;
     case MATRIX_DEVICE_B:
-      INTERFACE_SERIAL = INTERFACE_SERIAL2;
+      INTERFACE_SERIAL = INTERFACE_MIDI_B;
       matrix_modele = matrix_model_B;
       break;
 #if SOFTSERIAL_ENABLED
     case MATRIX_DEVICE_C:
-      INTERFACE_SERIAL = INTERFACE_SERIAL4;
+      INTERFACE_SERIAL = INTERFACE_MIDI_C;
       matrix_modele = matrix_model_C;
       break;
     case MATRIX_DEVICE_D:
-      INTERFACE_SERIAL = INTERFACE_SERIAL5;
+      INTERFACE_SERIAL = INTERFACE_MIDI_D;
       matrix_modele = matrix_model_D;
       break;
 #endif
@@ -126,11 +126,11 @@ void Device_Select(unsigned char pin)
   // set interface
   switch (device)
   {
-    case MATRIX_DEVICE_A: INTERFACE_SERIAL = INTERFACE_SERIAL1; break;
-    case MATRIX_DEVICE_B: INTERFACE_SERIAL = INTERFACE_SERIAL2; break;
+    case MATRIX_DEVICE_A: INTERFACE_SERIAL = INTERFACE_MIDI_A; break;
+    case MATRIX_DEVICE_B: INTERFACE_SERIAL = INTERFACE_MIDI_B; break;
 #if SOFTSERIAL_ENABLED
-    case MATRIX_DEVICE_C: INTERFACE_SERIAL = INTERFACE_SERIAL4; break;
-    case MATRIX_DEVICE_D: INTERFACE_SERIAL = INTERFACE_SERIAL5; break;
+    case MATRIX_DEVICE_C: INTERFACE_SERIAL = INTERFACE_MIDI_C; break;
+    case MATRIX_DEVICE_D: INTERFACE_SERIAL = INTERFACE_MIDI_D; break;
 #endif
     default: break;
   }

@@ -518,25 +518,25 @@ void HandleControlChange(byte channel, byte controlNumber, byte value)
       default:
         if (channel == MIDI_CHANNEL && mThru_XCc) // case A
         {
-          MIDI_SendVoiceParam(INTERFACE_SERIAL1, Translate_CC_SX(controlNumber), value, false);
+          MIDI_SendVoiceParam(INTERFACE_MIDI_A, Translate_CC_SX(controlNumber), value, false);
           update_EditBuffer(MATRIX_DEVICE_A, Translate_CC_SX(controlNumber), value);
           UpdateDinStates();
         }
         else if (channel == (MIDI_CHANNEL + 1) && mThru_XCc) // case B
         {
-          MIDI_SendVoiceParam(INTERFACE_SERIAL2, Translate_CC_SX(controlNumber), value, false);
+          MIDI_SendVoiceParam(INTERFACE_MIDI_B, Translate_CC_SX(controlNumber), value, false);
           update_EditBuffer(MATRIX_DEVICE_B, Translate_CC_SX(controlNumber), value);
           UpdateDinStates();
         }
         else if (channel == (MIDI_CHANNEL + 2) && mThru_XCc) // case C
         {
-          MIDI_SendVoiceParam(INTERFACE_SERIAL4, Translate_CC_SX(controlNumber), value, false);
+          MIDI_SendVoiceParam(INTERFACE_MIDI_C, Translate_CC_SX(controlNumber), value, false);
           update_EditBuffer(MATRIX_DEVICE_C, Translate_CC_SX(controlNumber), value);
           UpdateDinStates();
         }
         else if (channel == (MIDI_CHANNEL + 3) && mThru_XCc) // case D
         {
-          MIDI_SendVoiceParam(INTERFACE_SERIAL5, Translate_CC_SX(controlNumber), value, false);
+          MIDI_SendVoiceParam(INTERFACE_MIDI_D, Translate_CC_SX(controlNumber), value, false);
           update_EditBuffer(MATRIX_DEVICE_D, Translate_CC_SX(controlNumber), value);
           UpdateDinStates();
         }
@@ -594,30 +594,30 @@ void HandleProgramChange(byte channel, byte program)
         Reset_UI_ARP(); // stop arp parameters
         Read_Patch_From_BS(device, uBank[device], uPatch[device]); // read into BS
         UpdateDinStates(); // mise à jour des Leds
-        SendEditBuffer(device, INTERFACE_SERIAL1);
-        MIDI_Send_UNISONDETUNE(INTERFACE_SERIAL1, UnisonDetune[device]); // send Unison detune value
+        SendEditBuffer(device, INTERFACE_MIDI_A);
+        MIDI_Send_UNISONDETUNE(INTERFACE_MIDI_A, UnisonDetune[device]); // send Unison detune value
         ArpParameters_Load(device); // load arp parameters
         break;
 
       case MATRIX_DEVICE_B:
         Read_Patch_From_BS(device, uBank[device], uPatch[device]); // read into BS
         UpdateDinStates(); // mise à jour des Leds
-        SendEditBuffer(device, INTERFACE_SERIAL2);
-        MIDI_Send_UNISONDETUNE(INTERFACE_SERIAL2, UnisonDetune[device]); // send Unison detune value
+        SendEditBuffer(device, INTERFACE_MIDI_B);
+        MIDI_Send_UNISONDETUNE(INTERFACE_MIDI_B, UnisonDetune[device]); // send Unison detune value
         break;
 
       case MATRIX_DEVICE_C:
         Read_Patch_From_BS(device, uBank[device], uPatch[device]); // read into BS
         UpdateDinStates(); // mise à jour des Leds
-        SendEditBuffer(device, INTERFACE_SERIAL4);
-        MIDI_Send_UNISONDETUNE(INTERFACE_SERIAL4, UnisonDetune[device]); // send Unison detune value
+        SendEditBuffer(device, INTERFACE_MIDI_C);
+        MIDI_Send_UNISONDETUNE(INTERFACE_MIDI_C, UnisonDetune[device]); // send Unison detune value
         break;
 
       case MATRIX_DEVICE_D:
         Read_Patch_From_BS(device, uBank[device], uPatch[device]); // read into BS
         UpdateDinStates(); // mise à jour des Leds
-        SendEditBuffer(device, INTERFACE_SERIAL5);
-        MIDI_Send_UNISONDETUNE(INTERFACE_SERIAL5, UnisonDetune[device]); // send Unison detune value
+        SendEditBuffer(device, INTERFACE_MIDI_D);
+        MIDI_Send_UNISONDETUNE(INTERFACE_MIDI_D, UnisonDetune[device]); // send Unison detune value
         break;
     }
 
@@ -810,11 +810,11 @@ unsigned int HandleReceivedSysEx(byte *sysex, unsigned int length)
       case 7:
         // MIDI_RequestMastersParameters
         if (sysex[3] == 0x04 && sysex[4] == 0x03)
-          SendGlobalParameters(INTERFACE_SERIAL3);
+          SendGlobalParameters(INTERFACE_MIDI_CORE);
 
         // MIDI_RequestEditBuffer
         if (sysex[3] == 0x04 && sysex[4] == 0x04)
-          SendEditBuffer(device, INTERFACE_SERIAL3);
+          SendEditBuffer(device, INTERFACE_MIDI_CORE);
 
         // parameter sysex
         if (sysex[3] == 0x06)
@@ -1138,17 +1138,17 @@ unsigned int HandleReceivedSysEx(byte *sysex, unsigned int length)
       case 8: // diagnostics
         if (sysex[3] == 0x0f && sysex[4] == 0x01) // echo on core out ONLY
         {
-          MIDI_Rcv_Diagnostics(INTERFACE_SERIAL3, sysex[5], sysex[6]);
+          MIDI_Rcv_Diagnostics(INTERFACE_MIDI_CORE, sysex[5], sysex[6]);
           return 8;
         }
 
         else if (sysex[3] == 0x0f && sysex[4] == 0x01) // echo on all midi outputs
         {
-          MIDI_Rcv_Diagnostics(INTERFACE_SERIAL3, sysex[5], sysex[6]);
-          MIDI_Rcv_Diagnostics(INTERFACE_SERIAL1, sysex[5], sysex[6]);
-          MIDI_Rcv_Diagnostics(INTERFACE_SERIAL2, sysex[5], sysex[6]);
-          MIDI_Rcv_Diagnostics(INTERFACE_SERIAL4, sysex[5], sysex[6]);
-          MIDI_Rcv_Diagnostics(INTERFACE_SERIAL5, sysex[5], sysex[6]);
+          MIDI_Rcv_Diagnostics(INTERFACE_MIDI_CORE, sysex[5], sysex[6]);
+          MIDI_Rcv_Diagnostics(INTERFACE_MIDI_A, sysex[5], sysex[6]);
+          MIDI_Rcv_Diagnostics(INTERFACE_MIDI_B, sysex[5], sysex[6]);
+          MIDI_Rcv_Diagnostics(INTERFACE_MIDI_C, sysex[5], sysex[6]);
+          MIDI_Rcv_Diagnostics(INTERFACE_MIDI_D, sysex[5], sysex[6]);
           return 8;
         }
         // other messages below

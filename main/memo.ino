@@ -620,8 +620,8 @@ void PATCH_Init(unsigned char device)
       Recall_LastBankPatch_from_EEPROM(MATRIX_DEVICE_A); // recall last ubank upatch used in previous session
       Read_Patch_From_BS(MATRIX_DEVICE_A, uBank[MATRIX_DEVICE_A], uPatch[MATRIX_DEVICE_A]); // read EditBuffer[device] coresponding
       //CopyEditBufferOrigToEditBuffer(MATRIX_DEVICE_A);
-      SendEditBuffer(MATRIX_DEVICE_A, INTERFACE_SERIAL1); // send EditBuffer[device] to Mxi
-      // DEBUG//SendEditBuffer(MATRIX_DEVICE_A, INTERFACE_SERIAL3); // send EditBuffer[device] to core out
+      SendEditBuffer(MATRIX_DEVICE_A, INTERFACE_MIDI_A); // send EditBuffer[device] to Mxi
+      // DEBUG//SendEditBuffer(MATRIX_DEVICE_A, INTERFACE_MIDI_CORE); // send EditBuffer[device] to core out
       break;
 
     case MATRIX_DEVICE_B:
@@ -629,8 +629,8 @@ void PATCH_Init(unsigned char device)
       Recall_LastBankPatch_from_EEPROM(MATRIX_DEVICE_B); // recall last ubank upatch used in previous session
       Read_Patch_From_BS(MATRIX_DEVICE_B, uBank[MATRIX_DEVICE_B], uPatch[MATRIX_DEVICE_B]); // read EditBuffer[device] coresponding
       //CopyEditBufferOrigToEditBuffer(MATRIX_DEVICE_B);
-      SendEditBuffer(MATRIX_DEVICE_B, INTERFACE_SERIAL2); // send EditBuffer[device] to Mxi
-      // DEBUG//SendEditBuffer(MATRIX_DEVICE_B, INTERFACE_SERIAL3); // send EditBuffer[device] to core out
+      SendEditBuffer(MATRIX_DEVICE_B, INTERFACE_MIDI_B); // send EditBuffer[device] to Mxi
+      // DEBUG//SendEditBuffer(MATRIX_DEVICE_B, INTERFACE_MIDI_CORE); // send EditBuffer[device] to core out
       break;
 
     case MATRIX_DEVICE_C:
@@ -638,8 +638,8 @@ void PATCH_Init(unsigned char device)
       Recall_LastBankPatch_from_EEPROM(MATRIX_DEVICE_C); // recall last ubank upatch used in previous session
       Read_Patch_From_BS(MATRIX_DEVICE_C, uBank[MATRIX_DEVICE_C], uPatch[MATRIX_DEVICE_C]); // read EditBuffer[device] coresponding
       //CopyEditBufferOrigToEditBuffer(MATRIX_DEVICE_C);
-      SendEditBuffer(MATRIX_DEVICE_C, INTERFACE_SERIAL4); // send EditBuffer[device] to Mxi
-      // DEBUG//SendEditBuffer(MATRIX_DEVICE_C, INTERFACE_SERIAL3); // send EditBuffer[device] to core out
+      SendEditBuffer(MATRIX_DEVICE_C, INTERFACE_MIDI_C); // send EditBuffer[device] to Mxi
+      // DEBUG//SendEditBuffer(MATRIX_DEVICE_C, INTERFACE_MIDI_CORE); // send EditBuffer[device] to core out
       break;
 
     case MATRIX_DEVICE_D:
@@ -647,8 +647,8 @@ void PATCH_Init(unsigned char device)
       Recall_LastBankPatch_from_EEPROM(MATRIX_DEVICE_D); // recall last ubank upatch used in previous session
       Read_Patch_From_BS(MATRIX_DEVICE_D, uBank[MATRIX_DEVICE_D], uPatch[MATRIX_DEVICE_D]); // read EditBuffer[device] coresponding
       //CopyEditBufferOrigToEditBuffer(MATRIX_DEVICE_D);
-      SendEditBuffer(MATRIX_DEVICE_D, INTERFACE_SERIAL5); // send EditBuffer[device] to Mxi
-      // DEBUG//SendEditBuffer(MATRIX_DEVICE_D, INTERFACE_SERIAL3); // send EditBuffer[device] to core out
+      SendEditBuffer(MATRIX_DEVICE_D, INTERFACE_MIDI_D); // send EditBuffer[device] to Mxi
+      // DEBUG//SendEditBuffer(MATRIX_DEVICE_D, INTERFACE_MIDI_CORE); // send EditBuffer[device] to core out
       break;
     default: break;
   }

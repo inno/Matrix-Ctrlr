@@ -892,7 +892,7 @@ void SendEditBufferSingle(unsigned char device, unsigned char interface)
   sysex[273] = checksum & 0x7f;
   sysex[274] = 0xf7;
 
-  if ((matrix_modele == MATRIX_6) && (interface != INTERFACE_SERIAL3))
+  if ((matrix_modele == MATRIX_6) && (interface != INTERFACE_MIDI_CORE))
   {
     //send pgrm change number 0
     MIDI_SendPatchProgram(interface, 0);
@@ -1272,19 +1272,19 @@ void DumpCtrlrBank(unsigned char interface, unsigned char bank)
     lcd.print(F(" to"));
     switch (interface)
     {
-      case INTERFACE_SERIAL1 :
+      case INTERFACE_MIDI_A :
         lcd.print(F(" A   "));
         break;
-      case INTERFACE_SERIAL2 :
+      case INTERFACE_MIDI_B :
         lcd.print(F("  B  "));
         break;
-      case INTERFACE_SERIAL3 :
+      case INTERFACE_MIDI_CORE :
         lcd.print(F(" CORE"));
         break;
-      case INTERFACE_SERIAL4 :
+      case INTERFACE_MIDI_C :
         lcd.print(F(" C   "));
         break;
-      case INTERFACE_SERIAL5 :
+      case INTERFACE_MIDI_D :
         lcd.print(F(" D   "));
         break;
     }
@@ -1587,7 +1587,7 @@ void WizardEditBuffer(unsigned char device, unsigned char cmd)
 
   // send the EditBuffer to device ?
   SendEditBuffer(device, INTERFACE_SERIAL);
-  SendEditBuffer(device, INTERFACE_SERIAL3);
+  SendEditBuffer(device, INTERFACE_MIDI_CORE);
 
 #if DEBUG_wizz
   Serial.print(F("WizardEditBuffer(")); Serial.print(cmd, DEC); Serial.println(F(" ) / "));
