@@ -492,16 +492,11 @@ void Rec_Seq(byte pitch, byte velo, byte channel, unsigned char opt) // 0.97a c'
     // we can't play sequence
     ui_seqPlay = false;
 
-    // passing from play to Rec does reset the sequence to 128 : LATER
-
-    // passing from play to Rec does reset seqLength to zero : LATER
-
     // each time is called that function :
     // we receive notes to populate the sequence array :
     // notice that seqRecStep starts at 0
     sequence[seqRecStep][0] = pitch; // 1st element is note number
     sequence[seqRecStep][1] = velo; // 2nd element is velocity of that note,rest or tie
-    //  sequence[seqRecStep][2] = opt; // TO EDIT LATER and replace by false, rest or tie i.e 0, 1 or 2
 
     // you added a note to the sequence, i.e that its sequence length increments for the next loop
     ++seqRecStep;
@@ -552,7 +547,6 @@ void Insert_SeqRest(unsigned char param)
     sequence[seqRecStep][0] = 60; // 1st element is note number
     sequence[seqRecStep][1] = param; // 2nd element is velocity of that note, rest or tie i.e 0, 1 or 2
 
-    //sequence[seqRecStep][2] = param; // TO EDIT LATER and replace by false,
     // you added a note to the sequence, i.e that its sequence length increments for the next loop
     ++seqRecStep;
 
@@ -600,10 +594,6 @@ void Play_Seq(byte pitch, byte velocity, byte channel, bool type)
     playSeqTrigger[1] = velocity;
     playSeqTrigger[2] = channel;
     playSeqTrigger[3] = type; // = seqTrig (note on/off = true/false)
-
-    // update display lcd :
-    //if (SoftPanel.Mode == Arp) UI_Display_Arp();
-
   }
   else
     return;
@@ -619,7 +609,7 @@ void SEQ(void)
   // static unsigned char sGate;
   static unsigned char skipBack;
 
-  if (seqTick == 0) // == 0
+  if (seqTick == 0)
   {
 #if DEBUG_SEQTIK
     Serial.print(F("seqTick = ")); Serial.println( seqTick);
@@ -634,36 +624,20 @@ void SEQ(void)
     // apres une certaine temporisation (correspond à la resolution):
     if (ui_seqPlay && seqTrig)
     {
-      //MIDI1.sendNoteOn(sequence[seqPlayStep][0], sequence[seqPlayStep][1], MIDI_CHANNEL); // sequence[seqPlayStep][1] dans velo // ça marche 0.97b quand on ne prend pas le parametre rest/tie
-      // new model with triggers:
-      // pitch = Seq[i] - Seq[0] + trigger
-      // idem velocity,
-      // same channel but we could extract from trigger[3]
-      if (sequence[seqPlayStep][1] == 0)
-      {
-        // skip do nothing
-      }
-      else if (sequence[seqPlayStep][1] > 127) // if a silent note or a  tie
-      {
-        // do nothing
-        // if >127 increment a var skipback that you will use in the note off instezad of step-1
-        ++skipBack;
-      }
+      // skip do nothing
+      if (sequence[seqPlayStep][1] == 0) {}
+      // if a silent note or a tie do nothing
+      else if (sequence[seqPlayStep][1] > 127)
+        skipBack++;
       else // else normal note
       {
         MIDI1.sendNoteOn(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), sequence[seqPlayStep][1] - sequence[0][1] + playSeqTrigger[1], MIDI_CHANNEL);
-        // NOTA : limits 0 & 127 are automatically made by sendNoteOn function Edit : pas tout à fait, ça revient à zero si >127
-        //      lastPlayedSeqStep = seqPlayStep; // for very last resting note
         if (arp_send_notes)
-        {
           MIDI3.sendNoteOn(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), sequence[seqPlayStep][1] - sequence[0][1] + playSeqTrigger[1], MIDI_CHANNEL);
-        }
 
         // update display lcd :
-        if (SoftPanel.Mode == Arp && SoftPanel.Page == SOFT_PAGE2) {   
+        if (SoftPanel.Mode == Arp && SoftPanel.Page == SOFT_PAGE2)
           app_flags.Display_ARP_Req = 1;
-          //UI_Display_Arp(); // ralenti bcp trop les bpm émis : 115 au lieu de 120 -> usage du flag à la place
-        }
       }
 #if DEBUG_SEQ
       Serial.print(F("seqPlayStep = ")); Serial.println(seqPlayStep, DEC); Serial.println();
@@ -682,21 +656,13 @@ void SEQ(void)
     {
       MIDI1.sendNoteOff(sequence[seqPlayStep - skipBack][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
       if (arp_send_notes)
-      {
         MIDI3.sendNoteOff(sequence[seqPlayStep - skipBack][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
-      }
     }
     else if (sequence[seqPlayStep][1] != 0)
     {
       MIDI1.sendNoteOff(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
       if (arp_send_notes)
-      {
         MIDI3.sendNoteOff(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
-      }
-    }
-    else
-    {
-      // it was a silent so do nothing
     }
 
     // chnage state of released trigger
@@ -713,7 +679,7 @@ void SEQ(void)
   }
 
   // we reach gate time :
-  if (seqTick == sGate) // can be modulated by seqSpeed (= 6) || (playSeqTrigger[3] == false)
+  if (seqTick == sGate)
   {
 #if DEBUG_SEQTIK
     Serial.print(F("seqTick = ")); Serial.println( seqTick);
@@ -721,18 +687,14 @@ void SEQ(void)
     // extract an element E contained in sequence array, and play it as NoteOff after a delay corresponding to sGate
     if (ui_seqPlay && seqTrig)
     {
-      if ((sequence[seqPlayStep][1] == 0) || (sequence[seqPlayStep + 1][1] > 127)) // if  a 'rest' or next note is a tie
-      {
-        // do nothing
-      }
+      // if  a 'rest' or next note is a tie
+      if ((sequence[seqPlayStep][1] == 0) || (sequence[seqPlayStep + 1][1] > 127)) {}
       else if (sequence[seqPlayStep][1] > 127) // if it's a 'tie'
       {
         // play pitch of previous note with a zero velocity
         MIDI1.sendNoteOff(sequence[seqPlayStep - skipBack][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
         if (arp_send_notes)
-        {
           MIDI3.sendNoteOff(sequence[seqPlayStep - skipBack][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
-        }
         // reset counter
         skipBack = 0;
       }
@@ -740,9 +702,7 @@ void SEQ(void)
       {
         MIDI1.sendNoteOff(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), sequence[seqPlayStep][1] - sequence[0][1] + playSeqTrigger[1], MIDI_CHANNEL);
         if (arp_send_notes)
-        {
           MIDI3.sendNoteOff(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), sequence[seqPlayStep][1] - sequence[0][1] + playSeqTrigger[1], MIDI_CHANNEL);
-        }
       }
 
       // chnage state of released trigger
@@ -763,10 +723,9 @@ void SEQ(void)
   ++seqTick;
 
   // loop reset :
-  if (seqTick == (sGate + sGate)) // modulé par ui_aSpeed (=24) arp_div[arp_div_index] // non ! on fixe la durée de note et le reset se fera au double. travailler sur les gates plutot
-  {
+  // non ! on fixe la durée de note et le reset se fera au double. travailler sur les gates plutot
+  if (seqTick == (sGate + sGate))
     seqTick = 0;
-  }
 
 }
 
@@ -775,8 +734,6 @@ void SEQ(void)
 /////////////////////////////////////////////////////////////////////////////////////////////
 void SEQ2(bool trig)
 {
-  //unsigned char lastPlayedSeqStep=0;
-  // static unsigned char sGate;
   static unsigned char skipBack;
 
   if (trig == true) // play noteOn
@@ -795,41 +752,26 @@ void SEQ2(bool trig)
     // apres une certaine temporisation (correspond à la resolution):
     if (ui_seqPlay && seqTrig)
     {
-      //      // increment next step to play :
+      // increment next step to play :
       ++seqPlayStep;
       skipSeqStep = 0; // reset
       if (seqPlayStep > seqLength - 1) // ça MARCHE !!! 0.99x :) RTZ when reaching end
         seqPlayStep = 0;
-      //MIDI1.sendNoteOn(sequence[seqPlayStep][0], sequence[seqPlayStep][1], MIDI_CHANNEL); // sequence[seqPlayStep][1] dans velo // ça marche 0.97b quand on ne prend pas le parametre rest/tie
-      // new model with triggers:
-      // pitch = Seq[i] - Seq[0] + trigger
-      // idem velocity,
-      // same channel but we could extract from trigger[3]
-      if (sequence[seqPlayStep][1] == 0)
-      {
-        // skip do nothing
-      }
-      else if (sequence[seqPlayStep][1] > 127) // if a silent note or a  tie
-      {
-        // do nothing
-        // if >127 increment a var skipback that you will use in the note off instezad of step-1
+      // skip do nothing
+      if (sequence[seqPlayStep][1] == 0) {}
+      // if a silent note or a  tie
+      else if (sequence[seqPlayStep][1] > 127)
         ++skipBack;
-      }
       else // else normal note
       {
         MIDI1.sendNoteOn(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), sequence[seqPlayStep][1] - sequence[0][1] + playSeqTrigger[1], MIDI_CHANNEL);
         // NOTA : limits 0 & 127 are automatically made by sendNoteOn function Edit : pas tout à fait, ça revient à zero si >127
-        //      lastPlayedSeqStep = seqPlayStep; // for very last resting note
         if (arp_send_notes)
-        {
           MIDI3.sendNoteOn(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), sequence[seqPlayStep][1] - sequence[0][1] + playSeqTrigger[1], MIDI_CHANNEL);
-        }
 
         // update display lcd :
-        if (SoftPanel.Mode == Arp && SoftPanel.Page == SOFT_PAGE2) {   
+        if (SoftPanel.Mode == Arp && SoftPanel.Page == SOFT_PAGE2)
           app_flags.Display_ARP_Req = 1;
-          //UI_Display_Arp(); // ralenti bcp trop les bpm émis : 115 au lieu de 120 -> usage du flag à la place
-        }
       }
 #if DEBUG_SEQ
       Serial.print(F("seqPlayStep = ")); Serial.println(seqPlayStep, DEC); Serial.println();
@@ -848,21 +790,13 @@ void SEQ2(bool trig)
     {
       MIDI1.sendNoteOff(sequence[seqPlayStep - skipBack][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
       if (arp_send_notes)
-      {
         MIDI3.sendNoteOff(sequence[seqPlayStep - skipBack][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
-      }
     }
     else if (sequence[seqPlayStep][1] != 0)
     {
       MIDI1.sendNoteOff(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
       if (arp_send_notes)
-      {
         MIDI3.sendNoteOff(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
-      }
-    }
-    else
-    {
-      // it was a silent so do nothing
     }
 
     // chnage state of released trigger
@@ -887,18 +821,14 @@ void SEQ2(bool trig)
     // extract an element E contained in sequence array, and play it as NoteOff after a delay corresponding to sGate
     if (ui_seqPlay && seqTrig)
     {
-      if ((sequence[seqPlayStep][1] == 0) || (sequence[seqPlayStep + 1][1] > 127)) // if  a 'rest' or next note is a tie
-      {
-        // do nothing
-      }
+      // if  a 'rest' or next note is a tie
+      if ((sequence[seqPlayStep][1] == 0) || (sequence[seqPlayStep + 1][1] > 127)) {}
       else if (sequence[seqPlayStep][1] > 127) // if it's a 'tie'
       {
         // play pitch of previous note with a zero velocity
         MIDI1.sendNoteOff(sequence[seqPlayStep - skipBack][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
         if (arp_send_notes)
-        {
           MIDI3.sendNoteOff(sequence[seqPlayStep - skipBack][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), 0, MIDI_CHANNEL);
-        }
         // reset counter
         skipBack = 0;
       }
@@ -906,9 +836,7 @@ void SEQ2(bool trig)
       {
         MIDI1.sendNoteOff(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), sequence[seqPlayStep][1] - sequence[0][1] + playSeqTrigger[1], MIDI_CHANNEL);
         if (arp_send_notes)
-        {
           MIDI3.sendNoteOff(sequence[seqPlayStep][0] - sequence[0][0] + playSeqTrigger[0] + ((TrspB << 2) + (TrspB << 3) - 36), sequence[seqPlayStep][1] - sequence[0][1] + playSeqTrigger[1], MIDI_CHANNEL);
-        }
       }
 
       // chnage state of released trigger
