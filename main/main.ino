@@ -1,5 +1,3 @@
-
-
 /*
   Arduino 64 AIN 128 DIN 128 DOUT ported on arduino using e-lecktronic libraries + SFC60 code
   it uses :
@@ -14,7 +12,6 @@
    2x20 LCD compatble 44780 hitachi
 */
 // definitions for compiling :
-#define RX1_pin 19
 #define ANALOG_INPUTS_ACTIVE 1 // set to 0 for defective unit (accident coffre 206)
 #define DIGITAL_INPUTS_ACTIVE 1
 #define SOFTSERIAL_ENABLED 1 // NOTA : SoftSerial uses nearly 1KB of RAM ! but provides 2 additional MIDI ports (see below)
@@ -65,16 +62,6 @@
 #define year "XXXX" // Development
 #endif
 
-// http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1208715493/11
-#define FASTADC 0 // à essayer à 1 plus tard quand les ain non utilisés seront reliés à la masse
-//defines for setting and clearing register bits
-#ifndef cbi
-#define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
-#endif
-#ifndef sbi
-#define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
-#endif
-
 // Define various ADC prescaler
 const unsigned char PS_16 = (1 << ADPS2);
 const unsigned char PS_32 = (1 << ADPS2) | (1 << ADPS0);
@@ -103,7 +90,6 @@ const unsigned char PS_128 = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);
 #define DEBUG_bargraph 0
 #define DEBUG_matrix 0
 #define DEBUG_master 0
-#define DEBUG_CLOCK 0
 #define DEBUG_ARP 0
 #define DEBUG_SEQ 0
 #define DEBUG_SEQTIK 0
@@ -111,7 +97,6 @@ const unsigned char PS_128 = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);
 #define DEBUG_ARPN 0
 #define DEBUG_ARP2STEP 0
 #define DEBUG_ARP2CHORD 0
-#define DEBUG_ARPSTACK 0
 #define DEBUG_TRIG 0
 #define DEBUG_TRIG2 0
 #define DEBUG_LCD 0
@@ -123,7 +108,6 @@ const unsigned char PS_128 = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);
 // LCD display defines
 #define LCD_ROWS 2
 #define LCD_COLS 20
-// lcd(RS, Enable, D4, D5, D6, D7) julien proto arduino (ne marche pas en 47/48) ... pour les 2 premieres entrées A4 A5 ok
 hd44780_pinIO lcd(44, 45, 40, 43, 41, 42);
 #define HD44780_LCDOBJECT
 
@@ -147,11 +131,6 @@ unsigned char last_dout_pin;
 unsigned char last_encoder;
 
 byte AnalogThreshold = 3; //potentiometers threshold (6 = OK)
-//elapsedMicros timer_analog = 0;
-//elapsedMicros timer_digital = 0;
-//byte AnalogSamplingPeriod = 1; // in microsec
-//unsigned int DigitalScanPeriod = 0; // 5000 in microsec
-//int timer_display = 0;
 
 bool InitFlag = 0;
 bool booting = 1;
@@ -175,35 +154,11 @@ void setPin(byte outputPin) { PORTA = controlPins[outputPin]; }
 ////////////////////////////////////////////////////////////////////////////////////////////
 // MIDI INTERFACE DECLARATIONS
 ////////////////////////////////////////////////////////////////////////////////////////////
-
-// Note: https://www.arduino.cc/en/Reference/SoftwareSerial
-// Not all pins on the Mega and Mega 2560 support change interrupts,
-// so only the following can be used for RX:
-// 10, 11, 12, 13,  -> used by DIN DOUT
-// 50, 51, 52, 53, -> used by SD card
-// 62(A8), 63(A9), 64(A10), 65(A11), -> used by CV jacks (at least 64 et 65)
-// 66(A12), 67, 68, 69(A15) -> use for SoftSerial
-// alternative :
-// http://www.pjrc.com/teensy/td_libs_AltSoftSerial.html
 #if SOFTSERIAL_ENABLED
 SoftwareSerial mSerial4(A12, A13); // MIDI4 in out
 SoftwareSerial mSerial5(A14, A15); // MIDI5 in out
 #endif
-/*
-   Some boards, like Teensy, Teensy++ and Arduino Mega, have more than 1 timer
-   which is suitable for AltSoftSerial. You can configure which timer AltSoftSerial
-   uses by editing "config/known_boards.h" within the library. This may allow
-   AltSoftSerial to be used together with other libraries which require the
-   timer which AltSoftSerial uses by default.
 
-   define the Timer4 or Timer5 to use. Only ONE Altserial is available in the same sketch
-*/
-//#if ALTSOFTSERIAL_ENABLED
-//AltSoftSerial mSerial4 (A12, A13);
-//AltSoftSerial mSerial5 (A14, A15);
-//#endif
-
-//using namespace MIDI_NAMESPACE;
 USING_NAMESPACE_MIDI;
 
 // was hard to debug ! https://github.com/FortySevenEffects/arduino_midi_library/pull/151/commits/cadaa30fb5f46d5210ec523254fc982abe268e84
@@ -224,21 +179,13 @@ struct smallSysEx : public MIDI_NAMESPACE::DefaultSettings
   static const unsigned SysExMaxSize = 32;
 };
 
-MIDI_CREATE_CUSTOM_INSTANCE(HardwareSerial, Serial1, MIDI3, MatrixCtrlrSettings); // CORE DIN Midi
 MIDI_CREATE_CUSTOM_INSTANCE(HardwareSerial, Serial3, MIDI1, Matrix1000Settings); // A DIN Midi
-//MIDI_CREATE_INSTANCE(HardwareSerial, Serial3, MIDI1); // RX3 TX3 port A
 MIDI_CREATE_CUSTOM_INSTANCE(HardwareSerial, Serial2, MIDI2, smallSysEx); // port B DIN
-// MIDI_CREATE_CUSTOM_INSTANCE(HardwareSerial, Serial, midiUSB, Matrix1000Settings); // USB with HIDuino on m16u2 !
-
+MIDI_CREATE_CUSTOM_INSTANCE(HardwareSerial, Serial1, MIDI3, MatrixCtrlrSettings); // CORE DIN Midi
 #if SOFTSERIAL_ENABLED // additional midi ports
 MIDI_CREATE_CUSTOM_INSTANCE(SoftwareSerial, mSerial4, MIDI4, smallSysEx); // TX4 port C out
 MIDI_CREATE_CUSTOM_INSTANCE(SoftwareSerial, mSerial5, MIDI5, Matrix1000Settings); // TX5 port D out
 #endif
-
-//#if ALTSOFTSERIAL_ENABLED // additional midi ports
-//MIDI_CREATE_CUSTOM_INSTANCE(AltSoftSerial, mSerial4, MIDI4, smallSysEx);
-//MIDI_CREATE_CUSTOM_INSTANCE(AltSoftSerial, mSerial5, MIDI5, Matrix1000Settings);
-//#endif
 
 unsigned char INTERFACE_SERIAL;
 
@@ -275,17 +222,7 @@ void setup()
 
   // set up the ADC :
   ADCSRA &= ~PS_128; // remove bits set by Arduino library
-  // you can choose a prescaler from above : PS_16, PS_32, PS_64 or PS_128
-  //  ADCSRA |= PS_64;    // set our own prescaler to 64 if pots 100KB
-  ADCSRA |= PS_32; // 32 prescaler if pots 10 KB
-  // ADCSRA |= PS_16; // 16 prescaler
-
-#if FASTADC
-  // set prescale to 16
-  sbi(ADCSRA, ADPS2);
-  cbi(ADCSRA, ADPS1);
-  cbi(ADCSRA, ADPS0);
-#endif
+  ADCSRA |= PS_32; // 32 prescaler for 10 KB pots
 
   // CONFIGURE SERIAL DEBUG
   Serial.begin(SERIAL_BUS_SPEED); // fast !
@@ -302,15 +239,6 @@ void setup()
   // triggers (CV gate inputs)
   pinMode(TRIGGER_Pin, INPUT_PULLUP); // pin trig for analog drummachine
   pinMode(SYNC24_Pin, INPUT_PULLUP); // pin trig for analog clock
-
-  /* https://www.arduino.cc/reference/en/language/functions/external-interrupts/attachinterrupt/
-     attachInterrupt(digitalPinToInterrupt(pin), ISR, mode) (recommended)
-     Mega, Mega2560, MegaADK DIGITAL PINS USABLE FOR INTERRUPTS : 2, 3, 18, 19, 20, 21
-     2,3 encoder // 18,19 Serial1 CORE in/out // 20,21 i2c bus
-  */
-  //  // attach the new PinChangeInterrupts and enable event functions below
-  //  attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(SYNC24_Pin), Sync24TrigINT, RISING);
-  //  attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(TRIGGER_Pin), TrigINT, CHANGE);
 
   // CD4051 MUX adress PINS CONFIG
   DDRA = B11111111; // set PORT A to outputs
@@ -339,7 +267,7 @@ void setup()
   LCD_Init(); // custom char
 
   // init timer used for blinking UX LEDs
-  Timer3.initialize(20000); //
+  Timer3.initialize(20000);
   Timer3.attachInterrupt(timer3Isr);
 
   // initi Midi Clock generator
@@ -361,7 +289,6 @@ void setup()
 ////////////////////////////////////////////////////////////////////////////////////////////
 void loop()
 {
-//Serial.println(F("loop"));
 #if DEBUG_looptime
   long looptime, looptime1;
   looptime = looptime1 = micros();
@@ -371,18 +298,6 @@ void loop()
   MIDI3.read(); // NRT : stable 2/4/2016 // Core IN
   MIDI1.read(); // Matrix A IN
 
-  /*
-     doesnt work 20210323 --> better to use callbacks
-    // MIDI THRU in software : MIDI IN A -> MIDI OUT CORE (no filtering) :
-    if (softMIDITHRU) {
-      if (MIDI1.read()) {
-        MIDI3.send(MIDI1.getType(),
-                   MIDI1.getData1(),
-                   MIDI1.getData2(),
-                   MIDI1.getChannel());
-      }
-    }
-  */
   //-------------------------------------------------------//
   //READING AND SMOOTHING ANALOG//
   //-------------------------------------------------------//
@@ -393,7 +308,7 @@ void loop()
   //READING DIGITAL INPUTS//
   //-------------------------------------------------------//
   if (DIGITAL_INPUTS_ACTIVE)
-    ReadDigital(); //    DIN_NotifyChange();
+    ReadDigital();
 
   //-------------------------------------------------------//
   //SAMPLING, TESTING THRESHOLD AND SENDS MIDI//
@@ -410,9 +325,8 @@ void loop()
   //------------------------------------------------------//
   //READING TRIGGER (ext CV Gate)
   //------------------------------------------------------//
-  //  enablePinChangeInterrupt(digitalPinToPinChangeInterrupt(SYNC24_Pin));
-  //  enablePinChangeInterrupt(digitalPinToPinChangeInterrupt(TRIGGER_Pin));
   Triggers();
+
   //-------------------------------------------------------//
   //RECALL INIT//
   //-------------------------------------------------------//

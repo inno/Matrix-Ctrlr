@@ -53,7 +53,6 @@ void ReadAnalog()
 ///////////////////////////////////////////////////////////
 void AIN_NotifyChange()
 {
-  //  if (timer_analog > AnalogSamplingPeriod) { // inutile
   for (int i = 0; i < NBR_POT; i++) {
     if (Analog_Debug[i] == LOW) {
       if (abs(Previous_Analog[i] - Analog[i]) > AnalogThreshold) { //ensure value changed more than our threshold
