@@ -19,8 +19,8 @@ const char VIB_Waves_Name3[] PROGMEM = {"SQR"};
 const char VIB_Waves_Name4[] PROGMEM = {"RAN"};
 const char VIB_Waves_Name5[] PROGMEM = {"NOI"};
 
-const char * const VIB_Waves_Name[] PROGMEM  = // https://github.com/arduino/Arduino/wiki/1.6-Frequently-Asked-Questions  And, yes, it's really tricky even for experts!
-{
+// https://github.com/arduino/Arduino/wiki/1.6-Frequently-Asked-Questions  And, yes, it's really tricky even for experts!
+const char * const VIB_Waves_Name[] PROGMEM = {
   VIB_Waves_Name0,
   VIB_Waves_Name1,
   VIB_Waves_Name2,
@@ -34,8 +34,8 @@ const char VIB_Speed_By0[] PROGMEM = {"OFF"};
 const char VIB_Speed_By1[] PROGMEM = {"Lv2"};
 const char VIB_Speed_By2[] PROGMEM = {"Pd1"};
 
-const char * const VIB_Speed_By[] PROGMEM  = // https://github.com/arduino/Arduino/wiki/1.6-Frequently-Asked-Questions  And, yes, it's really tricky even for experts!
-{
+// https://github.com/arduino/Arduino/wiki/1.6-Frequently-Asked-Questions  And, yes, it's really tricky even for experts!
+const char * const VIB_Speed_By[] PROGMEM = {
   VIB_Speed_By0,
   VIB_Speed_By1,
   VIB_Speed_By2
@@ -46,8 +46,8 @@ const char VIB_Amp_By0[] PROGMEM = {"OFF"};
 const char VIB_Amp_By1[] PROGMEM = {"Lv2"};
 const char VIB_Amp_By2[] PROGMEM = {"Pd1"};
 
-const char * const VIB_Amp_By[] PROGMEM  = // https://github.com/arduino/Arduino/wiki/1.6-Frequently-Asked-Questions  And, yes, it's really tricky even for experts!
-{
+// https://github.com/arduino/Arduino/wiki/1.6-Frequently-Asked-Questions  And, yes, it's really tricky even for experts!
+const char * const VIB_Amp_By[] PROGMEM = {
   VIB_Amp_By0,
   VIB_Amp_By1,
   VIB_Amp_By2
@@ -70,10 +70,10 @@ void UI_Display_Cfg()
         []  []   [ ]  []  []
         01234567890123456789
       */
-      DOUT_PinSet0(DIN_ConfigMap[DIN_PATCH].dout_pin);   // off
-      DOUT_PinSet0(DIN_ConfigMap[DIN_EDIT].dout_pin);    // off
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_PATCH].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_EDIT].dout_pin);
       DOUT_PinSet_Keypanel(1, 1, 1, 1, 1, 0);
-      DOUT_PinSet1(DIN_ConfigMap[DIN_CFG].dout_pin);
+      DOUT_PinSetOn(DIN_ConfigMap[DIN_CFG].dout_pin);
 
       LCD_Clear();
       lcd.setCursor(0, 0); //1st line
@@ -88,10 +88,9 @@ void UI_Display_Cfg()
         []  []   [ ]  []  []
         01234567890123456789
       */
-      DOUT_PinSet0(DIN_ConfigMap[DIN_PATCH].dout_pin);   // off
-      DOUT_PinSet0(DIN_ConfigMap[DIN_EDIT].dout_pin);    // off
-      //      DOUT_PinSet_Keypanel(0, 0, 0, 0, 0, 1);
-      DOUT_PinSet1(DIN_ConfigMap[DIN_CFG].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_PATCH].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_EDIT].dout_pin);
+      DOUT_PinSetOn(DIN_ConfigMap[DIN_CFG].dout_pin);
 
       if (SoftPanel.IsNewPage)
       {
@@ -102,12 +101,10 @@ void UI_Display_Cfg()
       lcd.setCursor(1, 1);
       LCD_PrintBCD2(GlobalParameters[1]);
       lcd.setCursor(4, 1);
-      //LCD_PrintBCD2(GlobalParameters[2]);
       lcd.print(strcpy_P(bufferProgmem, (PGM_P)pgm_read_word(&(VIB_Speed_By[GlobalParameters[2]]))));
       lcd.setCursor(9, 1);
       LCD_PrintBCD2(GlobalParameters[3]);
       lcd.setCursor(13, 1);
-      //LCD_PrintBCD2(GlobalParameters[4]);
       lcd.print(strcpy_P(bufferProgmem, (PGM_P)pgm_read_word(&(VIB_Waves_Name[GlobalParameters[4]]))));
       lcd.setCursor(17, 1);
       lcd.print(F("Get"));
@@ -119,10 +116,9 @@ void UI_Display_Cfg()
         []  []   [ ]  []  []
         01234567890123456789
       */
-      DOUT_PinSet0(DIN_ConfigMap[DIN_PATCH].dout_pin);   // off
-      DOUT_PinSet0(DIN_ConfigMap[DIN_EDIT].dout_pin);    // off
-      //      DOUT_PinSet_Keypanel(0, 0, 0, 0, 0, 1);
-      DOUT_PinSet1(DIN_ConfigMap[DIN_CFG].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_PATCH].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_EDIT].dout_pin);
+      DOUT_PinSetOn(DIN_ConfigMap[DIN_CFG].dout_pin);
       if (SoftPanel.IsNewPage) {
         LCD_Clear();
         lcd.setCursor(0, 0); // 1st line
@@ -131,7 +127,6 @@ void UI_Display_Cfg()
       lcd.setCursor(1, 1);
       LCD_PrintBCD2(GlobalParameters[5]);
       lcd.setCursor(4, 1);
-      // LCD_PrintBCD2(GlobalParameters[6]);
       lcd.print(strcpy_P(bufferProgmem, (PGM_P)pgm_read_word(&(VIB_Amp_By[GlobalParameters[6]]))));
       lcd.setCursor(9, 1);
       LCD_PrintBCD2(GlobalParameters[7]);
@@ -150,10 +145,10 @@ void UI_Display_Cfg()
         CH    A   B   C   D
         00    0   0   1   0
       */
-      DOUT_PinSet0(DIN_ConfigMap[DIN_PATCH].dout_pin);   // off
-      DOUT_PinSet0(DIN_ConfigMap[DIN_EDIT].dout_pin);    // off
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_PATCH].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_EDIT].dout_pin);
       DOUT_PinSet_Keypanel(0, 0, 0, 0, 0, 1);
-      DOUT_PinSet1(DIN_ConfigMap[DIN_CFG].dout_pin);
+      DOUT_PinSetOn(DIN_ConfigMap[DIN_CFG].dout_pin);
 
       if (SoftPanel.IsNewPage)
       {
@@ -161,7 +156,6 @@ void UI_Display_Cfg()
         LCD_CursorSet(0 + LCD_Offset);
         LCD_PrintCString(F("CH  A:  B:   C:  D: "));
       }
-      //            lcd.print("CH  MxA MxB  MxC MxD");
       LCD_CursorSet(64 + LCD_Offset);
       LCD_PrintBCD2(MIDI_CHANNEL );
 
@@ -202,10 +196,9 @@ void UI_Display_Cfg()
         []  []   [ ]  []  []
         01234567890123456789
       */
-      DOUT_PinSet0(DIN_ConfigMap[DIN_PATCH].dout_pin);   // off
-      DOUT_PinSet0(DIN_ConfigMap[DIN_EDIT].dout_pin);    // off
-      //      DOUT_PinSet_Keypanel(0, 0, 0, 0, 0, 1);
-      DOUT_PinSet1(DIN_ConfigMap[DIN_CFG].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_PATCH].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_EDIT].dout_pin);
+      DOUT_PinSetOn(DIN_ConfigMap[DIN_CFG].dout_pin);
       if (SoftPanel.IsNewPage) {
         LCD_Clear();
         lcd.setCursor(0, 0); // 1st line
@@ -227,10 +220,9 @@ void UI_Display_Cfg()
       break;
 
     case SOFT_PAGE22:
-      DOUT_PinSet0(DIN_ConfigMap[DIN_PATCH].dout_pin);   // off
-      DOUT_PinSet0(DIN_ConfigMap[DIN_EDIT].dout_pin);    // off
-      //      DOUT_PinSet_Keypanel(0, 0, 0, 0, 0, 1);
-      DOUT_PinSet1(DIN_ConfigMap[DIN_CFG].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_PATCH].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_EDIT].dout_pin);
+      DOUT_PinSetOn(DIN_ConfigMap[DIN_CFG].dout_pin);
       if (SoftPanel.IsNewPage) {
         LCD_Clear();
       }
@@ -270,13 +262,10 @@ void UI_Display_Cfg()
         01234567890123456789
 
       */
-      DOUT_PinSet0(DIN_ConfigMap[DIN_PATCH].dout_pin);   // off
-      DOUT_PinSet0(DIN_ConfigMap[DIN_EDIT].dout_pin);    // off
-      //  DOUT_PinSet0(DIN_ConfigMap[DIN_PAGE].dout_pin);    // off
-      //DOUT_PinSet_Keypanel(0, 0, 1, 1, 0, 1);
-      DOUT_PinSet1(DIN_ConfigMap[DIN_CFG].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_PATCH].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_EDIT].dout_pin);
+      DOUT_PinSetOn(DIN_ConfigMap[DIN_CFG].dout_pin);
 
-      //      lcd.print(F("Cfg page 3"));
       if (SoftPanel.IsNewPage) {
         LCD_Clear();
         lcd.setCursor(0, 0);
@@ -288,38 +277,38 @@ void UI_Display_Cfg()
       switch (systmClock)
       {
         case INTCLK:
-          LCD_PrintCString(F("INT")); //LCD_PrintBCD3(bpm);
-          DOUT_PinSet0(DIN_ConfigMap[DIN_OSCILLATORS].dout_pin);
+          LCD_PrintCString(F("INT"));
+          DOUT_PinSetOff(DIN_ConfigMap[DIN_OSCILLATORS].dout_pin);
           break;
 
         case MIDCLK:
           lcd.print(F("Mid"));
-          DOUT_PinSet1(DIN_ConfigMap[DIN_OSCILLATORS].dout_pin);
+          DOUT_PinSetOn(DIN_ConfigMap[DIN_OSCILLATORS].dout_pin);
           break;
 
         case S24CLK:
           lcd.print(F("s24"));
-          DOUT_PinSet1(DIN_ConfigMap[DIN_OSCILLATORS].dout_pin);
+          DOUT_PinSetOn(DIN_ConfigMap[DIN_OSCILLATORS].dout_pin);
           break;
 
         case TRGCLK:
           lcd.print(F("Trg"));
-          DOUT_PinSet1(DIN_ConfigMap[DIN_OSCILLATORS].dout_pin);
+          DOUT_PinSetOn(DIN_ConfigMap[DIN_OSCILLATORS].dout_pin);
           break;
 
         case MTRGCLK:
           lcd.print(F("mTg"));
-          DOUT_PinSet1(DIN_ConfigMap[DIN_OSCILLATORS].dout_pin);
+          DOUT_PinSetOn(DIN_ConfigMap[DIN_OSCILLATORS].dout_pin);
           break;
 
         case SYSCLK:
           lcd.print(F("Sys")); // not possible normally
-          DOUT_PinSet1(DIN_ConfigMap[DIN_OSCILLATORS].dout_pin);
+          DOUT_PinSetOn(DIN_ConfigMap[DIN_OSCILLATORS].dout_pin);
           break;
 
         default:
           lcd.print(F("UKN"));
-          DOUT_PinSet1(DIN_ConfigMap[DIN_OSCILLATORS].dout_pin);
+          DOUT_PinSetOn(DIN_ConfigMap[DIN_OSCILLATORS].dout_pin);
           break;
 
       }
@@ -329,53 +318,40 @@ void UI_Display_Cfg()
       if (zActive)
       {
         lcd.print(F(" * "));
-        DOUT_PinSet1(DIN_ConfigMap[DIN_FILTER].dout_pin);
+        DOUT_PinSetOn(DIN_ConfigMap[DIN_FILTER].dout_pin);
       }
       else
       {
         lcd.print(F(" . "));
-        DOUT_PinSet0(DIN_ConfigMap[DIN_FILTER].dout_pin);
+        DOUT_PinSetOff(DIN_ConfigMap[DIN_FILTER].dout_pin);
       }
 
 
       lcd.setCursor(8, 1);
       if (localControl)
       {
-        //        lcd.print(F(" "));
-        //        lcd.write((byte)5); // a note icon
-        //        lcd.print(F(" "));
         lcd.print(F("on "));
-        DOUT_PinSet1(DIN_ConfigMap[DIN_ENVELOPES].dout_pin);
+        DOUT_PinSetOn(DIN_ConfigMap[DIN_ENVELOPES].dout_pin);
       }
       else
       {
         lcd.print(F("off"));
-        DOUT_PinSet0(DIN_ConfigMap[DIN_ENVELOPES].dout_pin);
+        DOUT_PinSetOff(DIN_ConfigMap[DIN_ENVELOPES].dout_pin);
       }
 
       lcd.setCursor(13, 1);
       lcd.print(filter_ratio, DEC);
-      //      if (FilterSustainMode == FILTER_ENV_MODE_BUGGED)
-      //      {
-      //        lcd.print(F(" . "));
-      //        DOUT_PinSet0(DIN_ConfigMap[DIN_KEYBOARD].dout_pin);
-      //      }
-      //      else
-      //      {
-      //        lcd.print(F(" $ "));
-      //        DOUT_PinSet1(DIN_ConfigMap[DIN_KEYBOARD].dout_pin);
-      //      }
 
       lcd.setCursor(17, 1);
       if (mThru_XCc)
       {
         lcd.print(F(" * "));
-        DOUT_PinSet1(DIN_ConfigMap[DIN_MATRIX].dout_pin);
+        DOUT_PinSetOn(DIN_ConfigMap[DIN_MATRIX].dout_pin);
       }
       else
       {
         lcd.print(F(" . "));
-        DOUT_PinSet0(DIN_ConfigMap[DIN_MATRIX].dout_pin);
+        DOUT_PinSetOff(DIN_ConfigMap[DIN_MATRIX].dout_pin);
       }
 
       break;
@@ -387,16 +363,17 @@ void UI_Display_Cfg()
         01234567890123456789
 
       */
-      DOUT_PinSet0(DIN_ConfigMap[DIN_PATCH].dout_pin);   // off
-      DOUT_PinSet0(DIN_ConfigMap[DIN_EDIT].dout_pin);    // off
-      DOUT_PinSet0(DIN_ConfigMap[DIN_ARP].dout_pin);     // ON
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_PATCH].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_EDIT].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_ARP].dout_pin);
       DOUT_PinSet_Keypanel(0, 0, 0, 0, 0, 1);
-      DOUT_PinSet1(DIN_ConfigMap[DIN_CFG].dout_pin);
+      DOUT_PinSetOn(DIN_ConfigMap[DIN_CFG].dout_pin);
 
       LCD_Clear();
       lcd.print(F("CFG : GRouP (page 4)"));
       lcd.setCursor(0, 1);
-      switch (ui_groupMode) {
+      switch (ui_groupMode)
+      {
         case GROUPSOLO:
           lcd.print(F("Solo"));
           break;
@@ -422,7 +399,6 @@ void UI_Display_Cfg()
           break;
 
       }
-      //      lcd.print(ui_groupMode);
       break;
 
     case SOFT_PAGE5: // Matrix Ctrlr memory Dump
@@ -432,11 +408,11 @@ void UI_Display_Cfg()
         01234567890123456789
 
       */
-      DOUT_PinSet0(DIN_ConfigMap[DIN_PATCH].dout_pin);   // off
-      DOUT_PinSet0(DIN_ConfigMap[DIN_EDIT].dout_pin);    // off
-      DOUT_PinSet0(DIN_ConfigMap[DIN_ARP].dout_pin);     // ON
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_PATCH].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_EDIT].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_ARP].dout_pin);
       DOUT_PinSet_Keypanel(1, 0, 1, 1, 1, 1);
-      DOUT_PinSet1(DIN_ConfigMap[DIN_CFG].dout_pin);
+      DOUT_PinSetOn(DIN_ConfigMap[DIN_CFG].dout_pin);
 
       LCD_Clear();
       lcd.print(F("DUMP CTRLR MEMORY : "));
@@ -459,12 +435,12 @@ void UI_Display_Cfg()
       if (encoder_inverted)
       {
         lcd.print(F("INV"));
-        DOUT_PinSet0(DIN_ConfigMap[DIN_MATRIX].dout_pin);
+        DOUT_PinSetOff(DIN_ConfigMap[DIN_MATRIX].dout_pin);
       }
       else
       {
         lcd.print(F("NOR"));
-        DOUT_PinSet1(DIN_ConfigMap[DIN_MATRIX].dout_pin);
+        DOUT_PinSetOn(DIN_ConfigMap[DIN_MATRIX].dout_pin);
       }
       break;
   }
@@ -475,56 +451,57 @@ void UI_Display_Cfg()
 /////////////////////////////////////////////////////////////////////////////
 void UI_Handle_Cfg()
 {
-  if (SoftPanel.Page == SOFT_PAGE1) // cfg page 1 ///////////////////////////// main page CFG ////////
+  // cfg page 1 ///////////////////////////// main page CFG ////////
+  if (SoftPanel.Page == SOFT_PAGE1)
   {
     switch (SoftPanel.Button)
     {
       case DIN_PAGE:
         break;
 
-      case SOFT_EDIT_1: //
+      case SOFT_EDIT_1:
         SoftPanel.Page = SOFT_PAGE11;
 
         break;
 
-      case SOFT_EDIT_2: //
+      case SOFT_EDIT_2:
         SoftPanel.Page = SOFT_PAGE2;
 
         break;
 
-      case SOFT_EDIT_3: //
+      case SOFT_EDIT_3:
         SoftPanel.Page = SOFT_PAGE3;
 
         break;
 
-      case SOFT_EDIT_4: //
+      case SOFT_EDIT_4:
         SoftPanel.Page = SOFT_PAGE4;
 
         break;
 
-      case SOFT_EDIT_5: //
+      case SOFT_EDIT_5:
         SoftPanel.Page = SOFT_PAGE5;
 
         break;
 
-      case SOFT_EDIT_INC: //
+      case SOFT_EDIT_INC:
         break;
 
-      case SOFT_EDIT_DEC: //
+      case SOFT_EDIT_DEC:
         break;
 
       default:
         break;
     }
-    // encoder : set toto
-    // toto += SoftPanel.EncoderValue;
 
     // realtime display feature
     app_flags.Display_DIN_Req = 1;
   }
-  else if (SoftPanel.Page == SOFT_PAGE11) { /// cfg page 1.1 ///////////////////////////////////////////////// CFG/VIB page 1 //////////////////
-    switch (SoftPanel.Button) {
-
+  // cfg page 1.1 ///////////////////////////////////////////////// CFG/VIB page 1 //////////////////
+  else if (SoftPanel.Page == SOFT_PAGE11)
+  {
+    switch (SoftPanel.Button)
+    {
       case DIN_PAGE:
         SoftPanel.Page = SOFT_PAGE12;
         break;
@@ -533,19 +510,19 @@ void UI_Handle_Cfg()
         DOUT_PinSet_Keypanel(1, 0, 0, 0, 0, 1);
         break;
 
-      case SOFT_EDIT_2: //
+      case SOFT_EDIT_2:
         DOUT_PinSet_Keypanel(0, 1, 0, 0, 0, 1);
         break;
 
-      case SOFT_EDIT_3: //
+      case SOFT_EDIT_3:
         DOUT_PinSet_Keypanel(0, 0, 1, 0, 0, 1);
         break;
 
-      case SOFT_EDIT_4: //
+      case SOFT_EDIT_4:
         DOUT_PinSet_Keypanel(0, 0, 0, 1, 0, 1);
         break;
 
-      case SOFT_EDIT_5: //
+      case SOFT_EDIT_5:
         DOUT_PinSet_Keypanel(0, 0, 0, 0, 1, 1);
         MIDI_RequestMastersParameters(INTERFACE_SERIAL);
 
@@ -555,17 +532,15 @@ void UI_Handle_Cfg()
 
         break;
 
-      case SOFT_EDIT_INC: //
+      case SOFT_EDIT_INC:
         break;
 
-      case SOFT_EDIT_DEC: //
+      case SOFT_EDIT_DEC:
         break;
 
       default:
         break;
     }
-    // encoder : set toto
-    // toto += SoftPanel.EncoderValue;
 
     if (SoftPanel.EncoderValue != 0) {
       if (SoftPanel.EditButton == Edit1) {
@@ -586,9 +561,11 @@ void UI_Handle_Cfg()
     // realtime display feature
     app_flags.Display_DIN_Req = 1;
   }
-  else if (SoftPanel.Page == SOFT_PAGE12) { // cfg page 1.2 ////////////////////////////////////////////////// CFG/VIB page 2 //////////////////
-    switch (SoftPanel.Button) {
-
+  // cfg page 1.2 ////////////////////////////////////////////////// CFG/VIB page 2 //////////////////
+  else if (SoftPanel.Page == SOFT_PAGE12)
+  {
+    switch (SoftPanel.Button)
+    {
       case DIN_PAGE:
         SoftPanel.Page = SOFT_PAGE1;
         break;
@@ -597,36 +574,34 @@ void UI_Handle_Cfg()
         DOUT_PinSet_Keypanel(1, 0, 0, 0, 0, 1);
         break;
 
-      case SOFT_EDIT_2: //
+      case SOFT_EDIT_2:
         DOUT_PinSet_Keypanel(0, 1, 0, 0, 0, 1);
         break;
 
-      case SOFT_EDIT_3: //
+      case SOFT_EDIT_3:
         DOUT_PinSet_Keypanel(0, 0, 1, 0, 0, 1);
         break;
 
-      case SOFT_EDIT_4: //
+      case SOFT_EDIT_4:
         DOUT_PinSet_Keypanel(0, 0, 0, 1, 0, 1);
         break;
 
-      case SOFT_EDIT_5: //
+      case SOFT_EDIT_5:
         STORE_GlobalParameters();
         READ_GlobalParameters();
         SendGlobalParameters(INTERFACE_SERIAL); // edited matrix
         SendGlobalParameters(INTERFACE_MIDI_CORE); // core OUT to DAW
         break;
 
-      case SOFT_EDIT_INC: //
+      case SOFT_EDIT_INC:
         break;
 
-      case SOFT_EDIT_DEC: //
+      case SOFT_EDIT_DEC:
         break;
 
       default:
         break;
     }
-    // encoder : set toto
-    // toto += SoftPanel.EncoderValue;
     if (SoftPanel.EncoderValue != 0) {
       if (SoftPanel.EditButton == Edit1) {
         SetEncoderValue(&GlobalParameters[5], 63);
@@ -646,9 +621,11 @@ void UI_Handle_Cfg()
     app_flags.Display_DIN_Req = 1;
 
   }
-  else if (SoftPanel.Page == SOFT_PAGE2) { // cfg page 2 //////////////////////////////////////////////////// CFG/MID Page 1 //////////////////
-
-    switch (SoftPanel.Button) {
+  // cfg page 2 //////////////////////////////////////////////////// CFG/MID Page 1 //////////////////
+  else if (SoftPanel.Page == SOFT_PAGE2)
+  {
+    switch (SoftPanel.Button)
+    {
       case DIN_PAGE:
         SoftPanel.Page = SOFT_PAGE21;
         break;
@@ -701,9 +678,11 @@ void UI_Handle_Cfg()
     }
   }
 
-  else if (SoftPanel.Page == SOFT_PAGE21)  // cfg page 21 //////////////////////////////////////////////////// CFG/MID Page 2 //////////////////
+  // cfg page 21 //////////////////////////////////////////////////// CFG/MID Page 2 //////////////////
+  else if (SoftPanel.Page == SOFT_PAGE21)
   {
-    switch (SoftPanel.Button) {
+    switch (SoftPanel.Button)
+    {
       case DIN_PAGE:
         STORE_GlobalParameters(); // save Masters Parameters into internal eeprom before leaving
         READ_GlobalParameters();
@@ -716,39 +695,34 @@ void UI_Handle_Cfg()
         DOUT_PinSet_Keypanel(1, 0, 0, 0, 0, 1);
         break;
 
-      case SOFT_EDIT_2: //
+      case SOFT_EDIT_2:
         DOUT_PinSet_Keypanel(0, 1, 0, 0, 0, 1);
         break;
 
-      case SOFT_EDIT_3: //
+      case SOFT_EDIT_3:
         DOUT_PinSet_Keypanel(0, 0, 1, 0, 0, 1);
         break;
 
-      case SOFT_EDIT_4: //
+      case SOFT_EDIT_4:
         DOUT_PinSet_Keypanel(0, 0, 0, 1, 0, 1);
         break;
 
-      case SOFT_EDIT_5: //
+      case SOFT_EDIT_5:
         DOUT_PinSet_Keypanel(0, 0, 0, 0, 1, 1);
         ++GlobalParameters[13];
         if (GlobalParameters[13] > 1)
           GlobalParameters[13] = 0;
-        //
-        //        SendGlobalParameters(INTERFACE_SERIAL); // edited matrix
-        //        SendGlobalParameters(INTERFACE_MIDI_CORE); // core OUT to DAW
         break;
 
-      case SOFT_EDIT_INC: //
+      case SOFT_EDIT_INC:
         break;
 
-      case SOFT_EDIT_DEC: //
+      case SOFT_EDIT_DEC:
         break;
 
       default:
         break;
     }
-    // encoder : set toto
-    // toto += SoftPanel.EncoderValue;
     if (SoftPanel.EncoderValue != 0) {
       if (SoftPanel.EditButton == Edit1) {
         SetEncoderValue(&GlobalParameters[17], 120);
@@ -764,27 +738,18 @@ void UI_Handle_Cfg()
       }
       else
         return;
-      /*
-        // ceci deconne et ne met pas à jour en temps réel les valeurs des Globalparam : normal c'est pas dans les conditions !
-           SendGlobalParameters(INTERFACE_SERIAL); // matrix à éditer
-           SendGlobalParameters(INTERFACE_MIDI_CORE); // core OUT to DAW
-      */
-
-
-#if DEBUG
-      // do stuff
-#endif
     }
 
     // realtime display feature
     app_flags.Display_DIN_Req = 1;
   }
-  else if (SoftPanel.Page == SOFT_PAGE22)  // cfg page 22 //////////////////////////////////////////////////// CFG/MID Page 22 //////////////////
+  // cfg page 22 //////////////////////////////////////////////////// CFG/MID Page 22 //////////////////
+  else if (SoftPanel.Page == SOFT_PAGE22)
   {
-    switch (SoftPanel.Button) {
+    switch (SoftPanel.Button)
+    {
       case DIN_PAGE:
         ZONE_Save(); // uncomment to enable saving Zone parameters by pressing PAGE button
-        //SoftPanel.Page = SOFT_PAGE23; // dummy, additional future menu
         SoftPanel.Page = SOFT_PAGE1;
         break;
 
@@ -792,36 +757,34 @@ void UI_Handle_Cfg()
         DOUT_PinSet_Keypanel(1, 0, 0, 0, 0, 1);
         break;
 
-      case SOFT_EDIT_2: //
+      case SOFT_EDIT_2:
         DOUT_PinSet_Keypanel(0, 1, 0, 0, 0, 1);
         break;
 
-      case SOFT_EDIT_3: //
+      case SOFT_EDIT_3:
         DOUT_PinSet_Keypanel(0, 0, 1, 0, 0, 1);
         break;
 
-      case SOFT_EDIT_4: //
+      case SOFT_EDIT_4:
         DOUT_PinSet_Keypanel(0, 0, 0, 1, 0, 1);
         break;
 
-      case SOFT_EDIT_5: //
+      case SOFT_EDIT_5:
         DOUT_PinSet_Keypanel(0, 0, 0, 0, 1, 1);
         break;
 
-      case SOFT_EDIT_INC: //
+      case SOFT_EDIT_INC:
         ++ui_Zone;
         if (ui_Zone > 3) ui_Zone = 3;
         break;
 
-      case SOFT_EDIT_DEC: //
+      case SOFT_EDIT_DEC:
         --ui_Zone;
         if (ui_Zone == 255) ui_Zone = 0;
         break;
 
       default: break;
     }
-    // encoder : set toto
-    // toto += SoftPanel.EncoderValue;
     if (SoftPanel.EncoderValue != 0) {
 
       if (SoftPanel.EditButton == Edit3) {
@@ -853,16 +816,13 @@ void UI_Handle_Cfg()
 
       else
         return;
-
-#if DEBUG
-      // do stuff
-#endif
     }
 
     // realtime display feature
     app_flags.Display_DIN_Req = 1;
   }
-  else if (SoftPanel.Page == SOFT_PAGE23)  // cfg page 23 //////////////////////////////////////////////////// CFG/MID Page 23 //////////////////
+  // cfg page 23 //////////////////////////////////////////////////// CFG/MID Page 23 //////////////////
+  else if (SoftPanel.Page == SOFT_PAGE23)
   {
     switch (SoftPanel.Button)
     {
@@ -874,45 +834,42 @@ void UI_Handle_Cfg()
         DOUT_PinSet_Keypanel(1, 0, 0, 0, 0, 1);
         break;
 
-      case SOFT_EDIT_2: //
+      case SOFT_EDIT_2:
         DOUT_PinSet_Keypanel(0, 1, 0, 0, 0, 1);
         break;
 
-      case SOFT_EDIT_3: //
+      case SOFT_EDIT_3:
         DOUT_PinSet_Keypanel(0, 0, 1, 0, 0, 1);
         break;
 
-      case SOFT_EDIT_4: //
+      case SOFT_EDIT_4:
         DOUT_PinSet_Keypanel(0, 0, 0, 1, 0, 1);
         break;
 
-      case SOFT_EDIT_5: //
+      case SOFT_EDIT_5:
         DOUT_PinSet_Keypanel(0, 0, 0, 0, 1, 1);
         break;
 
-      case SOFT_EDIT_INC: //
+      case SOFT_EDIT_INC:
         break;
 
-      case SOFT_EDIT_DEC: //
+      case SOFT_EDIT_DEC:
         break;
 
       default:
         break;
 
     }
-    // encoder : set toto
-    // toto += SoftPanel.EncoderValue;
     if (SoftPanel.EncoderValue != 0)
     {
-#if DEBUG
-      // do stuff
-#endif
     }
 
     // realtime display feature
     app_flags.Display_DIN_Req = 1;
   }
-  else if (SoftPanel.Page == SOFT_PAGE3) { /// cfg page 3 ////////////////// CFG/MISC page //////////////////
+  // cfg page 3 ////////////////// CFG/MISC page //////////////////
+  else if (SoftPanel.Page == SOFT_PAGE3)
+  {
     switch (SoftPanel.Button)
     {
       case DIN_PAGE:
@@ -920,8 +877,7 @@ void UI_Handle_Cfg()
           SoftPanel.Page = SOFT_PAGE51; // hidden feature FORMAT()
         else
         {
-          EEPROM.update(EEPROM_SYS_CLK, systmClock); 
-          //EEPROM.update(EEPROM_SYS_BPM, bpm); // -> feature ?
+          EEPROM.update(EEPROM_SYS_CLK, systmClock);
           SoftPanel.Page = SOFT_PAGE1; // return to beginning of CFG
         }
         break;
@@ -930,7 +886,6 @@ void UI_Handle_Cfg()
         ++systmClock;
         if (systmClock > MTRGCLK)
           systmClock = INTCLK; // can't be zero
-        //EEPROM.update(EEPROM_SYS_CLK, systmClock); // don't save with this button as it is frequently pushed. use PAGE
         break;
 
       case SOFT_EDIT_2: // ext clock
@@ -939,7 +894,7 @@ void UI_Handle_Cfg()
         break;
 
       case SOFT_EDIT_3: // midi local control of Ctrlr
-        localControl ^=1; //localControl = !localControl;
+        localControl ^=1;
         EEPROM.update(EEPROM_LOCAL_CONTROL, localControl);
         break;
 
@@ -947,9 +902,6 @@ void UI_Handle_Cfg()
         ++filter_ratio;
         if (filter_ratio > 9) filter_ratio = 1;
         EEPROM.update(EEPROM_FILTER_RATIO, filter_ratio);
-        // toggle env1 filter mode to handle sustain bug. enable/disable
-        //        FilterSustainMode = FilterSustainMode == FILTER_ENV_MODE_BUGGED ? FILTER_ENV_MODE_HACKED : FILTER_ENV_MODE_BUGGED;
-        //        EEPROM.update(EEPROM_FILTERSUSTAIN_MODE, FilterSustainMode); // save this
         break;
 
       case SOFT_EDIT_5: // Set A/B : deviceA is arp, device B is Seq
@@ -957,35 +909,28 @@ void UI_Handle_Cfg()
         EEPROM.update(EEPROM_MTHRU_XCC, mThru_XCc);
         break;
 
-      case SOFT_EDIT_INC: //
+      case SOFT_EDIT_INC:
         break;
 
-      case SOFT_EDIT_DEC: //
+      case SOFT_EDIT_DEC:
         break;
 
       default:
         break;
     }
-//    // encoder : set bpm
-//    if (systmClock == INTCLK)
-//      bpm += SoftPanel.EncoderValue;
-//    // range bpm :
-//    if (bpm < BPM_min)
-//      bpm = BPM_min;
-//    if (bpm > BPM_Max)
-//      bpm = BPM_Max;
-//    uClock.setTempo(bpm);
     // realtime display feature
     app_flags.Display_DIN_Req = 1;
   }
-  else if (SoftPanel.Page == SOFT_PAGE4) { // cfg  page 4 //////////////////////////////////////////////////// CFG/GRouP page 4 //////////////////
+  // cfg  page 4 //////////////////////////////////////////////////// CFG/GRouP page 4 //////////////////
+  else if (SoftPanel.Page == SOFT_PAGE4)
+  {
     switch (SoftPanel.Button)
     {
       case DIN_PAGE:
         SoftPanel.Page = SOFT_PAGE1;
         break;
 
-      case SOFT_EDIT_1: //
+      case SOFT_EDIT_1:
         ++ui_groupMode;
         if (ui_groupMode > 5)
           ui_groupMode = 0;
@@ -1008,7 +953,9 @@ void UI_Handle_Cfg()
     // realtime display feature
     app_flags.Display_DIN_Req = 1;
   }
-  else if (SoftPanel.Page == SOFT_PAGE51) { // cfg  page 51 //////////////////////////////////////////////////// HIDDEN FORMAT FEATURE /////////////////
+  // cfg  page 51 //////////////////////////////////////////////////// HIDDEN FORMAT FEATURE /////////////////
+  else if (SoftPanel.Page == SOFT_PAGE51)
+  {
     switch (SoftPanel.Button)
     {
       case DIN_PAGE:
@@ -1036,14 +983,14 @@ void UI_Handle_Cfg()
         elapsedTime = 0;
         break;
 
-      case SOFT_EDIT_4: //
+      case SOFT_EDIT_4:
         FORMAT_Memory(4);
         lcd.setCursor(0, 1);
         lcd.print(F(" Sys & Masters ready "));
         elapsedTime = 0;
         break;
 
-      case SOFT_EDIT_5: //
+      case SOFT_EDIT_5:
         encoder_inverted = !encoder_inverted;
         EEPROM.update(EEPROM_ENCODER_INVERTED, encoder_inverted);
         break;
@@ -1051,16 +998,15 @@ void UI_Handle_Cfg()
       default:
         break;
     }
-    // encoder : set toto
-    // toto += SoftPanel.EncoderValue;
 
     // realtime display feature
     app_flags.Display_DIN_Req = 1;
   }
   else
   {
-    switch (SoftPanel.Button) { // cfg page5 //////////////////////////////////////////////////// CFG/DuMP page //////////////////
-
+  // cfg page5 //////////////////////////////////////////////////// CFG/DuMP page //////////////////
+    switch (SoftPanel.Button)
+    {
       case DIN_PAGE:
         if (Shift)
           SoftPanel.Page = SOFT_PAGE51;
@@ -1104,8 +1050,6 @@ void UI_Handle_Cfg()
       default:
         break;
     }
-    // encoder : set toto
-    // toto += SoftPanel.EncoderValue;
 
     if (SoftPanel.EncoderValue != 0) {
       if (SoftPanel.EditButton == Edit2) {
