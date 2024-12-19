@@ -454,14 +454,11 @@ void handle_page_patch_get()
   }
 }
 
-void handle_page_patch_copy_paste()
+void handle_page_patch_save()
 {
   switch (SoftPanel.Button)
   {
-    case DIN_PAGE:
-      SoftPanel.Page = SOFT_PAGE4; // goto page 4
-      break;
-
+    case DIN_PAGE: SoftPanel.Page = SOFT_PAGE4; break;
     case SOFT_EDIT_1: // decrement patch & bank
       if (--ProgramNumber == 255)
       {
@@ -594,7 +591,7 @@ void handle_page_patch_copy_paste()
   }
 }
 
-void handle_page_patch_save()
+void handle_page_patch_copy_paste()
 {
   switch (SoftPanel.Button)
   {

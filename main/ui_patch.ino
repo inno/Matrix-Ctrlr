@@ -31,7 +31,7 @@ void UI_Handle_Patch(void)
 switch (SoftPanel.Page) {
     case SOFT_PAGE1: handle_page_patch_main(); break;
     case SOFT_PAGE2: handle_page_patch_get(); break;
-    case SOFT_PAGE3: handle_page_patch_copy_paste(); break;
-    case SOFT_PAGE4: handle_page_patch_save(); break;
+    case SOFT_PAGE3: handle_page_patch_save(); break;
+    case SOFT_PAGE4: handle_page_patch_copy_paste(); break;
   }
 }
