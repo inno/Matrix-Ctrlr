@@ -86,14 +86,7 @@ void LCD_CursorSet(unsigned char cell)
 ////////////////////////////////////////////////////////////////////
 void LCD_Clear(void)
 {
-  lcd.clear(); // tres lent
-
-
-//// encore plus lent :
-//  lcd.setCursor(0, 0);
-//  lcd.print(F("                    "));
-//  lcd.setCursor(0, 1);
-//  lcd.print(F("                    "));
+  lcd.clear();
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -146,4 +139,10 @@ void LCD_PrintCString( String msg)
 void LCD_PrintHex2(unsigned char data)
 {
   lcd.print (data, HEX);
+}
+
+void LCD_setAndPrint(unsigned char x, unsigned char y, String msg)
+{
+  lcd.setCursor(x, y);
+  lcd.print(msg);
 }
