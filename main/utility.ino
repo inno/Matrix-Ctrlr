@@ -33,6 +33,18 @@ void DOUT_PinSet1(unsigned char dout_pin)
 }
 
 ////////////////////////////////////////////////////////////////////
+void DOUT_PinSetOff(unsigned char dout_pin)
+{
+  SR.Led_Pin_Write(dout_pin, 0);
+}
+
+////////////////////////////////////////////////////////////////////
+void DOUT_PinSetOn(unsigned char dout_pin)
+{
+  SR.Led_Pin_Write(dout_pin, 1);
+}
+
+////////////////////////////////////////////////////////////////////
 void DOUT_PinSet_Keypanel(unsigned char key1_led, unsigned char key2_led, unsigned char key3_led, unsigned char key4_led, unsigned char key5_led, unsigned char key_page_led)
 {
   SR.Led_Pin_Write(DOUT_DCO, key1_led);
