@@ -43,12 +43,8 @@ void HandleNoteOff(byte channel, byte pitch, byte velocity)
     UI_Display_Arp(); // update display
   }
 
-  // MIDI THRU in software : MIDI IN A -> MIDI OUT CORE
-  if (softMIDITHRU)
-  {
-    if (channel == MIDI_CHANNEL)
-      MIDI_CORE.sendNoteOff(pitch, velocity, channel + 4);
-  }
+  if (softMIDITHRU && channel == MIDI_CHANNEL)
+    MIDI_CORE.sendNoteOff(pitch, velocity, channel + 4);
 
   // sending notes off to synths
   if (channel == MIDI_CHANNEL)
@@ -104,10 +100,9 @@ void HandleNoteOff(byte channel, byte pitch, byte velocity)
           }
         }
 
-        if (ui_seqPlay && seqMonoMode && (pitch != seqPushedKey)) // availability to play others notes while seq is running on the same keyboard
-        {
+        // availability to play others notes while seq is running on the same keyboard
+        if (ui_seqPlay && seqMonoMode && (pitch != seqPushedKey))
           MIDI_A.sendNoteOff(pitch, velocity, channel);
-        }
 
 #if DEBUG_ARP
         Serial.println(F("arpegiateOption FALSE"));
@@ -225,7 +220,6 @@ void HandleNoteOn(byte channel, byte pitch, byte velocity)
   if (channel == MIDI_CHANNEL && learningChord == true)
     LEARN_CHORD(pitch, velocity, channel, currentChords, 1);
 
-  // MIDI THRU in software : MIDI IN A -> MIDI OUT CORE
   if (softMIDITHRU && channel == MIDI_CHANNEL)
     MIDI_CORE.sendNoteOn(pitch, velocity, channel + 4);
 
