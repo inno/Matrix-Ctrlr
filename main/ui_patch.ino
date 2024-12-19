@@ -39,17 +39,16 @@ void UI_Display_Patch (void)
     case SOFT_PAGE1:
       unsigned char j;
 
-      DOUT_PinSet1(DIN_ConfigMap[DIN_PATCH].dout_pin);		// on
-      DOUT_PinSet0(DIN_ConfigMap[DIN_EDIT].dout_pin); 		// off
-      DOUT_PinSet0(DIN_ConfigMap[DIN_OSCILLATORS].dout_pin); // off
-      DOUT_PinSet0(DIN_ConfigMap[DIN_FILTER].dout_pin); 		// off
-      DOUT_PinSet0(DIN_ConfigMap[DIN_ENVELOPES].dout_pin); 	// off
-      DOUT_PinSet0(DIN_ConfigMap[DIN_KEYBOARD].dout_pin); 	// off
-      DOUT_PinSet0(DIN_ConfigMap[DIN_MATRIX].dout_pin); 		// off
-      DOUT_PinSet1(DIN_ConfigMap[DIN_PAGE].dout_pin); 		// off
-      DOUT_PinSet0(DIN_ConfigMap[DIN_CFG].dout_pin);     // off
+      DOUT_PinSetOn(DIN_ConfigMap[DIN_PATCH].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_EDIT].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_OSCILLATORS].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_FILTER].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_ENVELOPES].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_KEYBOARD].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_MATRIX].dout_pin);
+      DOUT_PinSetOn(DIN_ConfigMap[DIN_PAGE].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_CFG].dout_pin);
 
-      //lcd.clear();
       //1st line
       lcd.setCursor(0, 0);
       lcd.print(F("PATCH  "));
@@ -68,11 +67,8 @@ void UI_Display_Patch (void)
           lcd.print(F("D"));
           break;
 #endif
-        default:
-          break;
       }
       if (elapsedTime < 100) {
-        //print temp Patch,Bank
         LCD_PrintBCD1(tBank);
         LCD_PrintBCD2(tPatch);
         if (tPatch < 10)
@@ -82,7 +78,6 @@ void UI_Display_Patch (void)
         }
       }
       else {
-        //lcd.print(F("-"));
         LCD_PrintBCD1(uBank[device]);
         LCD_PrintBCD2(uPatch[device]);
         if (uPatch[device] < 10)
@@ -91,19 +86,18 @@ void UI_Display_Patch (void)
           LCD_PrintCString(F("0")); // place a zero here for values below 10
         }
 
-        //reset:
+        // reset
         tBank = uBank[device];
         tPatch = uPatch[device];
       }
 
       // display patchname
       lcd.setCursor(11, 0);
-      // temporary display of the name :
+      // temporary display of the name
       if (elapsedTime < 100) { // affiche temporaire 500 millisec
-        LCD_PrintCString(F(" ")); // LCD_PrintChar(CHAR_UP);
-        for (j = 0; j < 8; j++) {
+        LCD_PrintCString(F(" "));
+        for (j = 0; j < 8; j++)
           LCD_PrintChar(ToneName[j]);
-        }
       }
       else {
         LCD_PrintCString(F(" "));
@@ -132,15 +126,15 @@ void UI_Display_Patch (void)
       *  *      o    *  *
     */
     case SOFT_PAGE2:
-      DOUT_PinSet1(DIN_ConfigMap[DIN_PATCH].dout_pin);		// on
-      DOUT_PinSet0(DIN_ConfigMap[DIN_EDIT].dout_pin); 		// off
-      DOUT_PinSet0(DIN_ConfigMap[DIN_OSCILLATORS].dout_pin); // off
-      DOUT_PinSet0(DIN_ConfigMap[DIN_FILTER].dout_pin); 		// off
-      DOUT_PinSet1(DIN_ConfigMap[DIN_ENVELOPES].dout_pin); 	// on "store to ?"
-      DOUT_PinSet0(DIN_ConfigMap[DIN_KEYBOARD].dout_pin); 	// off
-      DOUT_PinSet0(DIN_ConfigMap[DIN_MATRIX].dout_pin); 		// off
-      DOUT_PinSet1(DIN_ConfigMap[DIN_PAGE].dout_pin); 		// on
-      DOUT_PinSet0(DIN_ConfigMap[DIN_CFG].dout_pin);     // off
+      DOUT_PinSetOn(DIN_ConfigMap[DIN_PATCH].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_EDIT].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_OSCILLATORS].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_FILTER].dout_pin);
+      DOUT_PinSetOn(DIN_ConfigMap[DIN_ENVELOPES].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_KEYBOARD].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_MATRIX].dout_pin);
+      DOUT_PinSetOn(DIN_ConfigMap[DIN_PAGE].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_CFG].dout_pin);
 
       //1st line
       LCD_Clear();
@@ -148,21 +142,21 @@ void UI_Display_Patch (void)
       LCD_PrintCString(F("mBank:"));
       LCD_PrintBCD1(BankNumberDump);
       lcd.setCursor(8, 0);
-      lcd.write(255); lcd.write(255); lcd.write((byte)0); //LCD_PrintCString(F("==>"));
+      lcd.write(255); lcd.write(255); lcd.write((byte)0);
       lcd.setCursor(12, 0);
       LCD_PrintCString(F(" Bank"));
       LCD_PrintBCD2(uBank[device]);
       //2nd line
       lcd.setCursor(0, 1);
-      lcd.write((byte)6); //LCD_PrintChar(CHAR_DOWN);
+      lcd.write((byte)6);
       lcd.setCursor(4, 1);
-      lcd.write((byte)7); //LCD_PrintChar(CHAR_UP);
+      lcd.write((byte)7);
       lcd.setCursor(10, 1);
-      LCD_PrintCString(F("GET "));	//68
+      LCD_PrintCString(F("GET "));
       lcd.setCursor(16, 1);
-      lcd.write((byte)6); //LCD_PrintChar(CHAR_DOWN);
+      lcd.write((byte)6);
       lcd.setCursor(19, 1);
-      lcd.write((byte)7); //LCD_PrintChar(CHAR_UP);
+      lcd.write((byte)7);
 
 
       if (MIDI_ReceivingBank)
@@ -184,19 +178,19 @@ void UI_Display_Patch (void)
       *  *     o    *  *
     */
     case SOFT_PAGE3:
-      DOUT_PinSet1(DIN_ConfigMap[DIN_PATCH].dout_pin);		// on
-      DOUT_PinSet0(DIN_ConfigMap[DIN_EDIT].dout_pin); 		// off
-      DOUT_PinSet0(DIN_ConfigMap[DIN_OSCILLATORS].dout_pin); // off
-      DOUT_PinSet0(DIN_ConfigMap[DIN_FILTER].dout_pin); 		// off
-      DOUT_PinSet1(DIN_ConfigMap[DIN_ENVELOPES].dout_pin); 	// on "store to ?"
-      DOUT_PinSet0(DIN_ConfigMap[DIN_KEYBOARD].dout_pin); 	// off
-      DOUT_PinSet0(DIN_ConfigMap[DIN_MATRIX].dout_pin); 		// off
-      DOUT_PinSet1(DIN_ConfigMap[DIN_PAGE].dout_pin); 		// on
-      DOUT_PinSet0(DIN_ConfigMap[DIN_CFG].dout_pin);     // off
+      DOUT_PinSetOn(DIN_ConfigMap[DIN_PATCH].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_EDIT].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_OSCILLATORS].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_FILTER].dout_pin);
+      DOUT_PinSetOn(DIN_ConfigMap[DIN_ENVELOPES].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_KEYBOARD].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_MATRIX].dout_pin);
+      DOUT_PinSetOn(DIN_ConfigMap[DIN_PAGE].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_CFG].dout_pin);
 
       //1st line
       LCD_Clear();
-      // patch number of M1000 :
+      // patch number of M1000
       lcd.setCursor(1 , 0);
       LCD_PrintCString(F("m"));
       LCD_PrintBCD1(BankNumber);
@@ -206,17 +200,17 @@ void UI_Display_Patch (void)
         LCD_PrintCString(F("0"));
       } // place a zero here for values below 10
 
-      // name of patch :
+      // name of patch
       lcd.setCursor(6 , 0);
       for (j = 0; j < 8; j++) {
-        if (EditBufferOrig[j] < 0x20) { // cf ASCII tables
+        // cf ASCII tables
+        if (EditBufferOrig[j] < 0x20)
           EditBufferOrig[j] = EditBufferOrig[j] + 0x40; // +64 (0x40) compatible with Matrix 1000 patch names
-        } else {
-          EditBufferOrig[j] = EditBufferOrig[j]; //
-        }
+        else
+          EditBufferOrig[j] = EditBufferOrig[j];
         LCD_PrintChar(EditBufferOrig[j]);
       }
-      // storage destination :
+      // storage destination
       lcd.setCursor(15 , 0);
       LCD_PrintBCD1(uBank[device]);
       LCD_PrintBCD2(uPatch[device]);
@@ -227,15 +221,15 @@ void UI_Display_Patch (void)
 
       //2nd line
       lcd.setCursor(1, 1);
-      lcd.write((byte)6); //LCD_PrintChar(CHAR_DOWN);
+      lcd.write((byte)6);
       lcd.setCursor(5, 1);
-      lcd.write((byte)7); //LCD_PrintChar(CHAR_UP);
+      lcd.write((byte)7);
       lcd.setCursor(8, 1);
       LCD_PrintCString(F("SAVE"));
       lcd.setCursor(14, 1);
-      lcd.write((byte)6); //LCD_PrintChar(CHAR_DOWN);
+      lcd.write((byte)6);
       lcd.setCursor(18, 1);
-      lcd.write((byte)7); //LCD_PrintChar(CHAR_UP);
+      lcd.write((byte)7);
       break;
 
     /*
@@ -246,9 +240,9 @@ void UI_Display_Patch (void)
       CPY PAST EDT ARP SEQ
     */
     case SOFT_PAGE4:
-      DOUT_PinSet1(DIN_ConfigMap[DIN_PATCH].dout_pin);    // on
-      DOUT_PinSet1(DIN_ConfigMap[DIN_PAGE].dout_pin);     // on
-      DOUT_PinSet0(DIN_ConfigMap[DIN_EDIT].dout_pin);     // off
+      DOUT_PinSetOn(DIN_ConfigMap[DIN_PATCH].dout_pin);
+      DOUT_PinSetOn(DIN_ConfigMap[DIN_PAGE].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_EDIT].dout_pin);
 
       LCD_Clear();
       lcd.setCursor(0, 0);
@@ -260,9 +254,9 @@ void UI_Display_Patch (void)
       break;
 
     case SOFT_PAGE5:
-      DOUT_PinSet1(DIN_ConfigMap[DIN_PATCH].dout_pin);    // on
-      DOUT_PinSet0(DIN_ConfigMap[DIN_EDIT].dout_pin);    // off
-      DOUT_PinSet0(DIN_ConfigMap[DIN_CFG].dout_pin);     // off
+      DOUT_PinSetOn(DIN_ConfigMap[DIN_PATCH].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_EDIT].dout_pin);
+      DOUT_PinSetOff(DIN_ConfigMap[DIN_CFG].dout_pin);
       DOUT_PinSet_Keypanel(0, 0, 0, 0, 0, 1);
       // 1st line
       LCD_Clear();
@@ -277,43 +271,12 @@ void UI_Display_Patch (void)
 /////////////////////////////////////////////////////////////////////////////
 void UI_Handle_Patch(void)
 {
-  //	ChooseEditBuffer[device]ABCD(); // define which EditBuffer[device] to use
-
   if (SoftPanel.Page == SOFT_PAGE1) /////////////////////////////////////////////////// 1 ////////////////// PAGE 1
   {
-    // encoder
-    //    if (Shift) {
-    //      uBank[device] += SoftPanel.EncoderValue;
-    //    } else {
-    //      uPatch[device] += SoftPanel.EncoderValue;
-    //    }
-    //
-    //
-    //    if (uPatch[device] > 200)
-    //    {
-    //      uPatch[device] = uPATCH_MAX;
-    //      uBank[device]--;
-    //    }
-    //
-    //    if (uPatch[device] > uPATCH_MAX)
-    //    {
-    //      uPatch[device] = 0;
-    //      uBank[device]++;
-    //    }
-    //
-    //    if (uBank[device] > 200)
-    //    {
-    //      uBank[device] = uBANK_MAX;
-    //    }
-    //
-    //    if (uBank[device] > uBANK_MAX) {
-    //      uBank[device] = 0;
-    //    }
-    if (Shift) {
+    if (Shift)
       tBank += SoftPanel.EncoderValue;
-    } else {
+    else
       tPatch += SoftPanel.EncoderValue;
-    }
 
 
     if (tPatch > 200)
@@ -329,13 +292,10 @@ void UI_Handle_Patch(void)
     }
 
     if (tBank > 200)
-    {
       tBank = uBANK_MAX;
-    }
 
-    if (tBank > uBANK_MAX) {
+    if (tBank > uBANK_MAX)
       tBank = 0;
-    }
 
 #if DEBUG_softpanel
     Serial.print(F("uPatch = ")); Serial.println(uPatch[device]);
@@ -347,7 +307,7 @@ void UI_Handle_Patch(void)
     UI_Display_Patch(); // to update patch name on display
 
 
-    // functions available on page 1 :
+    // functions available on page 1
     switch (SoftPanel.Button) {
       case SOFT_EDIT_F1:
         if (Shift)
@@ -533,7 +493,6 @@ void UI_Handle_Patch(void)
           ArpParameters_Load(device); // load arp parameters
           SendEditBuffer(device, INTERFACE_MIDI_CORE); // send  to core out
           MIDI_Send_UNISONDETUNE(INTERFACE_MIDI_CORE, UnisonDetune[device]);
-          //elapsedTime = 730;
           UI_Display_Patch(); // to update patch name on display
         }
         // send Bank et Patch number & EditBuffer[device] to Core  Midi out :
@@ -597,16 +556,13 @@ void UI_Handle_Patch(void)
         break;
 
       case SOFT_EDIT_1: // decrement patch & bank
-        ProgramNumber--;
-        if (ProgramNumber == 255)
+        if (--ProgramNumber == 255)
         {
           ProgramNumber = uPATCH_MAX;
           BankNumber--;
         }
         if (BankNumber == 255)
-        {
           BankNumber = uBANK_MAX;
-        }
         if (matrix_modele == MATRIX_6)
         { // and ask corresponding Matrix patch using a SysEx msg
           MIDI_SendPatchProgram(INTERFACE_SERIAL, ProgramNumber);
@@ -627,9 +583,8 @@ void UI_Handle_Patch(void)
           ProgramNumber = 0;
           BankNumber++;
         }
-        if (BankNumber > uBANK_MAX) {
+        if (BankNumber > uBANK_MAX)
           BankNumber = 0;
-        }
         if (matrix_modele == MATRIX_6) {
           MIDI_SendPatchProgram(INTERFACE_SERIAL, ProgramNumber);
           MIDI_RequestSinglePatch(INTERFACE_SERIAL, ProgramNumber);
@@ -641,7 +596,7 @@ void UI_Handle_Patch(void)
         }
         break;
 
-      case SOFT_EDIT_3: // click this button to store a patch sent by the Matrix1000 in the Ctrlr memory :
+      case SOFT_EDIT_3: // click this button to store a patch sent by the Matrix1000 in the Ctrlr memory
         // set arp, uni & seq to default
         Set_OrigArpUniSeq_toDefault();
         // then save
@@ -649,33 +604,27 @@ void UI_Handle_Patch(void)
         break;
 
       case SOFT_EDIT_4: // decrement BP
-        uPatch[device]--;
-        if (uPatch[device] == 255) {
+        if (--uPatch[device] == 255) {
           uPatch[device] = uPATCH_MAX;
           uBank[device]--;
         }
-        if (uBank[device] == 255) {
+        if (uBank[device] == 255)
           uBank[device] = uBANK_MAX;
-        }
 
-        if (uBank[device] > uBANK_MAX) {
+        if (uBank[device] > uBANK_MAX)
           uBank[device] = 0;
-        }
         break;
 
       case SOFT_EDIT_5: // increment BP
-        uPatch[device]++;
-        if (uPatch[device] > uPATCH_MAX) {
+        if (++uPatch[device] > uPATCH_MAX) {
           uPatch[device] = 0;
           uBank[device]++;
         }
-        if (uBank[device] == 255) {
+        if (uBank[device] == 255)
           uBank[device] = uBANK_MAX;
-        }
 
-        if (uBank[device] > uBANK_MAX) {
+        if (uBank[device] > uBANK_MAX)
           uBank[device] = 0;
-        }
         break;
 
       case SOFT_EDIT_ENC_CLIC: // encoder clic : load patch
@@ -691,8 +640,6 @@ void UI_Handle_Patch(void)
           MIDI_RequestSinglePatch(INTERFACE_SERIAL, ProgramNumber);
         }
         break;
-
-      default: break;
     }
 
     // encoder
@@ -709,13 +656,11 @@ void UI_Handle_Patch(void)
         uBank[device]--;
       }
 
-      if (uBank[device] == 255) {
+      if (uBank[device] == 255)
         uBank[device] = uBANK_MAX;
-      }
 
-      if (uBank[device] > uBANK_MAX) {
+      if (uBank[device] > uBANK_MAX)
         uBank[device] = 0;
-      }
     }
     else
     {
@@ -724,9 +669,8 @@ void UI_Handle_Patch(void)
         ProgramNumber = 0;
         BankNumber++;
       }
-      if (BankNumber > uBANK_MAX) {
+      if (BankNumber > uBANK_MAX)
         BankNumber = 0;
-      }
 
       if (ProgramNumber == 255)
       {
@@ -734,9 +678,7 @@ void UI_Handle_Patch(void)
         BankNumber--;
       }
       if (BankNumber == 255)
-      {
         BankNumber = uBANK_MAX;
-      }
     }
   } // end of page3
   else if (SoftPanel.Page == SOFT_PAGE4) ////////////////////////////////////////// PAGE 4 ////////////////////////
@@ -744,9 +686,6 @@ void UI_Handle_Patch(void)
     switch (SoftPanel.Button) {
       case DIN_PAGE:
         SoftPanel.Page = SOFT_PAGE1;
-        break;
-
-      default:
         break;
     }
   }
@@ -769,9 +708,7 @@ void UI_Handle_Patch(void)
         if (copy)        // copying
         {
           for (unsigned char i = 0; i < 134; i++)
-          {
             copyBuffer[i] = EditBuffer[device][i]; // patch
-          }
           copyBuffer[134] = UnisonDetune[device]; // unison
           copyBuffer[135] = 1; // typ EB
           copy = false;
@@ -780,9 +717,7 @@ void UI_Handle_Patch(void)
         if (paste && (copyBuffer[135] == 1))        //pasting
         {
           for (unsigned char i = 0; i < 128; i++)
-          {
             EditBuffer[device][i] = copyBuffer[i];
-          }
           UnisonDetune[device] = copyBuffer[134];
           paste = false;
         }
@@ -795,9 +730,7 @@ void UI_Handle_Patch(void)
         if (copy)        // copying
         {
           for (unsigned char i = 0; i < 20; i++)
-          {
             copyBuffer[i] = ArpParameters[device][i];
-          }
           copyBuffer[135] = 2; // typ ArpParam
           copy = false;
         }
@@ -805,9 +738,7 @@ void UI_Handle_Patch(void)
         if (paste && (copyBuffer[135] == 2))        //pasting
         {
           for (unsigned char i = 0; i < 20; i++)
-          {
             ArpParameters[device][i] = copyBuffer[i];
-          }
           paste = false;
         }
         else return;
@@ -817,12 +748,8 @@ void UI_Handle_Patch(void)
         if (copy)        // copying
         {
           for (unsigned char i = 0; i < 32; i++)
-          {
             for (unsigned char j = 0; j < 2; j++)
-            {
               copyBuffer[2 * i + j] = sequence[i][j];
-            }
-          }
           copyBuffer[135] = 3;
           copy = false;
         }
@@ -830,20 +757,12 @@ void UI_Handle_Patch(void)
         if (paste && (copyBuffer[135] == 3))        //pasting
         {
           for (unsigned char i = 0; i < 32; i++)
-          {
             for (unsigned char j = 0; j < 2; j++)
-            {
               sequence[i][j] = copyBuffer[2 * i + j];
-            }
-          }
           paste = false;
         }
         else return;
         break;
-
-      default:
-        break;
-
     }
   }
-}//end of UI_Handle_Patch()
+}
