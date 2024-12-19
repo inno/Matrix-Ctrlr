@@ -19,16 +19,15 @@ unsigned char BankNumberDump;
 unsigned char copyBuffer[136];
 static bool copy, paste;
 
-
 /////////////////////////////////////////////////////////////////////////////
 //  Display patch pages, page 1 for bank and program changes,
 //  page 2 for MIDI channel setup, edit buffer init and patch compare//
 // page3 for Bank dump from Matrix 1000
 /////////////////////////////////////////////////////////////////////////////
-void UI_Display_Patch (void)
+void UI_Display_Patch(void)
 {
-  switch (SoftPanel.Page) {
-
+  switch (SoftPanel.Page)
+  {
     /*
       PATCH PAGE 1
       []  []   [ ]  []  []
@@ -52,23 +51,17 @@ void UI_Display_Patch (void)
       //1st line
       lcd.setCursor(0, 0);
       lcd.print(F("PATCH  "));
-      switch (device) {
-        case MATRIX_DEVICE_A:
-          lcd.print(F("A"));
-          break;
-        case MATRIX_DEVICE_B:
-          lcd.print(F("B"));
-          break;
+      switch (device)
+      {
+        case MATRIX_DEVICE_A: lcd.print(F("A")); break;
+        case MATRIX_DEVICE_B: lcd.print(F("B")); break;
 #if SOFTSERIAL_ENABLED
-        case MATRIX_DEVICE_C:
-          lcd.print(F("C"));
-          break;
-        case MATRIX_DEVICE_D:
-          lcd.print(F("D"));
-          break;
+        case MATRIX_DEVICE_C: lcd.print(F("C")); break;
+        case MATRIX_DEVICE_D: lcd.print(F("D")); break;
 #endif
       }
-      if (elapsedTime < 100) {
+      if (elapsedTime < 100)
+      {
         LCD_PrintBCD1(tBank);
         LCD_PrintBCD2(tPatch);
         if (tPatch < 10)
@@ -77,7 +70,8 @@ void UI_Display_Patch (void)
           LCD_PrintCString(F("0")); // place a zero here for values below 10
         }
       }
-      else {
+      else
+      {
         LCD_PrintBCD1(uBank[device]);
         LCD_PrintBCD2(uPatch[device]);
         if (uPatch[device] < 10)
@@ -94,19 +88,23 @@ void UI_Display_Patch (void)
       // display patchname
       lcd.setCursor(11, 0);
       // temporary display of the name
-      if (elapsedTime < 100) { // affiche temporaire 500 millisec
+      if (elapsedTime < 100)
+      { // affiche temporaire 500 millisec
         LCD_PrintCString(F(" "));
         for (j = 0; j < 8; j++)
           LCD_PrintChar(ToneName[j]);
       }
-      else {
+      else
+      {
         LCD_PrintCString(F(" "));
-        for (j = 0; j < 8; j++) {
+        for (j = 0; j < 8; j++)
+        {
           if (EditBuffer[device][j] < 0x20) // cf ASCII tables
             EditBuffer[device][j] = EditBuffer[device][j] + 0x40; // +64 (0x40) compatible with Matrix 1000 patch names
-          else
-            EditBuffer[device][j] = EditBuffer[device][j];
-          LCD_PrintChar( EditBuffer[device][j]);
+
+          if (EditBuffer[device][j] < 0x20) // cf ASCII tables
+            EditBuffer[device][j] = EditBuffer[device][j] + 0x40; // +64 (0x40) compatible with Matrix 1000 patch names
+          LCD_PrintChar(EditBuffer[device][j]);
         }
       }
 
@@ -142,7 +140,9 @@ void UI_Display_Patch (void)
       LCD_PrintCString(F("mBank:"));
       LCD_PrintBCD1(BankNumberDump);
       lcd.setCursor(8, 0);
-      lcd.write(255); lcd.write(255); lcd.write((byte)0);
+      lcd.write(255);
+      lcd.write(255);
+      lcd.write((byte)0);
       lcd.setCursor(12, 0);
       LCD_PrintCString(F(" Bank"));
       LCD_PrintBCD2(uBank[device]);
@@ -157,7 +157,6 @@ void UI_Display_Patch (void)
       lcd.write((byte)6);
       lcd.setCursor(19, 1);
       lcd.write((byte)7);
-
 
       if (MIDI_ReceivingBank)
       {
@@ -191,30 +190,31 @@ void UI_Display_Patch (void)
       //1st line
       LCD_Clear();
       // patch number of M1000
-      lcd.setCursor(1 , 0);
+      lcd.setCursor(1, 0);
       LCD_PrintCString(F("m"));
       LCD_PrintBCD1(BankNumber);
       LCD_PrintBCD2(ProgramNumber);
-      if (ProgramNumber < 10) {
-        lcd.setCursor(3 , 0);
+      if (ProgramNumber < 10)
+      {
+        lcd.setCursor(3, 0);
         LCD_PrintCString(F("0"));
       } // place a zero here for values below 10
 
       // name of patch
-      lcd.setCursor(6 , 0);
-      for (j = 0; j < 8; j++) {
+      lcd.setCursor(6, 0);
+      for (j = 0; j < 8; j++)
+      {
         // cf ASCII tables
         if (EditBufferOrig[j] < 0x20)
           EditBufferOrig[j] = EditBufferOrig[j] + 0x40; // +64 (0x40) compatible with Matrix 1000 patch names
-        else
-          EditBufferOrig[j] = EditBufferOrig[j];
         LCD_PrintChar(EditBufferOrig[j]);
       }
       // storage destination
-      lcd.setCursor(15 , 0);
+      lcd.setCursor(15, 0);
       LCD_PrintBCD1(uBank[device]);
       LCD_PrintBCD2(uPatch[device]);
-      if (uPatch[device] < 10) { // Patch
+      if (uPatch[device] < 10)
+      { // Patch
         lcd.setCursor(16, 0);
         LCD_PrintCString(F("0"));
       }
@@ -278,7 +278,6 @@ void UI_Handle_Patch(void)
     else
       tPatch += SoftPanel.EncoderValue;
 
-
     if (tPatch > 200)
     {
       tPatch = uPATCH_MAX;
@@ -298,7 +297,8 @@ void UI_Handle_Patch(void)
       tBank = 0;
 
 #if DEBUG_softpanel
-    Serial.print(F("uPatch = ")); Serial.println(uPatch[device]);
+    Serial.print(F("uPatch = "));
+    Serial.println(uPatch[device]);
 #endif
 
     // insérer ici la lecture du nom du tone en page B.PP (T.Heckmann)
@@ -306,9 +306,9 @@ void UI_Handle_Patch(void)
     elapsedTime = 0; // for temporary msg
     UI_Display_Patch(); // to update patch name on display
 
-
     // functions available on page 1
-    switch (SoftPanel.Button) {
+    switch (SoftPanel.Button)
+    {
       case SOFT_EDIT_F1:
         if (Shift)
         {
@@ -404,8 +404,9 @@ void UI_Handle_Patch(void)
 
       case SOFT_EDIT_INC: // increment 000-->001  099-->100 :: OK :)
         uPatch[device]++;
-        uPatch[device] = uPatch[device] + Shift ;
-        if (uPatch[device] > uPATCH_MAX) {
+        uPatch[device] = uPatch[device] + Shift;
+        if (uPatch[device] > uPATCH_MAX)
+        {
           uPatch[device] = 0;
           uBank[device]++;
           if (uBank[device] > uBANK_MAX)
@@ -421,7 +422,7 @@ void UI_Handle_Patch(void)
 
           Read_Patch_From_BS(device, uBank[device], uPatch[device]); // read into BS
           UpdateDinStates(); // mise à jour des Leds
-          SendEditBuffer(device, INTERFACE_SERIAL);  // send edit buffer :)
+          SendEditBuffer(device, INTERFACE_SERIAL); // send edit buffer :)
           // send Unison detune value :
           MIDI_Send_UNISONDETUNE(INTERFACE_SERIAL, UnisonDetune[device]);
           // load arp parameters
@@ -438,8 +439,9 @@ void UI_Handle_Patch(void)
 
       case SOFT_EDIT_DEC: // decrement 000-->3199 100-->099 :: OK :)
         uPatch[device]--;
-        uPatch[device] = uPatch[device] - Shift ;
-        if (uPatch[device] == 255) {
+        uPatch[device] = uPatch[device] - Shift;
+        if (uPatch[device] == 255)
+        {
           uPatch[device] = uPATCH_MAX;
           uBank[device]--;
           if (uBank[device] == 255)
@@ -479,10 +481,13 @@ void UI_Handle_Patch(void)
         {
           ARP_GLOBAL_INIT(device);
           Reset_UI_ARP(); // stop arp parameters
-          if (elapsedTime < 100) {
+          if (elapsedTime < 100)
+          {
             uBank[device] = tBank;
             uPatch[device] = tPatch;
-          } else {
+          }
+          else
+          {
             tBank = uBank[device];
             tPatch = uPatch[device];
           }
@@ -550,7 +555,8 @@ void UI_Handle_Patch(void)
   }
   else if (SoftPanel.Page == SOFT_PAGE3) // it's page 3  //////////////////////////////////////////////// PAGE 3 ////////////////////////////////////
   {
-    switch (SoftPanel.Button) {
+    switch (SoftPanel.Button)
+    {
       case DIN_PAGE:
         SoftPanel.Page = SOFT_PAGE4; // goto page 4
         break;
@@ -573,19 +579,20 @@ void UI_Handle_Patch(void)
           // and ask corresponding Matrix patch using a SysEx msg
           MIDI_SetBank(INTERFACE_SERIAL, BankNumber);
           MIDI_RequestSinglePatch(INTERFACE_SERIAL, ProgramNumber);
-
         }
         break;
 
       case SOFT_EDIT_2: // increment patch & bank
         ProgramNumber++;
-        if (ProgramNumber > uPATCH_MAX) {
+        if (ProgramNumber > uPATCH_MAX)
+        {
           ProgramNumber = 0;
           BankNumber++;
         }
         if (BankNumber > uBANK_MAX)
           BankNumber = 0;
-        if (matrix_modele == MATRIX_6) {
+        if (matrix_modele == MATRIX_6)
+        {
           MIDI_SendPatchProgram(INTERFACE_SERIAL, ProgramNumber);
           MIDI_RequestSinglePatch(INTERFACE_SERIAL, ProgramNumber);
         }
@@ -604,7 +611,8 @@ void UI_Handle_Patch(void)
         break;
 
       case SOFT_EDIT_4: // decrement BP
-        if (--uPatch[device] == 255) {
+        if (--uPatch[device] == 255)
+        {
           uPatch[device] = uPATCH_MAX;
           uBank[device]--;
         }
@@ -616,7 +624,8 @@ void UI_Handle_Patch(void)
         break;
 
       case SOFT_EDIT_5: // increment BP
-        if (++uPatch[device] > uPATCH_MAX) {
+        if (++uPatch[device] > uPATCH_MAX)
+        {
           uPatch[device] = 0;
           uBank[device]++;
         }
@@ -646,12 +655,14 @@ void UI_Handle_Patch(void)
     if (Shift)
     {
       uPatch[device] += SoftPanel.EncoderValue;
-      if (uPatch[device] > uPATCH_MAX) {
+      if (uPatch[device] > uPATCH_MAX)
+      {
         uPatch[device] = 0;
         uBank[device]++;
       }
 
-      if (uPatch[device] == 255) {
+      if (uPatch[device] == 255)
+      {
         uPatch[device] = uPATCH_MAX;
         uBank[device]--;
       }
@@ -665,7 +676,8 @@ void UI_Handle_Patch(void)
     else
     {
       ProgramNumber += SoftPanel.EncoderValue;
-      if (ProgramNumber > uPATCH_MAX) {
+      if (ProgramNumber > uPATCH_MAX)
+      {
         ProgramNumber = 0;
         BankNumber++;
       }
@@ -683,15 +695,15 @@ void UI_Handle_Patch(void)
   } // end of page3
   else if (SoftPanel.Page == SOFT_PAGE4) ////////////////////////////////////////// PAGE 4 ////////////////////////
   {
-    switch (SoftPanel.Button) {
-      case DIN_PAGE:
-        SoftPanel.Page = SOFT_PAGE1;
-        break;
+    switch (SoftPanel.Button)
+    {
+      case DIN_PAGE: SoftPanel.Page = SOFT_PAGE1; break;
     }
   }
   else //////////////////////////////////////////////// PAGE 5 /////////////////////////
   {
-    switch (SoftPanel.Button) {
+    switch (SoftPanel.Button)
+    {
       case DIN_PAGE:
         SoftPanel.Page = SOFT_PAGE1; // goto page 1
         break;
@@ -705,7 +717,7 @@ void UI_Handle_Patch(void)
         break;
 
       case SOFT_EDIT_3: // EditBuffer copying
-        if (copy)        // copying
+        if (copy) // copying
         {
           for (unsigned char i = 0; i < 134; i++)
             copyBuffer[i] = EditBuffer[device][i]; // patch
@@ -714,20 +726,17 @@ void UI_Handle_Patch(void)
           copy = false;
         }
 
-        if (paste && (copyBuffer[135] == 1))        //pasting
+        if (paste && (copyBuffer[135] == 1)) //pasting
         {
           for (unsigned char i = 0; i < 128; i++)
             EditBuffer[device][i] = copyBuffer[i];
           UnisonDetune[device] = copyBuffer[134];
           paste = false;
         }
-        else
-          return; // quit
-
         break;
 
       case SOFT_EDIT_4:
-        if (copy)        // copying
+        if (copy) // copying
         {
           for (unsigned char i = 0; i < 20; i++)
             copyBuffer[i] = ArpParameters[device][i];
@@ -735,17 +744,16 @@ void UI_Handle_Patch(void)
           copy = false;
         }
 
-        if (paste && (copyBuffer[135] == 2))        //pasting
+        if (paste && (copyBuffer[135] == 2)) //pasting
         {
           for (unsigned char i = 0; i < 20; i++)
             ArpParameters[device][i] = copyBuffer[i];
           paste = false;
         }
-        else return;
         break;
 
       case SOFT_EDIT_5:
-        if (copy)        // copying
+        if (copy) // copying
         {
           for (unsigned char i = 0; i < 32; i++)
             for (unsigned char j = 0; j < 2; j++)
@@ -754,14 +762,13 @@ void UI_Handle_Patch(void)
           copy = false;
         }
 
-        if (paste && (copyBuffer[135] == 3))        //pasting
+        if (paste && (copyBuffer[135] == 3)) //pasting
         {
           for (unsigned char i = 0; i < 32; i++)
             for (unsigned char j = 0; j < 2; j++)
               sequence[i][j] = copyBuffer[2 * i + j];
           paste = false;
         }
-        else return;
         break;
     }
   }
