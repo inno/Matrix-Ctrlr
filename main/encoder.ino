@@ -27,68 +27,70 @@ bool previousEncoderClic;
 /////////////////////////////////////////////////////////
 void encoder() // Youhouhouuuu !!!! ça marcheeee :)
 {
-  static signed char encSmooth; // several *clics* of the encoder are needed to increment/decrement (nicer touch feel)
-  long newPos = mainEncoder.read(); // reading encoder position
+  // several *clics* of the encoder are needed to increment/decrement (nicer touch feel)
+  static signed char encSmooth;
+  // reading encoder position
+  long newPos = mainEncoder.read();
 
-  if (newPos != position)
+  if (newPos == position)
+      return;
+
+  if (encoder_inverted) // if Encoder has D-shaft
   {
-    if (encoder_inverted) // if Encoder has D-shaft
+    if (position < newPos)
     {
-      if (position < newPos)
-      { // CW turn
-        if (--encSmooth == 0 - SMOOTHING_ENCODER) // count CCW turns
-        {
-          incrementer = -1; // at -(encSmoothING_ENCODER)'s counts send decrementer
-          encSmooth = 0; // and reset count
-        }
-        else
-          incrementer = 0; // set a null incrementer
-      }
-
-      if (position > newPos)
+      if (--encSmooth == 0 - SMOOTHING_ENCODER) // CCW turns
       {
-        if (++encSmooth == 0 + SMOOTHING_ENCODER) // CCW turn
-        {
-          incrementer = 1; // send incrementer
-          encSmooth = 0;
-        }
-        else
-          incrementer = 0;
+        incrementer = -1;
+        encSmooth = 0;
       }
+      else
+        incrementer = 0;
     }
-    else // encoder has knurled shaft
+
+    else if (position > newPos)
     {
-      if (position > newPos)
+      if (++encSmooth == 0 + SMOOTHING_ENCODER) // CW turn
       {
-        if (--encSmooth == 0 - SMOOTHING_ENCODER) // CCW turn
-        {
-          incrementer = -1; // at -(encSmoothING_ENCODER)'s counts send decrementer
-          encSmooth = 0; // and reset count
-        }
-        else
-          incrementer = 0; // set a null incrementer
+        incrementer = 1;
+        encSmooth = 0;
       }
-
-      if (position < newPos)
+      else
+        incrementer = 0;
+    }
+  }
+  else // encoder has knurled shaft
+  {
+    if (position > newPos)
+    {
+      if (--encSmooth == 0 - SMOOTHING_ENCODER) // CCW turn
       {
-        if (++encSmooth == 0 + SMOOTHING_ENCODER) // CW turn
-        {
-          incrementer = 1; // send incrementer
-          encSmooth = 0;
-        }
-        else
-          incrementer = 0;
+        incrementer = -1;
+        encSmooth = 0;
       }
+      else
+        incrementer = 0;
     }
 
-    if (incrementer != 0)
-    { // we only send +1 or 1 value, null is useless
-      // NB : using Shift button we could set a new value to encSmoothING_ENCODER to increment faster
-      SoftPanel_Handler(-1, incrementer); // no pin
-      //   last_encoder = encoder;
-      app_flags.Display_ENC_Req = 1; // update display
+    else if (position < newPos)
+    {
+      if (++encSmooth == 0 + SMOOTHING_ENCODER) // CW turn
+      {
+        incrementer = 1;
+        encSmooth = 0;
+      }
+      else
+        incrementer = 0;
     }
-    position = newPos; // update position
+  }
+
+  if (incrementer != 0)
+  { // we only send +1 or 1 value, null is useless
+    // NB : using Shift button we could set a new value to encSmoothING_ENCODER to increment faster
+    SoftPanel_Handler(-1, incrementer); // no pin
+    app_flags.Display_ENC_Req = 1; // update display
+  }
+  position = newPos; // update position
 
 #if DEBUG_encoder
     Serial.println(F("encoder() "));
@@ -97,7 +99,6 @@ void encoder() // Youhouhouuuu !!!! ça marcheeee :)
     Serial.println(position);
     Serial.println();
 #endif
-  }
 }
 
 /////////////////////////////////////////////////////////
