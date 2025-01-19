@@ -1,4 +1,3 @@
-//
 #include "chaosmatrix.h"
 #include "pots.h"
 #include "din.h"
@@ -7,139 +6,77 @@
 // https://zestedesavoir.com/tutoriels/374/gestion-de-la-memoire-sur-arduino/
 // http://www.nongnu.org/avr-libc/user-manual/pgmspace.html PROGMEM + pgm_read_byte_near(& )
 char bufferProgmem[17];
+#define S 255
+#define b 160
 
 #if CHINESE_RED_LCD
-// char 255 = solid block, char 160 = blank,  45 = hyphen = - , 4 = [ , 5 = ]
-const unsigned char barmap_signed[16][16] PROGMEM = { // solid bar 8-15 // 0-7
-  { 45,  45,  45,  45,  45,  45,  45,  45, 255,  45,  45,  45,  45,  45,  45,  45}, // 0
-  { 45,  45,  45,  45,  45,  45,  45,  45, 255, 255,  45,  45,  45,  45,  45,  45},
-  { 45,  45,  45,  45,  45,  45,  45,  45, 255, 255, 255,  45,  45,  45,  45,  45},
-  { 45,  45,  45,  45,  45,  45,  45,  45, 255, 255, 255, 255,  45,  45,  45,  45},
-  { 45,  45,  45,  45,  45,  45,  45,  45, 255, 255, 255, 255, 255,  45,  45,  45},
-  { 45,  45,  45,  45,  45,  45,  45,  45, 255, 255, 255, 255, 255, 255,  45,  45},
-  { 45,  45,  45,  45,  45,  45,  45,  45, 255, 255, 255, 255, 255, 255, 255,  45},
-  { 45,  45,  45,  45,  45,  45,  45,  45, 255, 255, 255, 255, 255, 255, 255, 255}, // 15
-  {255, 255, 255, 255, 255, 255, 255, 255,  45,  45,  45,  45,  45,  45,  45,  45}, // 8
-  { 45, 255, 255, 255, 255, 255, 255, 255,  45,  45,  45,  45,  45,  45,  45,  45},
-  { 45,  45, 255, 255, 255, 255, 255, 255,  45,  45,  45,  45,  45,  45,  45,  45},
-  { 45,  45,  45, 255, 255, 255, 255, 255,  45,  45,  45,  45,  45,  45,  45,  45},
-  { 45,  45,  45,  45, 255, 255, 255, 255,  45,  45,  45,  45,  45,  45,  45,  45},
-  { 45,  45,  45,  45,  45, 255, 255, 255,  45,  45,  45,  45,  45,  45,  45,  45},
-  { 45,  45,  45,  45,  45,  45, 255, 255,  45,  45,  45,  45,  45,  45,  45,  45},
-  { 45,  45,  45,  45,  45,  45,  45, 255,  45,  45,  45,  45,  45,  45,  45,  45} // 14
-};
-
-// char 255 = solid block, char 160 = blank, char  45 = -
-const unsigned char barmap_mix[16][16] PROGMEM =
-{
-  { 45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45, 255},
-  { 45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45, 255,  45},
-  { 45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45, 255,  45,  45},
-  { 45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45, 255,  45,  45,  45},
-  { 45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45, 255,  45,  45,  45,  45},
-  { 45,  45,  45,  45,  45,  45,  45,  45,  45,  45, 255,  45,  45,  45,  45,  45},
-  { 45,  45,  45,  45,  45,  45,  45,  45,  45, 255,  45,  45,  45,  45,  45,  45},
-  { 45,  45,  45,  45,  45,  45,  45,  45, 255,  45,  45,  45,  45,  45,  45,  45},
-  { 45,  45,  45,  45,  45,  45,  45, 255,  45,  45,  45,  45,  45,  45,  45,  45},
-  { 45,  45,  45,  45,  45,  45, 255,  45,  45,  45,  45,  45,  45,  45,  45,  45},
-  { 45,  45,  45,  45,  45, 255,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45},
-  { 45,  45,  45,  45, 255,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45},
-  { 45,  45,  45, 255,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45},
-  { 45,  45, 255,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45},
-  { 45, 255,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45},
-  {255,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45} // DJ crossfader style
-};
-
-// char 255 = solid block, char 160 = blank
-const unsigned char barmap_linear[16][16] PROGMEM =
-{
-  { 45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45}, // 0
-  {255,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45},
-  {255, 255,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45},
-  {255, 255, 255,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45},
-  {255, 255, 255, 255,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45},
-  {255, 255, 255, 255, 255,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45},
-  {255, 255, 255, 255, 255, 255,  45,  45,  45,  45,  45,  45,  45,  45,  45,  45},
-  {255, 255, 255, 255, 255, 255, 255,  45,  45,  45,  45,  45,  45,  45,  45,  45},
-  {255, 255, 255, 255, 255, 255, 255, 255,  45,  45,  45,  45,  45,  45,  45,  45},
-  {255, 255, 255, 255, 255, 255, 255, 255, 255,  45,  45,  45,  45,  45,  45,  45},
-  {255, 255, 255, 255, 255, 255, 255, 255, 255, 255,  45,  45,  45,  45,  45,  45},
-  {255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,  45,  45,  45,  45,  45},
-  {255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,  45,  45,  45,  45},
-  {255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,  45,  45,  45},
-  {255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,  45,  45},
-  {255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,  45} // 15
-};
-
+#define h 45
 #else
-
-// char 255 = solid block, char 160 = blank, 176 = hyphen = - , 4 = [ , 5 = ]
-
-const unsigned char barmap_signed[16][16] PROGMEM = { // solid bar 8-15 // 0-7
-  {176, 176, 176, 176, 176, 176, 176, 176, 255, 176, 176, 176, 176, 176, 176, 176}, // 0
-  {176, 176, 176, 176, 176, 176, 176, 176, 255, 255, 176, 176, 176, 176, 176, 176},
-  {176, 176, 176, 176, 176, 176, 176, 176, 255, 255, 255, 176, 176, 176, 176, 176},
-  {176, 176, 176, 176, 176, 176, 176, 176, 255, 255, 255, 255, 176, 176, 176, 176},
-  {176, 176, 176, 176, 176, 176, 176, 176, 255, 255, 255, 255, 255, 176, 176, 176},
-  {176, 176, 176, 176, 176, 176, 176, 176, 255, 255, 255, 255, 255, 255, 176, 176},
-  {176, 176, 176, 176, 176, 176, 176, 176, 255, 255, 255, 255, 255, 255, 255, 176},
-  {176, 176, 176, 176, 176, 176, 176, 176, 255, 255, 255, 255, 255, 255, 255, 255}, // 15
-  {255, 255, 255, 255, 255, 255, 255, 255, 176, 176, 176, 176, 176, 176, 176, 176}, // 8
-  {176, 255, 255, 255, 255, 255, 255, 255, 176, 176, 176, 176, 176, 176, 176, 176},
-  {176, 176, 255, 255, 255, 255, 255, 255, 176, 176, 176, 176, 176, 176, 176, 176},
-  {176, 176, 176, 255, 255, 255, 255, 255, 176, 176, 176, 176, 176, 176, 176, 176},
-  {176, 176, 176, 176, 255, 255, 255, 255, 176, 176, 176, 176, 176, 176, 176, 176},
-  {176, 176, 176, 176, 176, 255, 255, 255, 176, 176, 176, 176, 176, 176, 176, 176},
-  {176, 176, 176, 176, 176, 176, 255, 255, 176, 176, 176, 176, 176, 176, 176, 176},
-  {176, 176, 176, 176, 176, 176, 176, 255, 176, 176, 176, 176, 176, 176, 176, 176} // 14
-};
-
-// char 255 = solid block, char 160 = blank, char 176 = -
-const unsigned char barmap_mix[16][16] PROGMEM =
-{
-  {176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 255},
-  {176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 255, 176},
-  {176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 255, 176, 176},
-  {176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 255, 176, 176, 176},
-  {176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 255, 176, 176, 176, 176},
-  {176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 255, 176, 176, 176, 176, 176},
-  {176, 176, 176, 176, 176, 176, 176, 176, 176, 255, 176, 176, 176, 176, 176, 176},
-  {176, 176, 176, 176, 176, 176, 176, 176, 255, 176, 176, 176, 176, 176, 176, 176},
-  {176, 176, 176, 176, 176, 176, 176, 255, 176, 176, 176, 176, 176, 176, 176, 176},
-  {176, 176, 176, 176, 176, 176, 255, 176, 176, 176, 176, 176, 176, 176, 176, 176},
-  {176, 176, 176, 176, 176, 255, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176},
-  {176, 176, 176, 176, 255, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176},
-  {176, 176, 176, 255, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176},
-  {176, 176, 255, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176},
-  {176, 255, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176},
-  {255, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176} // DJ crossfader style
-};
-
-// char 255 = solid block, char 160 = blank
-const unsigned char barmap_linear[16][16] PROGMEM =
-{
-  {176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176}, // 0
-  {255, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176},
-  {255, 255, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176},
-  {255, 255, 255, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176},
-  {255, 255, 255, 255, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176},
-  {255, 255, 255, 255, 255, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176},
-  {255, 255, 255, 255, 255, 255, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176},
-  {255, 255, 255, 255, 255, 255, 255, 176, 176, 176, 176, 176, 176, 176, 176, 176},
-  {255, 255, 255, 255, 255, 255, 255, 255, 176, 176, 176, 176, 176, 176, 176, 176},
-  {255, 255, 255, 255, 255, 255, 255, 255, 255, 176, 176, 176, 176, 176, 176, 176},
-  {255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 176, 176, 176, 176, 176, 176},
-  {255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 176, 176, 176, 176, 176},
-  {255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 176, 176, 176, 176},
-  {255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 176, 176, 176},
-  {255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 176, 176},
-  {255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 176} // 15
-};
+#define h 176
 #endif
 
+// solid bar 8-15 // 0-7
+const unsigned char barmap_signed[16][16] PROGMEM = {
+  {h, h, h, h, h, h, h, h, S, h, h, h, h, h, h, h},
+  {h, h, h, h, h, h, h, h, S, S, h, h, h, h, h, h},
+  {h, h, h, h, h, h, h, h, S, S, S, h, h, h, h, h},
+  {h, h, h, h, h, h, h, h, S, S, S, S, h, h, h, h},
+  {h, h, h, h, h, h, h, h, S, S, S, S, S, h, h, h},
+  {h, h, h, h, h, h, h, h, S, S, S, S, S, S, h, h},
+  {h, h, h, h, h, h, h, h, S, S, S, S, S, S, S, h},
+  {h, h, h, h, h, h, h, h, S, S, S, S, S, S, S, S},
+  {S, S, S, S, S, S, S, S, h, h, h, h, h, h, h, h},
+  {h, S, S, S, S, S, S, S, h, h, h, h, h, h, h, h},
+  {h, h, S, S, S, S, S, S, h, h, h, h, h, h, h, h},
+  {h, h, h, S, S, S, S, S, h, h, h, h, h, h, h, h},
+  {h, h, h, h, S, S, S, S, h, h, h, h, h, h, h, h},
+  {h, h, h, h, h, S, S, S, h, h, h, h, h, h, h, h},
+  {h, h, h, h, h, h, S, S, h, h, h, h, h, h, h, h},
+  {h, h, h, h, h, h, h, S, h, h, h, h, h, h, h, h},
+};
+
+// DJ crossfader style
+const unsigned char barmap_mix[16][16] PROGMEM = {
+  {h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, S},
+  {h, h, h, h, h, h, h, h, h, h, h, h, h, h, S, h},
+  {h, h, h, h, h, h, h, h, h, h, h, h, h, S, h, h},
+  {h, h, h, h, h, h, h, h, h, h, h, h, S, h, h, h},
+  {h, h, h, h, h, h, h, h, h, h, h, S, h, h, h, h},
+  {h, h, h, h, h, h, h, h, h, h, S, h, h, h, h, h},
+  {h, h, h, h, h, h, h, h, h, S, h, h, h, h, h, h},
+  {h, h, h, h, h, h, h, h, S, h, h, h, h, h, h, h},
+  {h, h, h, h, h, h, h, S, h, h, h, h, h, h, h, h},
+  {h, h, h, h, h, h, S, h, h, h, h, h, h, h, h, h},
+  {h, h, h, h, h, S, h, h, h, h, h, h, h, h, h, h},
+  {h, h, h, h, S, h, h, h, h, h, h, h, h, h, h, h},
+  {h, h, h, S, h, h, h, h, h, h, h, h, h, h, h, h},
+  {h, h, S, h, h, h, h, h, h, h, h, h, h, h, h, h},
+  {h, S, h, h, h, h, h, h, h, h, h, h, h, h, h, h},
+  {S, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h},
+};
+
+const unsigned char barmap_linear[16][16] PROGMEM = {
+  {h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h},
+  {S, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h},
+  {S, S, h, h, h, h, h, h, h, h, h, h, h, h, h, h},
+  {S, S, S, h, h, h, h, h, h, h, h, h, h, h, h, h},
+  {S, S, S, S, h, h, h, h, h, h, h, h, h, h, h, h},
+  {S, S, S, S, S, h, h, h, h, h, h, h, h, h, h, h},
+  {S, S, S, S, S, S, h, h, h, h, h, h, h, h, h, h},
+  {S, S, S, S, S, S, S, h, h, h, h, h, h, h, h, h},
+  {S, S, S, S, S, S, S, S, h, h, h, h, h, h, h, h},
+  {S, S, S, S, S, S, S, S, S, h, h, h, h, h, h, h},
+  {S, S, S, S, S, S, S, S, S, S, h, h, h, h, h, h},
+  {S, S, S, S, S, S, S, S, S, S, S, h, h, h, h, h},
+  {S, S, S, S, S, S, S, S, S, S, S, S, h, h, h, h},
+  {S, S, S, S, S, S, S, S, S, S, S, S, S, h, h, h},
+  {S, S, S, S, S, S, S, S, S, S, S, S, S, S, h, h},
+  {S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, h},
+};
 
 // https://www.arduino.cc/en/Reference/LiquidCrystalCreateChar
-const unsigned char customChar0[] PROGMEM = { // play
+const unsigned char customChar0[] PROGMEM = {
+  // play
   0b10000,
   0b11000,
   0b11100,
@@ -147,10 +84,11 @@ const unsigned char customChar0[] PROGMEM = { // play
   0b11110,
   0b11100,
   0b11000,
-  0b10000
+  0b10000,
 };
 
-const unsigned char customChar1[] PROGMEM = { // tiny bar 1
+const unsigned char customChar1[] PROGMEM = {
+  // tiny bar 1
   0b10000,
   0b10000,
   0b10000,
@@ -158,10 +96,11 @@ const unsigned char customChar1[] PROGMEM = { // tiny bar 1
   0b10000,
   0b10000,
   0b10000,
-  0b10000
+  0b10000,
 };
 
-const unsigned char customChar2[] PROGMEM = { // tiny bar 2
+const unsigned char customChar2[] PROGMEM = {
+  // tiny bar 2
   0b11000,
   0b11000,
   0b11000,
@@ -169,10 +108,11 @@ const unsigned char customChar2[] PROGMEM = { // tiny bar 2
   0b11000,
   0b11000,
   0b11000,
-  0b11000
+  0b11000,
 };
 
-const unsigned char customChar3[] PROGMEM = { // tiny bar 3
+const unsigned char customChar3[] PROGMEM = {
+  // tiny bar 3
   0b11100,
   0b11100,
   0b11100,
@@ -180,10 +120,11 @@ const unsigned char customChar3[] PROGMEM = { // tiny bar 3
   0b11100,
   0b11100,
   0b11100,
-  0b11100
+  0b11100,
 };
 
-const unsigned char customChar4[] PROGMEM = { // tiny bar 4
+const unsigned char customChar4[] PROGMEM = {
+  // tiny bar 4
   0b11110,
   0b11110,
   0b11110,
@@ -191,12 +132,13 @@ const unsigned char customChar4[] PROGMEM = { // tiny bar 4
   0b11110,
   0b11110,
   0b11110,
-  0b11110
+  0b11110,
 };
 
 // https://omerk.github.io/lcdchargen/ generateur de char
 
-const unsigned char customChar5[] PROGMEM = { // quarter note
+const unsigned char customChar5[] PROGMEM = {
+  // quarter note
   0b00010,
   0b00011,
   0b00011,
@@ -204,10 +146,11 @@ const unsigned char customChar5[] PROGMEM = { // quarter note
   0b00010,
   0b01110,
   0b11110,
-  0b01100
+  0b01100,
 };
 
-const unsigned char customChar6[] PROGMEM = { // DOWN arrow
+const unsigned char customChar6[] PROGMEM = {
+  // DOWN arrow
   0b00000,
   0b00000,
   0b00000,
@@ -215,10 +158,11 @@ const unsigned char customChar6[] PROGMEM = { // DOWN arrow
   0b01110,
   0b00100,
   0b00000,
-  0b00000
+  0b00000,
 };
 
-const unsigned char customChar7[] PROGMEM = { // UP arrow
+const unsigned char customChar7[] PROGMEM = {
+  // UP arrow
   0b00000,
   0b00000,
   0b00000,
@@ -226,31 +170,9 @@ const unsigned char customChar7[] PROGMEM = { // UP arrow
   0b01110,
   0b11111,
   0b00000,
-  0b00000
+  0b00000,
 
 };
-
-//const unsigned char customChar9[] PROGMEM = { // clé de fa
-//  0b00000,
-//  0b01000,
-//  0b10101,
-//  0b10100,
-//  0b00101,
-//  0b00100,
-//  0b01000,
-//  0b10000
-//};
-
-//const unsigned char customChar12[] PROGMEM = { // quarter note b/w
-//  0b11101,
-//  0b11100,
-//  0b11101,
-//  0b11101,
-//  0b10001,
-//  0b01101,
-//  0b01101,
-//  0b10011
-//};
 
 /////////////////////////////////////////////////////////////////////////////
 //  Initialized LCD variables
@@ -316,18 +238,9 @@ void LCD_DisplayEditBufferOrig(unsigned char value, unsigned char valtype)
   {
     case MIXBALANCE:
     case UNSIGNED6:
-    case UNSIGNED7:
-      LCD_PrintBCD3(value);
-      break;
-
-    case SIGNED6:
-      display6BitSigned(value);
-      break;
-
-    case SIGNED7:
-      LCD_Display7BitSigned(value);
-      break;
-
+    case UNSIGNED7 : LCD_PrintBCD(value, 3); break;
+    case SIGNED6   : display6BitSigned(value); break;
+    case SIGNED7   : LCD_Display7BitSigned(value); break;
   }
 
   LCD_PrintChar(LCD_PARAMSEPARATOR);
@@ -344,17 +257,9 @@ void LCD_DisplayParamValue(unsigned char value, unsigned char valtype)
   {
     case MIXBALANCE:
     case UNSIGNED6:
-    case UNSIGNED7:
-      LCD_PrintBCD3(value);
-      break;
-
-    case SIGNED6:
-      display6BitSigned(value);
-      break;
-
-    case SIGNED7:
-      LCD_Display7BitSigned(value);
-      break;
+    case UNSIGNED7 : LCD_PrintBCD(value, 3); break;
+    case SIGNED6   : display6BitSigned(value); break;
+    case SIGNED7   : LCD_Display7BitSigned(value); break;
   }
   lcd.setCursor(3, 1);
   lcd.print(F(" ")); // blank space
@@ -369,7 +274,8 @@ void LCD_DisplayParamValueDescription(const char *data)
   lcd.print(data);
 
 #if DEBUG_LCDparamvaluedescription
-  Serial.print (F("LCD_DisplayParamValueDescription() ")); Serial.println(data);
+  Serial.print(F("LCD_DisplayParamValueDescription() "));
+  Serial.println(data);
 #endif
 }
 
@@ -382,14 +288,15 @@ void LCD_DisplayParamDescription(const char *data)
   lcd.print(data);
 
 #if DEBUG_LCDparamvaluedescription
-  Serial.print (F("LCD_DisplayParamDescription() ")); Serial.println(data);
+  Serial.print(F("LCD_DisplayParamDescription() "));
+  Serial.println(data);
 #endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
 //  Displays a bargraph on the lower row
 /////////////////////////////////////////////////////////////////////////////
-void LCD_DisplayBarGraph (unsigned char bartype, unsigned char value)
+void LCD_DisplayBarGraph(unsigned char bartype, unsigned char value)
 {
   // N.B NE PLUS Y TOUCHER CA MARCHE PARFAITEMENT !!! v6.3
 
@@ -399,15 +306,14 @@ void LCD_DisplayBarGraph (unsigned char bartype, unsigned char value)
 
   lcd.setCursor(LCD_BARGRAPHPOSITION + LCD_Offset, 1);
 
-  switch (bartype) {
-
-    case UNSIGNED6: // 0/63
+  switch (bartype)
+  {
+    case UNSIGNED6:
       solid_bars = (value >> 2); // get max 16 bars from value of 0-63
-      tiny_bars =  ((value << 1) & 7 ) >> 1; // formule Julien arduino
-      for ( i = 0; i < 16; i++)
-        lcd.write (byte(pgm_read_byte_near( &barmap_linear[solid_bars][i])));
+      tiny_bars = ((value << 1) & 7) >> 1; // formule Julien arduino
+      for (i = 0; i < 16; i++)
+        lcd.write(byte(pgm_read_byte_near(&barmap_linear[solid_bars][i])));
       lcd.setCursor(LCD_BARGRAPHPOSITION + solid_bars + LCD_Offset, 1);
-      //          LCD_PrintChar(barmap_fractional[tiny_bars]);
       if (tiny_bars == 0)
         lcd.write(45);
       else if (tiny_bars == 6)
@@ -418,16 +324,16 @@ void LCD_DisplayBarGraph (unsigned char bartype, unsigned char value)
 
     case SIGNED7: // -63/+63
       solid_bars = value >> 3;
-      for ( i = 0; i < 16; i++)
-        lcd.write(byte( pgm_read_byte_near( &barmap_signed[solid_bars][i])));
+      for (i = 0; i < 16; i++)
+        lcd.write(byte(pgm_read_byte_near(&barmap_signed[solid_bars][i])));
       break;
 
     case UNSIGNED7: // 0/127
       solid_bars = value >> 3;
-      tiny_bars =  (((value) & 7 ) + 1 ) >> 1; // formule Julien arduino qui marche :)
-      for ( i = 0; i < 16; i++)
-        lcd.write(byte(pgm_read_byte_near( &barmap_linear[solid_bars][i])));
-      lcd.setCursor(LCD_BARGRAPHPOSITION + solid_bars + LCD_Offset , 1);
+      tiny_bars = (((value) & 7) + 1) >> 1; // formule Julien arduino qui marche :)
+      for (i = 0; i < 16; i++)
+        lcd.write(byte(pgm_read_byte_near(&barmap_linear[solid_bars][i])));
+      lcd.setCursor(LCD_BARGRAPHPOSITION + solid_bars + LCD_Offset, 1);
       if (tiny_bars == 0)
         lcd.write(45);
       else if (tiny_bars == 6)
@@ -438,25 +344,27 @@ void LCD_DisplayBarGraph (unsigned char bartype, unsigned char value)
 
     case SIGNED6: // there's only one of these, the detune -32/+31
       solid_bars = value >> 3; // on peut pas faire mieux :(
-      for ( i = 0; i < 16; i++)
-        lcd.write(byte(pgm_read_byte_near( &barmap_signed[solid_bars][i])));
+      for (i = 0; i < 16; i++)
+        lcd.write(byte(pgm_read_byte_near(&barmap_signed[solid_bars][i])));
       break;
 
     case MIXBALANCE: // balance DCO1 / DCO2
       solid_bars = ((value * 2) >> 3);
-      for ( i = 0; i < 16; i++)
-        lcd.write(byte(pgm_read_byte_near( &barmap_mix[solid_bars][i])));
+      for (i = 0; i < 16; i++)
+        lcd.write(byte(pgm_read_byte_near(&barmap_mix[solid_bars][i])));
       break;
   }
 
-  // cette fonction est à améliorer car ça bouffe 800 octets de RAM !!! PROGMEM -> c'est fait 4.4.2016
-  // https://www.arduino.cc/en/Reference/PROGMEM
+    // cette fonction est à améliorer car ça bouffe 800 octets de RAM !!! PROGMEM -> c'est fait 4.4.2016
+    // https://www.arduino.cc/en/Reference/PROGMEM
 
 #if DEBUG_bargraph
-  Serial.print(F("solid bars = ")); Serial.print(solid_bars, DEC); Serial.print(F(" tiny_bars = ")); Serial.println(tiny_bars, DEC);
+  Serial.print(F("solid bars = "));
+  Serial.print(solid_bars, DEC);
+  Serial.print(F(" tiny_bars = "));
+  Serial.println(tiny_bars, DEC);
 #endif
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 //  requires 3 spaces, set cursor before using
@@ -465,19 +373,11 @@ void LCD_DisplayBarGraph (unsigned char bartype, unsigned char value)
 void LCD_Display7BitSigned(unsigned char value)
 {
   if (value == 0)
-  {
     lcd.print("  0");
-  }
-  else if ( value < 64 )
-  {
-    lcd.print('+');
-    LCD_PrintBCD2(value & 0x3f); //
-  }
+  else if (value < 64)
+    LCD_PrintBCDPrepend('+', value & 0x3f, 2);
   else
-  {
-    lcd.print('-');
-    LCD_PrintBCD2( 64 - (value & 0x3f)); // 0x3f
-  }
+    LCD_PrintBCDPrepend('-', 64 - (value & 0x3f), 2);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -487,17 +387,9 @@ void LCD_Display7BitSigned(unsigned char value)
 void display6BitSigned(unsigned char value)
 {
   if (value == 0)
-  {
     lcd.print("  0");
-  }
-  else if ( value < 32 )
-  {
-    lcd.print('+');
-    LCD_PrintBCD2(value & 0x1f); // 0x1f
-  }
+  else if (value < 32)
+    LCD_PrintBCDPrepend('+', value & 0x1f, 2);
   else
-  {
-    lcd.print('-');
-    LCD_PrintBCD2(32 - (value & 0x1f)); // 0x1f
-  }
+    LCD_PrintBCDPrepend('-', 32 - (value & 0x1f), 2);
 }
