@@ -16,87 +16,58 @@
 
 Encoder mainEncoder(2, 3); // encoder pin A and C. B to ground
 
-signed char incrementer = 0; // value sent to various functions
-long position = -999; // track the encoder
-
+long previousPosition = -999;
+signed char encSmooth = 0;
 bool encoderClic;
 bool previousEncoderClic;
 
-/////////////////////////////////////////////////////////
-// ENCODER MANAGEMENT
-/////////////////////////////////////////////////////////
+
+int decrementEncoder()
+{
+    if (--encSmooth == SMOOTHING_ENCODER)
+    {
+        encSmooth = 0;
+        return -1;
+    }
+    return 0;
+}
+
+int incrementEncoder()
+{
+    if (++encSmooth == SMOOTHING_ENCODER)
+    {
+        encSmooth = 0;
+        return 1;
+    }
+    return 0;
+}
+
 void encoder() // Youhouhouuuu !!!! ça marcheeee :)
 {
+  signed char incrementer = 0;
   // several *clics* of the encoder are needed to increment/decrement (nicer touch feel)
-  static signed char encSmooth;
-  // reading encoder position
-  long newPos = mainEncoder.read();
+  long currentPosition = mainEncoder.read();
 
-  if (newPos == position)
+  if (currentPosition == previousPosition)
       return;
-
-  if (encoder_inverted) // if Encoder has D-shaft
-  {
-    if (position < newPos)
-    {
-      if (--encSmooth == 0 - SMOOTHING_ENCODER) // CCW turns
-      {
-        incrementer = -1;
-        encSmooth = 0;
-      }
-      else
-        incrementer = 0;
-    }
-
-    else if (position > newPos)
-    {
-      if (++encSmooth == 0 + SMOOTHING_ENCODER) // CW turn
-      {
-        incrementer = 1;
-        encSmooth = 0;
-      }
-      else
-        incrementer = 0;
-    }
-  }
-  else // encoder has knurled shaft
-  {
-    if (position > newPos)
-    {
-      if (--encSmooth == 0 - SMOOTHING_ENCODER) // CCW turn
-      {
-        incrementer = -1;
-        encSmooth = 0;
-      }
-      else
-        incrementer = 0;
-    }
-
-    else if (position < newPos)
-    {
-      if (++encSmooth == 0 + SMOOTHING_ENCODER) // CW turn
-      {
-        incrementer = 1;
-        encSmooth = 0;
-      }
-      else
-        incrementer = 0;
-    }
-  }
+  else if (previousPosition < currentPosition)
+      incrementer = decrementEncoder() ? encoder_inverted : incrementEncoder();
+  else if (previousPosition > currentPosition)
+      incrementer = incrementEncoder() ? encoder_inverted : decrementEncoder();
 
   if (incrementer != 0)
-  { // we only send +1 or 1 value, null is useless
+  {
     // NB : using Shift button we could set a new value to encSmoothING_ENCODER to increment faster
     SoftPanel_Handler(-1, incrementer); // no pin
     app_flags.Display_ENC_Req = 1; // update display
   }
-  position = newPos; // update position
+  previousPosition = currentPosition;
 
 #if DEBUG_encoder
     Serial.println(F("encoder() "));
     Serial.print(incrementer);
     Serial.print(F(" Position = "));
-    Serial.println(position);
+    Serial.println(previousPosition);
     Serial.println();
 #endif
 }
